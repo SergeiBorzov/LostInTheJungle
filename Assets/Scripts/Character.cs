@@ -10,6 +10,7 @@ public class Character : MonoBehaviour
 
     private Animator animator;
     private CharacterController characterController;
+    //private Animation animation;
 
 
     private Vector3 move_direction = new Vector3(0.0f, 0.0f, 0.0f);
@@ -21,16 +22,16 @@ public class Character : MonoBehaviour
 
     /* Animator parameters indices*/
     int animatorSpeedIndex;
-    int animatorRunningJumpIndex;
     int animatorJumpIndex;
+    int animatorWalkingJumpIndex;
+    int animatorRunningJumpIndex;
 
     /* Animator state indices */
-    int animatorStateRunIndex;
     int animatorStateIdleIndex;
+    int animatorStateWalkIndex;
+    int animatorStateRunIndex;
 
-  
 
- 
     void ChangeIsInAir()
     {
         isInAir = !isInAir;
@@ -41,11 +42,15 @@ public class Character : MonoBehaviour
         animator = GetComponent<Animator>();
 
         animatorSpeedIndex = Animator.StringToHash("Speed");
-        animatorRunningJumpIndex = Animator.StringToHash("RunningJump");
         animatorJumpIndex = Animator.StringToHash("Jump");
+        animatorWalkingJumpIndex = Animator.StringToHash("WalkingJump");
+        animatorRunningJumpIndex = Animator.StringToHash("RunningJump");
 
-        animatorStateRunIndex = Animator.StringToHash("Base Layer.Run");
         animatorStateIdleIndex = Animator.StringToHash("Base Layer.Idle");
+        animatorStateWalkIndex = Animator.StringToHash("Base Layer.Walk");
+        animatorStateRunIndex = Animator.StringToHash("Base Layer.Run");
+
+        //animation["Jump"].speed = 2.0f;
     }
 
     private void Flip()
@@ -79,12 +84,20 @@ public class Character : MonoBehaviour
         /* Handle Jump */
         if (characterController.isGrounded && Input.GetButtonDown("Jump")) {
             AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-            if (stateInfo.fullPathHash == animatorStateRunIndex) {
-                animator.SetTrigger(animatorRunningJumpIndex);
-            }
+
             if (stateInfo.fullPathHash == animatorStateIdleIndex)
             {
                 animator.SetTrigger(animatorJumpIndex);
+            }
+
+            if (stateInfo.fullPathHash == animatorStateWalkIndex)
+            {
+                animator.SetTrigger(animatorWalkingJumpIndex);
+            }
+
+            if (stateInfo.fullPathHash == animatorStateRunIndex)
+            {
+                animator.SetTrigger(animatorRunningJumpIndex);
             }
         }
 
