@@ -879,9 +879,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd1bd49675bdb46dbb34fcf4dd839739, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 1807427539}
+  target: {fileID: 0}
   camera_speed: 5
-  offset: {x: 0, y: 2.73, z: -7}
+  offset: {x: 0, y: 0, z: 0}
 --- !u!1 &1657373709
 GameObject:
   m_ObjectHideFlags: 0
@@ -974,12 +974,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &1807427539 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1517518127926201475, guid: e672266db3347db4c8a28412d0cbb794,
-    type: 3}
-  m_PrefabInstance: {fileID: 5797815508932349637}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1899094727
 PrefabInstance:
   m_ObjectHideFlags: 0
