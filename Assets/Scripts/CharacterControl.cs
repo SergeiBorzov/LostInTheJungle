@@ -14,29 +14,6 @@ public class CharacterControl : MonoBehaviour
 
     void Update()
     {
-        if (VirtualInputManager.Instance.MoveRight && VirtualInputManager.Instance.MoveLeft)
-        {
-            animator.SetBool(TransitionParameter.Move.ToString(), false);
-            return;
-        }
-        if (!VirtualInputManager.Instance.MoveRight && !VirtualInputManager.Instance.MoveLeft)
-        {
-            animator.SetBool(TransitionParameter.Move.ToString(), false);
-        }
 
-        if (VirtualInputManager.Instance.MoveRight)
-        {
-            this.gameObject.transform.Translate(Vector3.forward * Speed * Time.deltaTime);
-            this.gameObject.transform.rotation = Quaternion.Euler(0f, 90f, 0f);
-            animator.SetBool(TransitionParameter.Move.ToString(), true);
-        }
-
-        if (VirtualInputManager.Instance.MoveLeft)
-        {
-            this.gameObject.transform.Translate(Vector3.forward * Speed * Time.deltaTime);
-            this.gameObject.transform.rotation = Quaternion.Euler(0f, -90f, 0f);
-            animator.SetBool(TransitionParameter.Move.ToString(), true);
-
-        }
     }
 }
