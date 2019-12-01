@@ -13,7 +13,6 @@ public class PlayerIdle : CharacterStateBase
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        /*
         if (VirtualInputManager.Instance.MoveRight && VirtualInputManager.Instance.MoveLeft)
         {
             animator.SetBool(CharacterControl.TransitionParameter.Move.ToString(), false);
@@ -24,7 +23,6 @@ public class PlayerIdle : CharacterStateBase
             animator.SetBool(CharacterControl.TransitionParameter.Move.ToString(), false);
             return;
         }
-        */
 
         if (VirtualInputManager.Instance.MoveRight)
         {
