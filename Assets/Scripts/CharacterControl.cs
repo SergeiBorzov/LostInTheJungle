@@ -10,6 +10,7 @@ public class CharacterControl : MonoBehaviour
     public enum TransitionParameter
     {
         Move,
+        Jump,
     }
 
     void Update()

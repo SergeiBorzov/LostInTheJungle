@@ -40,6 +40,11 @@ public class PlayerIdle : CharacterStateBase
             animator.SetBool(CharacterControl.TransitionParameter.Move.ToString(), true);
 
         }
+
+        if (VirtualInputManager.Instance.Jump)
+        {
+            animator.SetBool(CharacterControl.TransitionParameter.Jump.ToString(), true);
+        }
     }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
