@@ -15,7 +15,7 @@ public class CameraLookAt : MonoBehaviour
     }
     */
 
-    void LateUpdate()
+    void Update()
     {
         /*
         transform.LookAt(target); // change the direction of the camera view
