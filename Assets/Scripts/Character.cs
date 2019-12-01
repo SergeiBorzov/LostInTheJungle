@@ -19,17 +19,20 @@ public class Character : MonoBehaviour
     /* Useful flags */
     private bool lookingRight = true;
     private bool isInAir = false;
+    private bool characterTurning = false;
 
     /* Animator parameters indices*/
     int animatorSpeedIndex;
     int animatorJumpIndex;
     int animatorWalkingJumpIndex;
     int animatorRunningJumpIndex;
+    int animatorRunningTurn180;
 
     /* Animator state indices */
     int animatorStateIdleIndex;
     int animatorStateWalkIndex;
     int animatorStateRunIndex;
+    int animatorStateMoveIndex;
 
 
     void ChangeIsInAir()
@@ -45,21 +48,37 @@ public class Character : MonoBehaviour
         animatorJumpIndex = Animator.StringToHash("Jump");
         animatorWalkingJumpIndex = Animator.StringToHash("WalkingJump");
         animatorRunningJumpIndex = Animator.StringToHash("RunningJump");
+        animatorRunningTurn180 = Animator.StringToHash("RunningTurn180");
 
         animatorStateIdleIndex = Animator.StringToHash("Base Layer.Idle");
-        animatorStateWalkIndex = Animator.StringToHash("Base Layer.Walk");
-        animatorStateRunIndex = Animator.StringToHash("Base Layer.Run");
+        // animatorStateWalkIndex = Animator.StringToHash("Base Layer.Walk");
+        // animatorStateRunIndex = Animator.StringToHash("Base Layer.Run");
+        animatorStateMoveIndex = Animator.StringToHash("Base Layer.Move");
 
-        //animation["Jump"].speed = 2.0f;
     }
 
     private void Flip()
     {
+      /*  AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        if (stateInfo.fullPathHash == animatorStateRunIndex)
+        {
+            animator.SetTrigger(animatorRunningTurn180);
+        }*/
         lookingRight = !lookingRight;
         Vector3 scale = transform.localScale;
         scale.z *= -1;
         transform.localScale = scale;
+
     }
+
+    /*
+    private void Turning()
+    {
+        Vector3 scale = transform.localScale;
+        scale.z *= -1;
+        transform.localScale = scale;
+    }
+    */
 
     void Update() {
         /* Get Horizontal speed -1..1 */
@@ -68,7 +87,7 @@ public class Character : MonoBehaviour
             horizontal_move = Input.GetAxis("Horizontal");
 
         /* Deal with animation parameters */
-        animator.SetFloat(animatorSpeedIndex, Mathf.Abs(horizontal_move));
+       
 
         /* Face character the right way */
         if (horizontal_move > 0.1f && !lookingRight && !isInAir)
@@ -80,11 +99,23 @@ public class Character : MonoBehaviour
             Flip();
         }
 
+        if (!characterTurning)
+            animator.SetFloat(animatorSpeedIndex, Mathf.Abs(horizontal_move));
 
         /* Handle Jump */
         if (characterController.isGrounded && Input.GetButtonDown("Jump")) {
             AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
 
+            if (stateInfo.fullPathHash == animatorStateIdleIndex)
+            {
+                animator.SetTrigger(animatorJumpIndex);
+            }
+
+            if (stateInfo.fullPathHash == animatorStateMoveIndex)
+            {
+                animator.SetTrigger(animatorRunningJumpIndex);
+            }
+            /*
             if (stateInfo.fullPathHash == animatorStateIdleIndex)
             {
                 animator.SetTrigger(animatorJumpIndex);
@@ -99,6 +130,7 @@ public class Character : MonoBehaviour
             {
                 animator.SetTrigger(animatorRunningJumpIndex);
             }
+            */
         }
 
 
@@ -107,9 +139,9 @@ public class Character : MonoBehaviour
         move_direction.y += (Physics.gravity.y * gravityScale * Time.deltaTime);
 
           
-        if (transform.position.z != 0)
+        if (transform.position.z != 0.0f)
         {
-            movementOffset.z = (0 - transform.position.z) * 0.1f;
+            movementOffset.z = (0.0f - transform.position.z) * 0.1f;
         }
 
         if (!isInAir)
