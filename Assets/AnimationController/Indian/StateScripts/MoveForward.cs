@@ -31,14 +31,14 @@ public class MoveForward : StateData
         if (VirtualInputManager.Instance.MoveRight)
         {
             control.transform.Translate(Vector3.forward * Speed * Time.deltaTime);
-            control.transform.rotation = Quaternion.Euler(0f, 90f, 0f);
+            //control.transform.rotation = Quaternion.Euler(0f, 90f, 0f);
             //animator.SetBool(CharacterControl.TransitionParameter.Move.ToString(), true);
         }
 
         if (VirtualInputManager.Instance.MoveLeft)
         {
             control.transform.Translate(Vector3.forward * Speed * Time.deltaTime);
-            control.transform.rotation = Quaternion.Euler(0f, -90f, 0f);
+            //control.transform.rotation = Quaternion.Euler(0f, -90f, 0f);
             //animator.SetBool(CharacterControl.TransitionParameter.Move.ToString(), true);
         }
     }

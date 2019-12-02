@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class Jump : StateData
 {
+    public float JumpForce;
+
     public override void OnEnter(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
     {
 
@@ -21,8 +23,5 @@ public class Jump : StateData
         animator.SetBool(CharacterControl.TransitionParameter.Jump.ToString(), false);
     }
 }
-
-
-
 
 

@@ -201,7 +201,7 @@ Light:
   m_BounceIntensity: 6.23
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 3.0092666e-36, y: 1.009742e-28, z: 0, w: 0}
+  m_BoundingSphereOverride: {x: 1e-45, y: 5.9418017e+21, z: 1e-45, w: 2.96e-43}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -655,6 +655,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Indian
       objectReference: {fileID: 0}
+    - target: {fileID: 4324829129677016840, guid: 50a9f9f4c4ee3403e81c34e5d8a693f9,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: d05338e8702a149079697694f99b9f5b, type: 2}
     - target: {fileID: 1726099263958285490, guid: 50a9f9f4c4ee3403e81c34e5d8a693f9,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -730,11 +735,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: IndianMesh
       objectReference: {fileID: 0}
-    - target: {fileID: 4324829129677016840, guid: 50a9f9f4c4ee3403e81c34e5d8a693f9,
+    - target: {fileID: 1726099263958285517, guid: 50a9f9f4c4ee3403e81c34e5d8a693f9,
         type: 3}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 9100000, guid: d05338e8702a149079697694f99b9f5b, type: 2}
+      propertyPath: m_Center.y
+      value: 0.97
+      objectReference: {fileID: 0}
+    - target: {fileID: 1726099263958285517, guid: 50a9f9f4c4ee3403e81c34e5d8a693f9,
+        type: 3}
+      propertyPath: m_Center.z
+      value: -0.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 1726099263958285517, guid: 50a9f9f4c4ee3403e81c34e5d8a693f9,
+        type: 3}
+      propertyPath: m_Radius
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1726099263958285517, guid: 50a9f9f4c4ee3403e81c34e5d8a693f9,
+        type: 3}
+      propertyPath: m_Height
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 50a9f9f4c4ee3403e81c34e5d8a693f9, type: 3}
 --- !u!1001 &8120549220247159318
