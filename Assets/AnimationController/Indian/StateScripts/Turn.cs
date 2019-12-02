@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New State", menuName = "LostInTheJungle/AbilityData/WalkingTurn")]
+[CreateAssetMenu(fileName = "New State", menuName = "LostInTheJungle/AbilityData/Turn")]
 public class WalkingTurn : StateData
 {
     public override void OnEnter(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
@@ -27,6 +27,6 @@ public class WalkingTurn : StateData
         {
             control.FaceForward(true);
         }
-        animator.SetBool(CharacterControl.TransitionParameter.WalkingTurn.ToString(), false);
+        animator.SetBool(CharacterControl.TransitionParameter.Turn.ToString(), false);
     }
 }

@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: WalkingTurn
-  m_EditorClassIdentifier: Assembly-CSharp::WalkingTurn
+  m_Script: {fileID: 11500000, guid: fd226618ed88049bfa62d8ee3c52aec8, type: 3}
+  m_Name: CheckRunningTurn
+  m_EditorClassIdentifier: 
   Duration: 0
