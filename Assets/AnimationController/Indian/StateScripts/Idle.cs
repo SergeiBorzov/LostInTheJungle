@@ -2,16 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerIdle : CharacterStateBase
+[CreateAssetMenu(fileName = "New State", menuName = "LostInTheJungle/AbilityData/Idle")]
+
+public class Idle : StateData
 {
-    // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
-    override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
-
-    }
-
-    // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
-    override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    public override void UpdateAbility(CharacterState characterState, Animator animator)
     {
         if (VirtualInputManager.Instance.MoveRight && VirtualInputManager.Instance.MoveLeft)
         {
@@ -44,10 +39,28 @@ public class PlayerIdle : CharacterStateBase
             animator.SetBool(CharacterControl.TransitionParameter.Jump.ToString(), true);
         }
     }
+}
 
-    // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
-    override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+
+/*
+
+namespace roundbeargames_tutorial
+{
+    [CreateAssetMenu(fileName = "New State", menuName = "Roundbeargames/AbilityData/Idle")]
+    public class Idle : StateData
     {
+        public override void UpdateAbility(CharacterState characterState, Animator animator)
+        {
+            if (VirtualInputManager.Instance.MoveRight)
+            {
+                animator.SetBool(TransitionParameter.Move.ToString(), true);
+            }
 
+            if (VirtualInputManager.Instance.MoveLeft)
+            {
+                animator.SetBool(TransitionParameter.Move.ToString(), true);
+            }
+        }
     }
 }
+ */
