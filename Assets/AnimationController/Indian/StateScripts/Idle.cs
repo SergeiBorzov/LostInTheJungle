@@ -6,8 +6,18 @@ using UnityEngine;
 
 public class Idle : StateData
 {
-    public override void UpdateAbility(CharacterState characterState, Animator animator)
+    public override void OnEnter(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
     {
+
+    }
+
+    public override void UpdateAbility(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
+    {
+        if (VirtualInputManager.Instance.Jump)
+        {
+            animator.SetBool(CharacterControl.TransitionParameter.Jump.ToString(), true);
+        }
+
         if (VirtualInputManager.Instance.MoveRight && VirtualInputManager.Instance.MoveLeft)
         {
             animator.SetBool(CharacterControl.TransitionParameter.Move.ToString(), false);
@@ -21,15 +31,11 @@ public class Idle : StateData
 
         if (VirtualInputManager.Instance.MoveRight)
         {
-            //GetCharacterControl(animator).transform.Translate(Vector3.forward * GetCharacterControl(animator).Speed * Time.deltaTime);
-            //GetCharacterControl(animator).transform.rotation = Quaternion.Euler(0f, 90f, 0f);
             animator.SetBool(CharacterControl.TransitionParameter.Move.ToString(), true);
         }
 
         if (VirtualInputManager.Instance.MoveLeft)
         {
-            //GetCharacterControl(animator).transform.Translate(Vector3.forward * GetCharacterControl(animator).Speed * Time.deltaTime);
-            //GetCharacterControl(animator).transform.rotation = Quaternion.Euler(0f, -90f, 0f);
             animator.SetBool(CharacterControl.TransitionParameter.Move.ToString(), true);
 
         }
@@ -38,5 +44,10 @@ public class Idle : StateData
         {
             animator.SetBool(CharacterControl.TransitionParameter.Jump.ToString(), true);
         }
+    }
+
+    public override void OnExit(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
+    {
+
     }
 }

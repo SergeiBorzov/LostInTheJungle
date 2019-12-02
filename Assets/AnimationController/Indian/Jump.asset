@@ -9,8 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc451d895fa2e45d7a2ba588ea2f8572, type: 3}
-  m_Name: MoveForward
+  m_Script: {fileID: 11500000, guid: afdee6871bb2848b9bde15031bff1c87, type: 3}
+  m_Name: Jump
   m_EditorClassIdentifier: 
   Duration: 0
-  Speed: 2

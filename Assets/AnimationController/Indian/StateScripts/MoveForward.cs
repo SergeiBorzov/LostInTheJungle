@@ -8,7 +8,12 @@ public class MoveForward : StateData
 {
     public float Speed;
 
-    public override void UpdateAbility(CharacterState characterState, Animator animator)
+    public override void OnEnter(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
+    {
+        //throw new System.NotImplementedException();
+    }
+
+    public override void UpdateAbility(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
     {
         CharacterControl control = characterState.GetCharacterControl(animator);
 
@@ -36,5 +41,10 @@ public class MoveForward : StateData
             control.transform.rotation = Quaternion.Euler(0f, -90f, 0f);
             //animator.SetBool(CharacterControl.TransitionParameter.Move.ToString(), true);
         }
+    }
+
+    public override void OnExit(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
+    {
+        //throw new System.NotImplementedException();
     }
 }
