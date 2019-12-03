@@ -13,6 +13,7 @@ public class CharacterControl : MonoBehaviour
         Jump,
         Turn,
         Run,
+        ForceTransition,
     }
 
     public bool IsFacingForward()

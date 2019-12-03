@@ -33,6 +33,6 @@ public class CheckTurn : StateData
 
     public override void OnExit(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
     {
-        //animator.SetBool(CharacterControl.TransitionParameter.WalkingTurn.ToString(), false);
+        animator.SetBool(CharacterControl.TransitionParameter.Turn.ToString(), false);
     }
 }
