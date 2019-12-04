@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Run_Jump
   m_EditorClassIdentifier: 
   Duration: 0
-  JumpForce: 0
+  Speed: 5

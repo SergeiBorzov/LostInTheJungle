@@ -4,8 +4,13 @@ using UnityEngine;
 
 public class CharacterControl : MonoBehaviour
 {
-    //public float Speed;
+    [SerializeField] private float gravityScale = 5.0f;
+    public float Speed;
+    public float jumpForce;
     public Animator animator;
+    public CharacterController controller;
+    public Vector3 velocity;
+    
 
     public enum TransitionParameter
     {
@@ -43,6 +48,30 @@ public class CharacterControl : MonoBehaviour
 
     void Update()
     {
+        bool facingForward = IsFacingForward();
+
+        if (facingForward)
+        {
+            velocity = Vector3.right * Speed * Time.deltaTime;
+        }
+        else
+        {
+            velocity = Vector3.left * Speed * Time.deltaTime;
+        }
+
+        if (!controller.isGrounded)
+        {
+            velocity.y += (Physics.gravity.y * gravityScale * Time.deltaTime);
+        }
+        else
+        {
+            velocity.y = 0.0f;
+        }
+
+        if (Input.GetButtonDown("Jump") && controller.isGrounded)
+        {
+            velocity.y += jumpForce;
+        }
 
     }
 }

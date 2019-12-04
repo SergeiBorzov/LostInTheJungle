@@ -6,15 +6,61 @@ using UnityEngine;
 
 public class Jump : StateData
 {
-    public float JumpForce;
+    public float Speed;
 
     public override void OnEnter(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
     {
+       /*
+         CharacterControl control = characterState.GetCharacterControl(animator);
+        Vector3 velocity = control.velocity;
 
+        if (VirtualInputManager.Instance.MoveRight)
+        {
+            control.controller.Move(velocity);
+
+        }
+
+        if (VirtualInputManager.Instance.MoveLeft)
+        {
+            control.controller.Move(velocity);
+
+        }
+        */       
+        //+velocity_y
     }
 
     public override void UpdateAbility(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
     {
+        CharacterControl control = characterState.GetCharacterControl(animator);
+        Vector3 velocity = control.velocity;
+
+        if (VirtualInputManager.Instance.MoveRight)
+        {
+            control.controller.Move(velocity);
+
+        }
+
+        if (VirtualInputManager.Instance.MoveLeft)
+        {
+            control.controller.Move(velocity);
+
+        }
+        /*
+        CharacterControl control = characterState.GetCharacterControl(animator);
+
+        if (VirtualInputManager.Instance.MoveRight)
+        {
+            control.controller.Move(Vector3.right * Speed * Time.deltaTime);
+
+        }
+
+        if (VirtualInputManager.Instance.MoveLeft)
+        {
+            control.controller.Move(Vector3.left * Speed * Time.deltaTime);
+
+        }
+        */
+        //+gravitation
 
     }
 
