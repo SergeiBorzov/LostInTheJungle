@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New State", menuName = "LostInTheJungle/AbilityData/CheckWalkingTurn")]
-public class CheckWalkingTurn : StateData
+[CreateAssetMenu(fileName = "New State", menuName = "LostInTheJungle/AbilityData/CheckTurn")]
+public class CheckTurn : StateData
 {
     public override void OnEnter(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
     {
@@ -16,28 +16,23 @@ public class CheckWalkingTurn : StateData
 
         if (control.IsFacingForward()) 
         {
-            //Debug.Log("Forward");
-            Debug.Log(VirtualInputManager.Instance.MoveLeft);
             if (VirtualInputManager.Instance.MoveLeft)
             {
-                Debug.Log("TurnLeft");
-                animator.SetBool(CharacterControl.TransitionParameter.WalkingTurn.ToString(), true);
+                animator.SetBool(CharacterControl.TransitionParameter.Turn.ToString(), true);
             }
         }
 
         if (!control.IsFacingForward())
         {
-            //Debug.Log("!Forward");
             if (VirtualInputManager.Instance.MoveRight)
             {
-                Debug.Log("TurnRight");
-                animator.SetBool(CharacterControl.TransitionParameter.WalkingTurn.ToString(), true);
+                animator.SetBool(CharacterControl.TransitionParameter.Turn.ToString(), true);
             }
         }
     }
 
     public override void OnExit(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
     {
-        //animator.SetBool(CharacterControl.TransitionParameter.WalkingTurn.ToString(), false);
+        animator.SetBool(CharacterControl.TransitionParameter.Turn.ToString(), false);
     }
 }

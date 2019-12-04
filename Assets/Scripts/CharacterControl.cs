@@ -11,7 +11,9 @@ public class CharacterControl : MonoBehaviour
     {
         Move,
         Jump,
-        WalkingTurn,
+        Turn,
+        Run,
+        ForceTransition,
     }
 
     public bool IsFacingForward()
