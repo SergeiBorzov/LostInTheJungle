@@ -13,6 +13,10 @@ public class Idle : StateData
 
     public override void UpdateAbility(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
     {
+        //CharacterControl control = characterState.GetCharacterControl(animator);
+        //Vector3 velocity = control.velocity;
+        //control.controller.Move(velocity);
+
         if (VirtualInputManager.Instance.Jump)
         {
             animator.SetBool(CharacterControl.TransitionParameter.Jump.ToString(), true);

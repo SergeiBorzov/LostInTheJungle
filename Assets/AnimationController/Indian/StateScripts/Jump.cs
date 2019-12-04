@@ -7,6 +7,7 @@ using UnityEngine;
 public class Jump : StateData
 {
     public float Speed;
+    private bool isJump = false;
 
     public override void OnEnter(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
     {
@@ -34,17 +35,21 @@ public class Jump : StateData
         CharacterControl control = characterState.GetCharacterControl(animator);
         Vector3 velocity = control.velocity;
 
-        if (VirtualInputManager.Instance.MoveRight)
+        //if (VirtualInputManager.Instance.MoveRight)
+        //{
+        //Debug.Log(isJump);
+        if (!isJump)
         {
             control.controller.Move(velocity);
-
+            isJump = true;
         }
+        //}
 
-        if (VirtualInputManager.Instance.MoveLeft)
-        {
-            control.controller.Move(velocity);
+        //if (VirtualInputManager.Instance.MoveLeft)
+        //{
+        //    control.controller.Move(velocity);
+        //}
 
-        }
         /*
         CharacterControl control = characterState.GetCharacterControl(animator);
 
@@ -67,6 +72,7 @@ public class Jump : StateData
     public override void OnExit(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
     {
         animator.SetBool(CharacterControl.TransitionParameter.Jump.ToString(), false);
+        isJump = false;
     }
 }
 
