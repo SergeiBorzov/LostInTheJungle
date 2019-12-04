@@ -38,11 +38,11 @@ public class Jump : StateData
         //if (VirtualInputManager.Instance.MoveRight)
         //{
         //Debug.Log(isJump);
-        if (!isJump)
-        {
+        //if (!isJump)
+        //{
             control.controller.Move(velocity);
-            isJump = true;
-        }
+            //isJump = true;
+        //}
         //}
 
         //if (VirtualInputManager.Instance.MoveLeft)

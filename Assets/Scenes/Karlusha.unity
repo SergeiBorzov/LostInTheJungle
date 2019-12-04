@@ -472,7 +472,7 @@ PrefabInstance:
     - target: {fileID: 1726099263958285490, guid: 50a9f9f4c4ee3403e81c34e5d8a693f9,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.55
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 1726099263958285490, guid: 50a9f9f4c4ee3403e81c34e5d8a693f9,
         type: 3}
@@ -544,6 +544,11 @@ PrefabInstance:
       propertyPath: jumpForce
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 1726099263958285518, guid: 50a9f9f4c4ee3403e81c34e5d8a693f9,
+        type: 3}
+      propertyPath: gravityScale
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 7265919408884371553, guid: 50a9f9f4c4ee3403e81c34e5d8a693f9,
         type: 3}
       propertyPath: m_Name
@@ -595,7 +600,7 @@ CharacterController:
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0.85, z: 0}
+  m_Center: {x: 0, y: 0.92, z: 0}
 --- !u!4 &1726099265343563257 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1726099263958285490, guid: 50a9f9f4c4ee3403e81c34e5d8a693f9,
