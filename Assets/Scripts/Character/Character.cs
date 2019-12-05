@@ -8,7 +8,16 @@ public class Character : MonoBehaviour
     [SerializeField] private float gravityScale = 5.0f;
     [SerializeField] private float jumpForce = 2.0f;
 
-    private Animator animator;
+    public enum TransitionParameter
+    {
+        Move,
+        Jump,
+        Turn,
+        Run,
+        ForceTransition,
+    }
+
+    public Animator animator;
     private CharacterController characterController;
 
 
@@ -18,10 +27,10 @@ public class Character : MonoBehaviour
     /* Useful flags */
     private bool lookingRight = true;
 
-   
-
+  
     void Start() {
         characterController = GetComponent<CharacterController>();
+        animator = GetComponent<Animator>();
     }
 
     private void Flip()
@@ -41,6 +50,15 @@ public class Character : MonoBehaviour
     void Update() {
 
         float horizontal_move = Input.GetAxis("Horizontal");
+        if (horizontal_move != 0.0f) 
+        {
+            animator.SetBool(TransitionParameter.Move.ToString(), true);
+        }
+        else
+        {
+            animator.SetBool(TransitionParameter.Move.ToString(), false);
+        }
+
         move_direction.x = horizontal_move * runSpeed;
         move_direction += Physics.gravity * gravityScale * Time.deltaTime;
 
