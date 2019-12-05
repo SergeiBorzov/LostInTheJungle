@@ -46,15 +46,16 @@ public class Character : MonoBehaviour
         lookingRight = !lookingRight;
     }
 
-   // public void Jump()
-   // {
-
-   // }
+    public void StandingJump()
+    {
+        move_direction.y = 0.0f;
+        move_direction.y = jumpForce;
+    }
 
     void Update() {
 
         float horizontal_move = Input.GetAxis("Horizontal");
-        if (horizontal_move != 0.0f) 
+        if (Mathf.Abs(horizontal_move) > 0.01f)
         {
             animator.SetBool(TransitionParameter.Move.ToString(), true);
         }
@@ -69,8 +70,12 @@ public class Character : MonoBehaviour
         if (Input.GetButtonDown("Jump") && characterController.isGrounded)
         {
             animator.SetBool(Character.TransitionParameter.Jump.ToString(), true);
-            move_direction.y = 0.0f;
-            move_direction.y = jumpForce;
+            //animator.SetBool(Character.TransitionParameter.Move.ToString(), false);
+            if (Mathf.Abs(horizontal_move) > 0.01f)
+            {
+                move_direction.y = 0.0f;
+                move_direction.y = jumpForce;
+            }
         }
 
         if (horizontal_move > 0.0f && !lookingRight)
@@ -85,7 +90,7 @@ public class Character : MonoBehaviour
             animator.SetBool(TransitionParameter.Turn.ToString(), true);
         }
 
-        if (transform.position.z != 0.0f)
+        if (Mathf.Abs(transform.position.z) > 0.01f)
         {
             movementOffset.z = (0.0f - transform.position.z) * 0.1f;
         }
