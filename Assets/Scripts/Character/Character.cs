@@ -11,10 +11,12 @@ public class Character : MonoBehaviour
     public enum TransitionParameter
     {
         Move,
-        Jump,
         Turn,
-        Run,
         ForceTransition,
+        //Jump,
+        //Turn,
+        //Run,
+        //ForceTransition,
     }
 
     public Animator animator;
@@ -33,7 +35,7 @@ public class Character : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
-    private void Flip()
+    public void Flip() // вызывается самой анимацией, когда переходит в состояние поворота в автомате
     {
         if (lookingRight)
         {
@@ -70,12 +72,14 @@ public class Character : MonoBehaviour
 
         if (horizontal_move > 0.0f && !lookingRight)
         {
-            Flip();
+            //Flip();
+            animator.SetBool(TransitionParameter.Turn.ToString(), true);
         }
 
         if (horizontal_move < 0.0f && lookingRight)
         {
-            Flip();
+            //Flip();
+            animator.SetBool(TransitionParameter.Turn.ToString(), true);
         }
 
         if (transform.position.z != 0.0f)
