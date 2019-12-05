@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CheckForceTransition : StateMachineBehaviour
+public class CheckJumpForceTransition : StateMachineBehaviour
 {
     [Range(0.01f, 1f)]
     public float TransitionTiming;
@@ -33,7 +33,7 @@ public class CheckForceTransition : StateMachineBehaviour
     // OnStateMove is called right after Animator.OnAnimatorMove()
     //override public void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     //{
-        // Implement code that processes and affects root motion
+    // Implement code that processes and affects root motion
     //}
 
     // OnStateIK is called right after Animator.OnAnimatorIK()

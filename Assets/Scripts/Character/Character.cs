@@ -13,10 +13,7 @@ public class Character : MonoBehaviour
         Move,
         Turn,
         ForceTransition,
-        //Jump,
-        //Turn,
-        //Run,
-        //ForceTransition,
+        Jump,
     }
 
     public Animator animator;
@@ -49,6 +46,11 @@ public class Character : MonoBehaviour
         lookingRight = !lookingRight;
     }
 
+   // public void Jump()
+   // {
+
+   // }
+
     void Update() {
 
         float horizontal_move = Input.GetAxis("Horizontal");
@@ -66,6 +68,7 @@ public class Character : MonoBehaviour
 
         if (Input.GetButtonDown("Jump") && characterController.isGrounded)
         {
+            animator.SetBool(Character.TransitionParameter.Jump.ToString(), true);
             move_direction.y = 0.0f;
             move_direction.y = jumpForce;
         }
