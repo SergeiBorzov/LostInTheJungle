@@ -22,7 +22,7 @@ public class JumpNormalLanding : StateMachineBehaviour
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         animator.SetBool(Character.TransitionParameter.Jump.ToString(), false);
-        //animator.SetBool(Character.TransitionParameter.Turn.ToString(), false);
+        animator.SetBool(Character.TransitionParameter.Turn.ToString(), false);
         //animator.SetBool(Character.TransitionParameter.Move.ToString(), true);
     }
 

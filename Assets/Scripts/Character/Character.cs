@@ -56,6 +56,7 @@ public class Character : MonoBehaviour
 
     void Update() {
 
+        ////------------------------Check move----------------------------------
         float horizontal_move = Input.GetAxis("Horizontal");
         if (Mathf.Abs(horizontal_move) > 0.01f)
         {
@@ -68,7 +69,9 @@ public class Character : MonoBehaviour
 
         move_direction.x = horizontal_move * runSpeed;
         move_direction += Physics.gravity * gravityScale * Time.deltaTime;
+        ///---------------------------------------------------------------------
 
+        ///-------------------------Check jump----------------------------------
         if (Input.GetButtonDown("Jump") && characterController.isGrounded)
         {
             animator.SetBool(Character.TransitionParameter.Jump.ToString(), true);
@@ -79,7 +82,9 @@ public class Character : MonoBehaviour
                 move_direction.y = jumpForce;
             }
         }
+        ///---------------------------------------------------------------------
 
+        ///-------------------------Check turn----------------------------------
         if (horizontal_move > 0.0f && !lookingRight)
         {
             //Flip();
@@ -91,12 +96,22 @@ public class Character : MonoBehaviour
             //Flip();
             animator.SetBool(TransitionParameter.Turn.ToString(), true);
         }
+        ///---------------------------------------------------------------------
 
         if (Mathf.Abs(transform.position.z) > 0.01f)
         {
             movementOffset.z = (0.0f - transform.position.z) * 0.1f;
         }
 
+        ///------------------Don't move in standing jump------------------------
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormalPrep") || animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormalLanding"))
+        {
+            //Debug.Log("Jumping");
+            move_direction.x = 0.0f;
+        }
+        ///---------------------------------------------------------------------
+
+        ///-----------------------Check grounded--------------------------------
         if (characterController.isGrounded)
         {
             animator.SetBool(TransitionParameter.isGrounded.ToString(), true);
@@ -106,6 +121,7 @@ public class Character : MonoBehaviour
             animator.SetBool(TransitionParameter.isGrounded.ToString(), false);
 
         }
+        ///---------------------------------------------------------------------
 
         characterController.Move(movementOffset + move_direction * Time.deltaTime);
     }
