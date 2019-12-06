@@ -71,7 +71,7 @@ public class Character : MonoBehaviour
         if (Input.GetButtonDown("Jump") && characterController.isGrounded)
         {
             animator.SetBool(Character.TransitionParameter.Jump.ToString(), true);
-            //animator.SetBool(Character.TransitionParameter.Move.ToString(), false);
+            animator.SetBool(Character.TransitionParameter.Move.ToString(), false);
             if (Mathf.Abs(horizontal_move) > 0.01f)
             {
                 move_direction.y = 0.0f;
