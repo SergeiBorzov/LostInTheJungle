@@ -7,6 +7,7 @@ public class Character : MonoBehaviour
     [SerializeField] private float runSpeed = 1.0f;
     [SerializeField] private float gravityScale = 5.0f;
     [SerializeField] private float jumpForce = 2.0f;
+    [SerializeField] private float pushForce = 5.0f;
 
     public enum TransitionParameter
     {
@@ -109,9 +110,20 @@ public class Character : MonoBehaviour
         characterController.Move(movementOffset + move_direction * Time.deltaTime);
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnControllerColliderHit(ControllerColliderHit hit)
     {
+        Rigidbody body = hit.collider.attachedRigidbody;
 
+        // no rigidbody
+        if (body == null || body.isKinematic)
+            return;
+
+        // We want to push objects below us
+        if (hit.moveDirection.y < -0.3f)
+        {
+            Vector3 pushDir = new Vector3(0, hit.moveDirection.y, 0);
+            body.velocity = pushDir * pushForce;
+        }
     }
 
 }
