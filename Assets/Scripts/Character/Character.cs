@@ -14,6 +14,7 @@ public class Character : MonoBehaviour
         Turn,
         ForceTransition,
         Jump,
+        isGrounded,
     }
 
     public Animator animator;
@@ -93,6 +94,16 @@ public class Character : MonoBehaviour
         if (Mathf.Abs(transform.position.z) > 0.01f)
         {
             movementOffset.z = (0.0f - transform.position.z) * 0.1f;
+        }
+
+        if (characterController.isGrounded)
+        {
+            animator.SetBool(TransitionParameter.isGrounded.ToString(), true);
+        }
+        else
+        {
+            animator.SetBool(TransitionParameter.isGrounded.ToString(), false);
+
         }
 
         characterController.Move(movementOffset + move_direction * Time.deltaTime);

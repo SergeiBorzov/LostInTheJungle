@@ -5,7 +5,7 @@ using UnityEngine;
 public class CameraLookAt : MonoBehaviour
 {
     public Transform target; // the object which we will monitor
-    public float camera_speed = 5.0f;
+    public float smoothSpeed = 0.125f;
     public Vector3 offset;
 
     /*
@@ -17,17 +17,9 @@ public class CameraLookAt : MonoBehaviour
 
     void Update()
     {
-        /*
-        transform.LookAt(target); // change the direction of the camera view
-        Vector3 move_direction = target.position - transform.position;
-        move_direction.y = 0;
-        move_direction.z = 0;
-        // if (move_direction.magnitude > 0.1f) {
-        //move_direction = Vector3.Normalize(move_direction);
-        transform.position += move_direction * Time.deltaTime * camera_speed;
-        //}
-        */
+        Vector3 desiredPosition = target.position + offset;
+        Vector3 smoothPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);
+        transform.position = smoothPosition;
         transform.LookAt(target);
-        transform.position = target.transform.position + offset;
     }
 }
