@@ -1,4 +1,6 @@
-﻿Shader "Custom/WaterShader"
+﻿// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
+
+Shader "Custom/WaterShader"
 {
     Properties
     {
@@ -26,6 +28,9 @@
 		[Header(Normal)]
 		_NormalMap("Normal map", 2D) = "bump" {}
 
+		[Header(Reflection)]
+		_ReflectionMap("Reflection Texture", 2D) = "white" {}
+
 		[Header(Transparency)]
 		_Alpha("Alpha", Range(0.1, 1)) = 0.76
     }
@@ -34,14 +39,14 @@
     {
         Tags {"Queue" = "Transparent" "IgnoreProjector" = "True" "RenderType" = "Transparent" "DisableBatching" = "True"}
 		Blend One OneMinusSrcAlpha
-		Cull Off
+		//Cull Off
 		ZWrite Off
         LOD 200
 		
 
         CGPROGRAM
         // Physically based Standard lighting model, and enable shadows on all light types
-        #pragma surface surf Standard fullforwardshadows vertex:vert tessellate:tessDistance alpha:fade
+        #pragma surface surf Standard fullforwardshadows vertex:vert tessellate:tessDistance alpha
 
         #pragma target 4.6
 		#include "Tessellation.cginc"
@@ -97,19 +102,35 @@
 		}
 
 
-		
+
+		float smoothstep(float x) {
+			x = saturate(x);
+			return saturate(x * x * x * (x * (6 * x - 15) + 10));
+		}
+
 		struct Input {
 			float4 screenPos;
 			float3 viewDir;
 			float3 worldPos;
 			float2 uv_NormalMap;
 			float2 uv_FoamMap;
+			float2 uv_ReflectionMap;
+			float3 worldNormal; INTERNAL_DATA
 		};
 
+		// Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
+	   // See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
+	   // #pragma instancing_options assumeuniformscaling
+		UNITY_INSTANCING_BUFFER_START(Props)
+			// put more per-instance properties here
+		UNITY_INSTANCING_BUFFER_END(Props)
+
+		sampler2D _ReflectionMap;
 		sampler2D _NormalMap;
 		sampler2D _FoamMap;
 		sampler2D _FoamNormalMap;
 		sampler2D_float _CameraDepthTexture;
+		samplerCUBE _Cube;
 
 		half _FresnelPower;
         half _Glossiness;
@@ -117,18 +138,7 @@
 		half _FoamOffset;
         fixed4 _WaterDarkColor;
 		fixed4 _WaterLightColor;
-
-        // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
-        // See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
-        // #pragma instancing_options assumeuniformscaling
-        UNITY_INSTANCING_BUFFER_START(Props)
-            // put more per-instance properties here
-        UNITY_INSTANCING_BUFFER_END(Props)
-
-		float smoothstep(float x) {
-			x = saturate(x);
-			return saturate(x * x * x * (x * (6 * x - 15) + 10));
-		}
+		float4 _ReflectionMap_ST;
 
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
@@ -140,14 +150,12 @@
 			float depthDifference = depth - (IN.screenPos.w - _FoamOffset);
 			depthDifference = 1 - saturate(depthDifference);
 
-
 			/* Normals*/
 			float3 offsetNormal = UnpackNormal(tex2D(_NormalMap, IN.uv_NormalMap + waterOffset()));
 			float3 foamNormal = UnpackNormal(tex2D(_FoamNormalMap, IN.uv_FoamMap + 0.1 * _CosTime[1]));
 			float3 normal = o.Normal;
-			o.Normal = lerp(0.15*offsetNormal + 0.85*normal, foamNormal, depthDifference);
-
-
+			float3 final_normal = normalize(lerp(0.15 * offsetNormal + 0.85 * normal, foamNormal, 0.15));
+			o.Normal = final_normal;
 
 			/* Albedo */
 			half fresnelCoeff = saturate(dot(normalize(IN.viewDir), o.Normal));
@@ -155,6 +163,14 @@
 
 			float3 foamColor = lerp(tex2D(_FoamMap, IN.uv_FoamMap + 0.1*_CosTime[1]), _WaterDarkColor, 0.25);
 
+			float3 normalWS = WorldNormalVector(IN, o.Normal);
+			float2 screenPos = (IN.screenPos.xy / IN.screenPos.w);
+			screenPos = float2(1 - screenPos.x, screenPos.y) + normalWS.xz* 0.15;
+
+			//screenPos = TRANSFORM_TEX(screenPos, _ReflectionMap);
+		
+			float3 reflectionColor = tex2D(_ReflectionMap, screenPos);
+			o.Emission = reflectionColor;
 			o.Albedo = lerp(lerp(_WaterDarkColor, _WaterLightColor, fresnelCoeff), foamColor, depthDifference);
             o.Smoothness = _Glossiness;
 

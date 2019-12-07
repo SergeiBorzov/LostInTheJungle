@@ -23,6 +23,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Cube:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -37,7 +41,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _DisplacementMap:
         m_Texture: {fileID: 2800000, guid: 002b54395e97ed54f8b450f697d56975, type: 3}
-        m_Scale: {x: 1, y: 1}
+        m_Scale: {x: 0.5, y: 0.5}
         m_Offset: {x: 0, y: 0}
     - _DisplacementTexture:
         m_Texture: {fileID: 0}
@@ -87,19 +91,23 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _ReflectionMap:
+        m_Texture: {fileID: 8400000, guid: c79882a545914e147b6f38ef85942835, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _Alpha: 0.994
+    - _Alpha: 1
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
-    - _Displacement: 0.2
+    - _Displacement: 0.24
     - _DstBlend: 0
     - _FoamOffset: 0.25
-    - _FresnelPower: 10
+    - _FresnelPower: 1
     - _GlossMapScale: 1
-    - _Glossiness: 0.77
+    - _Glossiness: 0.811
     - _GlossyReflections: 1
-    - _MaxTessellationDistance: 25
+    - _MaxTessellationDistance: 100
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
@@ -108,15 +116,18 @@ Material:
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _Tesselation: 50
-    - _Tessellation: 40
+    - _Tessellation: 50
     - _UVSec: 0
     - _WaterSpeed: 5
     - _ZWrite: 1
     m_Colors:
+    - _BBoxMax: {r: 70.041626, g: -4.4483786, b: 34.241623, a: 0}
+    - _BBoxMin: {r: 61.55838, g: -12.931621, b: 25.758379, a: 0}
+    - _BBoxPos: {r: 65.8, g: -8.69, b: 30, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _NormalMapScale: {r: 1, g: 1, b: 0, a: 0}
     - _NormalMapTiling: {r: 1, g: 1, b: 0, a: 0}
-    - _WaterDarkColor: {r: 0.053844795, g: 0.08553282, b: 0.20754719, a: 1}
-    - _WaterLightColor: {r: 0.35751158, g: 0.44158643, b: 0.735849, a: 1}
+    - _WaterDarkColor: {r: 0.025542913, g: 0.14994894, b: 0.7735849, a: 1}
+    - _WaterLightColor: {r: 0.2232111, g: 0.3588884, b: 0.8301887, a: 1}
     - _WaveDirection: {r: -0.5, g: -0.3, b: 0, a: 0}
