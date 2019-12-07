@@ -915,6 +915,7 @@ MonoBehaviour:
   runSpeed: 7
   gravityScale: 3
   jumpForce: 13
+  pushForce: 5
   animator: {fileID: 0}
 --- !u!1 &2852444921490580267
 GameObject:

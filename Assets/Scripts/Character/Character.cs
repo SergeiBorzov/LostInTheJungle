@@ -55,7 +55,7 @@ public class Character : MonoBehaviour
     }
 
     void Update() {
-
+        // move_direction = new Vector3(0.0f, 0.0f, 0.0f);
         ////------------------------Check move----------------------------------
         float horizontal_move = Input.GetAxis("Horizontal");
         if (Mathf.Abs(horizontal_move) > 0.01f)
@@ -68,7 +68,7 @@ public class Character : MonoBehaviour
         }
 
         move_direction.x = horizontal_move * runSpeed;
-        move_direction += Physics.gravity * gravityScale * Time.deltaTime;
+
         ///---------------------------------------------------------------------
 
         ///-------------------------Check jump----------------------------------
@@ -115,15 +115,18 @@ public class Character : MonoBehaviour
         if (characterController.isGrounded)
         {
             animator.SetBool(TransitionParameter.isGrounded.ToString(), true);
+            //move_direction.y = 0.0f;
         }
         else
         {
             animator.SetBool(TransitionParameter.isGrounded.ToString(), false);
-
+            move_direction += Physics.gravity * gravityScale * Time.deltaTime;
         }
         ///---------------------------------------------------------------------
 
         characterController.Move(movementOffset + move_direction * Time.deltaTime);
+
+        Debug.Log("Character y velocity" + move_direction.y);
     }
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
