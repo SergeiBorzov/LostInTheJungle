@@ -794,7 +794,12 @@ PrefabInstance:
     - target: {fileID: 5797815509073197187, guid: 8d1bccc7d7f39de48b6da6e9ee512c2b,
         type: 3}
       propertyPath: jumpForce
-      value: 13
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5797815509073197187, guid: 8d1bccc7d7f39de48b6da6e9ee512c2b,
+        type: 3}
+      propertyPath: "slowingDown\u0421oeff"
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8d1bccc7d7f39de48b6da6e9ee512c2b, type: 3}

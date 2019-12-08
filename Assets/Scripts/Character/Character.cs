@@ -94,7 +94,9 @@ public class Character : MonoBehaviour
         ///---------------------------------------------------------------------
 
         ///-------------------------Check jump----------------------------------
-        if (Input.GetButtonDown("Jump") && characterController.isGrounded)
+        if ( Input.GetButtonDown("Jump") && characterController.isGrounded && 
+             !animator.GetCurrentAnimatorStateInfo(0).IsName("RunningJumpLanding") &&
+             !animator.GetCurrentAnimatorStateInfo(0).IsName("RunningJump") )
         {
             animator.SetBool(Character.TransitionParameter.Jump.ToString(), true);
             animator.SetBool(Character.TransitionParameter.Move.ToString(), false);
@@ -108,7 +110,7 @@ public class Character : MonoBehaviour
         }
         ///---------------------------------------------------------------------
          
-        ///-----------------------No move backwards in jump--------------------------
+        ///--------------No new jumps and move backwards in jump---------------------
         if ( animator.GetCurrentAnimatorStateInfo(0).IsName("RunningJump") ||
              animator.GetCurrentAnimatorStateInfo(0).IsName("RunningJumpLanding"))
         {
@@ -128,6 +130,7 @@ public class Character : MonoBehaviour
         ///--------------------------No jump in turning-------------------------
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("RunningTurn"))
         {
+            move_direction.x = 0.0f;
             move_direction.y = 0.0f;
         }
         ///---------------------------------------------------------------------
