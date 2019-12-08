@@ -2,32 +2,29 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RunningJumpLandingForceTransition : StateMachineBehaviour
+public class RunningJumpLanding : StateMachineBehaviour
 {
-    [Range(0.01f, 1f)]
-    public float TransitionTiming;
-
     Character characterControl;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         characterControl = animator.GetComponentInParent<Character>();
+        animator.SetBool(Character.TransitionParameter.Jump.ToString(), false);
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if (stateInfo.normalizedTime >= TransitionTiming)
-        {
-            animator.SetBool(Character.TransitionParameter.ForceTransition.ToString(), true);
-        }
+        //animator.SetBool(Character.TransitionParameter.Jump.ToString(), false);
     }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        animator.SetBool(Character.TransitionParameter.ForceTransition.ToString(), false);
+        //animator.SetBool(Character.TransitionParameter.Jump.ToString(), false);
+        //animator.SetBool(Character.TransitionParameter.Turn.ToString(), false);
+        //animator.SetBool(Character.TransitionParameter.Move.ToString(), true);
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()
@@ -39,6 +36,6 @@ public class RunningJumpLandingForceTransition : StateMachineBehaviour
     // OnStateIK is called right after Animator.OnAnimatorIK()
     //override public void OnStateIK(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     //{
-    //    // Implement code that sets up animation IK (inverse kinematics)
+    // Implement code that sets up animation IK (inverse kinematics)
     //}
 }

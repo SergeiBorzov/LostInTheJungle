@@ -8,6 +8,7 @@ public class Character : MonoBehaviour
     [SerializeField] private float gravityScale = 5.0f;
     [SerializeField] private float jumpForce = 2.0f;
     [SerializeField] private float pushForce = 5.0f;
+    [SerializeField] private float slowingDownСoeff = 5.0f;
 
     public enum TransitionParameter
     {
@@ -21,14 +22,12 @@ public class Character : MonoBehaviour
     public Animator animator;
     private CharacterController characterController;
 
-
     private Vector3 move_direction = new Vector3(0.0f, 0.0f, 0.0f);
     private Vector3 movementOffset = new Vector3(0.0f, 0.0f, 0.0f);
 
     /* Useful flags */
     private bool lookingRight = true;
 
-  
     void Start() {
         characterController = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
@@ -48,7 +47,7 @@ public class Character : MonoBehaviour
         lookingRight = !lookingRight;
     }
 
-    public void StandingJump()
+    public void StandingJump() // вызывается внутри самой анимации (не в автомате)
     {
         //move_direction.y = 0.0f;
         move_direction.y = jumpForce;
@@ -57,6 +56,7 @@ public class Character : MonoBehaviour
 
     void Update() {
         // move_direction = new Vector3(0.0f, 0.0f, 0.0f);
+
         ////------------------------Check move----------------------------------
         float horizontal_move = Input.GetAxis("Horizontal");
         if (Mathf.Abs(horizontal_move) > 0.01f)
@@ -104,20 +104,49 @@ public class Character : MonoBehaviour
                 //move_direction.y = 0.0f;
                 move_direction.y = jumpForce;
             }
+
+        }
+        ///---------------------------------------------------------------------
+         
+        ///-----------------------No move backwards in jump--------------------------
+        if ( animator.GetCurrentAnimatorStateInfo(0).IsName("RunningJump") ||
+             animator.GetCurrentAnimatorStateInfo(0).IsName("RunningJumpLanding"))
+        {
+            if (lookingRight && horizontal_move < 0.0f)
+            {
+                move_direction.x = -(move_direction.x + slowingDownСoeff);
+            }
+
+            if (!lookingRight && horizontal_move > 0.0f)
+            {
+                move_direction.x = -(move_direction.x - slowingDownСoeff);
+            }
+
+        }
+        ///---------------------------------------------------------------------
+
+        ///--------------------------No jump in turning-------------------------
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("RunningTurn"))
+        {
+            move_direction.y = 0.0f;
         }
         ///---------------------------------------------------------------------
 
         ///-------------------------Check turn----------------------------------
-        if (horizontal_move > 0.0f && !lookingRight)
+        if ( !animator.GetCurrentAnimatorStateInfo(0).IsName("RunningJump") && 
+             !animator.GetCurrentAnimatorStateInfo(0).IsName("RunningJumpLanding") )
         {
-            //Flip();
-            animator.SetBool(TransitionParameter.Turn.ToString(), true);
-        }
+            if (horizontal_move > 0.0f && !lookingRight)
+            {
+                //Flip();
+                animator.SetBool(TransitionParameter.Turn.ToString(), true);
+            }
 
-        if (horizontal_move < 0.0f && lookingRight)
-        {
-            //Flip();
-            animator.SetBool(TransitionParameter.Turn.ToString(), true);
+            if (horizontal_move < 0.0f && lookingRight)
+            {
+                //Flip();
+                animator.SetBool(TransitionParameter.Turn.ToString(), true);
+            }
         }
         ///---------------------------------------------------------------------
 
