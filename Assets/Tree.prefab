@@ -102,7 +102,7 @@ MonoBehaviour:
   m_Name: Tree Data
   m_EditorClassIdentifier: 
   _uniqueID: 2426
-  materialHash: cc1396ec0650f2091c576ad2463430cb6291456
+  materialHash: bdf94aba927cb3bcc91ab5f50be10c856291456
   root:
     _uniqueID: 1
     seed: 1234
@@ -10580,7 +10580,7 @@ Material:
   m_Shader: {fileID: 10604, guid: 0000000000000000f000000000000000, type: 0}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
+  m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}

@@ -30,6 +30,7 @@ Shader "Custom/WaterShader"
 
 		[Header(Reflection)]
 		_ReflectionMap("Reflection Texture", 2D) = "white" {}
+		_Reflection("Reflection", Range(0, 1)) = 0.25
 
 		[Header(Transparency)]
 		_Alpha("Alpha", Range(0.1, 1)) = 0.76
@@ -139,6 +140,7 @@ Shader "Custom/WaterShader"
         fixed4 _WaterDarkColor;
 		fixed4 _WaterLightColor;
 		float4 _ReflectionMap_ST;
+		half _Reflection;
 
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
@@ -170,8 +172,9 @@ Shader "Custom/WaterShader"
 			//screenPos = TRANSFORM_TEX(screenPos, _ReflectionMap);
 		
 			float3 reflectionColor = tex2D(_ReflectionMap, screenPos);
-			o.Emission = reflectionColor;
+			//o.Emission = reflectionColor;
 			o.Albedo = lerp(lerp(_WaterDarkColor, _WaterLightColor, fresnelCoeff), foamColor, depthDifference);
+			o.Emission = reflectionColor * _Reflection;
             o.Smoothness = _Glossiness;
 
 			/* Transparency */
