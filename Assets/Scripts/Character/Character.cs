@@ -50,8 +50,9 @@ public class Character : MonoBehaviour
 
     public void StandingJump()
     {
-        move_direction.y = 0.0f;
+        //move_direction.y = 0.0f;
         move_direction.y = jumpForce;
+        //Debug.Log("Character y velocity" + move_direction.y);
     }
 
     void Update() {
@@ -71,14 +72,36 @@ public class Character : MonoBehaviour
 
         ///---------------------------------------------------------------------
 
+        ///-----------------------Check grounded--------------------------------
+        if (characterController.isGrounded)
+        {
+            animator.SetBool(TransitionParameter.isGrounded.ToString(), true);
+
+            if ( !animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormalPrep") &&
+                 !animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormalLanding") &&
+                 !animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormal") )
+            {
+                //Debug.Log("Jumping");
+                move_direction.y = -9.8f;
+            }
+            //move_direction.y = -9.8f;
+        }
+        else
+        {
+            animator.SetBool(TransitionParameter.isGrounded.ToString(), false);
+            move_direction += Physics.gravity * gravityScale * Time.deltaTime;
+        }
+        ///---------------------------------------------------------------------
+
         ///-------------------------Check jump----------------------------------
         if (Input.GetButtonDown("Jump") && characterController.isGrounded)
         {
             animator.SetBool(Character.TransitionParameter.Jump.ToString(), true);
             animator.SetBool(Character.TransitionParameter.Move.ToString(), false);
+            animator.SetBool(Character.TransitionParameter.Turn.ToString(), false);
             if (Mathf.Abs(horizontal_move) > 0.01f)
             {
-                move_direction.y = 0.0f;
+                //move_direction.y = 0.0f;
                 move_direction.y = jumpForce;
             }
         }
@@ -104,29 +127,18 @@ public class Character : MonoBehaviour
         }
 
         ///------------------Don't move in standing jump------------------------
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormalPrep") || animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormalLanding"))
+        if ( animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormalPrep") ||
+             animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormalLanding") || 
+             animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormal") )
         {
             //Debug.Log("Jumping");
             move_direction.x = 0.0f;
         }
         ///---------------------------------------------------------------------
 
-        ///-----------------------Check grounded--------------------------------
-        if (characterController.isGrounded)
-        {
-            animator.SetBool(TransitionParameter.isGrounded.ToString(), true);
-            //move_direction.y = 0.0f;
-        }
-        else
-        {
-            animator.SetBool(TransitionParameter.isGrounded.ToString(), false);
-            move_direction += Physics.gravity * gravityScale * Time.deltaTime;
-        }
-        ///---------------------------------------------------------------------
-
         characterController.Move(movementOffset + move_direction * Time.deltaTime);
 
-        Debug.Log("Character y velocity" + move_direction.y);
+       // Debug.Log("Character y velocity" + move_direction.y);
     }
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
