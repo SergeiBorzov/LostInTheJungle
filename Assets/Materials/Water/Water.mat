@@ -102,7 +102,7 @@ Material:
     - _DetailNormalMapScale: 1
     - _Displacement: 0.24
     - _DstBlend: 0
-    - _FoamOffset: 0.25
+    - _FoamOffset: 0
     - _FresnelPower: 1
     - _GlossMapScale: 1
     - _Glossiness: 0.811
@@ -112,6 +112,7 @@ Material:
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
+    - _Reflection: 0.815
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
@@ -128,6 +129,6 @@ Material:
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _NormalMapScale: {r: 1, g: 1, b: 0, a: 0}
     - _NormalMapTiling: {r: 1, g: 1, b: 0, a: 0}
-    - _WaterDarkColor: {r: 0.025542913, g: 0.14994894, b: 0.7735849, a: 1}
-    - _WaterLightColor: {r: 0.2232111, g: 0.3588884, b: 0.8301887, a: 1}
+    - _WaterDarkColor: {r: 0, g: 0.107142925, b: 1, a: 1}
+    - _WaterLightColor: {r: 0.08387325, g: 0.057493784, b: 0.7169812, a: 1}
     - _WaveDirection: {r: -0.5, g: -0.3, b: 0, a: 0}
