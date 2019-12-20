@@ -18,6 +18,7 @@ public class ReflectionCamera : MonoBehaviour
     void Start()
     {
         reflectionCamera = gameObject.AddComponent<Camera>();
+        reflectionCamera.enabled = false;
     }
 
     // Update is called once per frame
@@ -66,6 +67,7 @@ public class ReflectionCamera : MonoBehaviour
         reflectionCamera.projectionMatrix = reflectionCamera.CalculateObliqueMatrix(clipPlaneCameraSpace);
 
         reflectionCamera.targetTexture = reflectionTexture;
+
         reflectionCamera.Render();
     }
 

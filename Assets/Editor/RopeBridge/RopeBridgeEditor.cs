@@ -8,8 +8,6 @@ using UnityEditor;
 [CustomEditor(typeof(RopeBridge))]
 public class RopeBridgeEditor : Editor
 {
-    // Start is called before the first frame update
-
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
