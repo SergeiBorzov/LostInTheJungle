@@ -41,7 +41,14 @@ public class RopeBridge : MonoBehaviour
                 if (i != 0)
                 {
                     HingeJoint hingeJoint = planks[i].GetComponent<HingeJoint>();
+                    hingeJoint.anchor = new Vector3(0.5f, 0.5f, 0);
                     hingeJoint.connectedBody = planks[i - 1].GetComponent<Rigidbody>();
+                    hingeJoint.useLimits = true;
+                    hingeJoint.limits = new JointLimits
+                    {
+                        min = -5,
+                        max = 5
+                    };
                 }
 
                 if (i == planksNumber - 1)

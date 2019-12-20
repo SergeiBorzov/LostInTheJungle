@@ -11,14 +11,10 @@ public class ReflectionCamera : MonoBehaviour
     [SerializeField]
     private Transform waterTransform;
 
-    [SerializeField]
-    private RenderTexture reflectionTexture;
-  
     private Camera reflectionCamera;
     void Start()
     {
-        reflectionCamera = gameObject.AddComponent<Camera>();
-        reflectionCamera.enabled = false;
+        reflectionCamera = gameObject.GetComponent<Camera>();
     }
 
     // Update is called once per frame
@@ -29,15 +25,11 @@ public class ReflectionCamera : MonoBehaviour
         
     }
 
-    private void OnPostRender()
-    {
-        RenderReflection();
-    }
-
-    private void RenderReflection()
+    public void RenderReflection()
     {
         Camera mainCamera = Camera.main;
-        reflectionCamera.CopyFrom(mainCamera);
+        reflectionCamera.transform.position = mainCamera.transform.position;
+        reflectionCamera.transform.rotation = mainCamera.transform.rotation;
 
         Vector3 cameraDirectionWS = mainCamera.transform.forward;
         Vector3 cameraUpWS = mainCamera.transform.up;
@@ -65,9 +57,6 @@ public class ReflectionCamera : MonoBehaviour
 
 
         reflectionCamera.projectionMatrix = reflectionCamera.CalculateObliqueMatrix(clipPlaneCameraSpace);
-
-        reflectionCamera.targetTexture = reflectionTexture;
-
         reflectionCamera.Render();
     }
 

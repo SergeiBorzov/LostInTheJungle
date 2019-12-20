@@ -217,8 +217,8 @@ public class Character : MonoBehaviour
     }
 
     void Update() {
-       
 
+        Debug.Log(move_direction.y);
         if (!onRope)
         {
             Movement();
