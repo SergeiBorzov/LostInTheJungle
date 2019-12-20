@@ -11,7 +11,7 @@ public class Rope : MonoBehaviour
     [SerializeField]
     private float ropeMaxAngle;
     [SerializeField]
-    private int ropeDrawPointsCount;
+    private Material ropeMaterial;
 
     private bool ropeBuilded = false;
 
@@ -36,15 +36,13 @@ public class Rope : MonoBehaviour
     private void DrawRope()
     {
         List<Vector3> positions = new List<Vector3>();
-        lineRenderer.positionCount = ropeDrawPointsCount;
+        lineRenderer.positionCount = 2;
 
         Vector3 ropeCenter = rope.transform.position + ropeCollider.center;
 
-        for (int i = 0; i < ropeDrawPointsCount; i++)
-        {
-            positions.Add(ropeCenter - rope.transform.up * (ropeHeight / 2.0f) + i*rope.transform.up * ropeHeight / (float)ropeDrawPointsCount);
-            positions.Add(ropeCenter + rope.transform.up * (ropeHeight / 2.0f));
-        }
+       
+        positions.Add(ropeCenter - rope.transform.up * (ropeHeight / 2.0f));
+        positions.Add(ropeCenter + rope.transform.up * (ropeHeight / 2.0f));
         lineRenderer.SetPositions(positions.ToArray());
     }
 
@@ -91,9 +89,10 @@ public class Rope : MonoBehaviour
             };
 
             lineRenderer = gameObject.AddComponent<LineRenderer>();
-            lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
+            lineRenderer.material = ropeMaterial;
             lineRenderer.startWidth = ropeRadius;
             lineRenderer.endWidth = ropeRadius;
+            lineRenderer.numCapVertices = 5;
 
           
 

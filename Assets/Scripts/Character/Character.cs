@@ -61,8 +61,6 @@ public class Character : MonoBehaviour
     
     void Movement()
     {
-        // move_direction = new Vector3(0.0f, 0.0f, 0.0f);
-
         ////------------------------Check move----------------------------------
         float horizontal_move = Input.GetAxis("Horizontal");
         if (Mathf.Abs(horizontal_move) > 0.01f)
@@ -73,7 +71,11 @@ public class Character : MonoBehaviour
         {
             animator.SetBool(TransitionParameter.Move.ToString(), false);
         }
+
+        
         move_direction.x = horizontal_move * runSpeed;
+       
+       
 
 
         ///---------------------------------------------------------------------
@@ -88,10 +90,8 @@ public class Character : MonoBehaviour
                  !animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormalLanding") &&
                  !animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormal"))
             {
-                //Debug.Log("Jumping");
                 move_direction.y = -9.8f;
             }
-            //move_direction.y = -9.8f;
         }
         else
         {
@@ -110,7 +110,6 @@ public class Character : MonoBehaviour
             animator.SetBool(Character.TransitionParameter.Turn.ToString(), false);
             if (Mathf.Abs(horizontal_move) > 0.01f)
             {
-                //move_direction.y = 0.0f;
                 move_direction.y = jumpForce;
             }
 
@@ -148,13 +147,11 @@ public class Character : MonoBehaviour
         {
             if (horizontal_move > 0.0f && !lookingRight)
             {
-                //Flip();
                 animator.SetBool(TransitionParameter.Turn.ToString(), true);
             }
 
             if (horizontal_move < 0.0f && lookingRight)
             {
-                //Flip();
                 animator.SetBool(TransitionParameter.Turn.ToString(), true);
             }
         }
@@ -170,15 +167,11 @@ public class Character : MonoBehaviour
              animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormalLanding") ||
              animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormal"))
         {
-            //Debug.Log("Jumping");
             move_direction.x = 0.0f;
         }
         ///---------------------------------------------------------------------
 
-        Debug.Log(characterController.isGrounded);
         characterController.Move(movementOffset + move_direction * Time.deltaTime);
-
-        // Debug.Log("Character y velocity" + move_direction.y);
     }
 
     void MovementOnRope()
@@ -204,17 +197,21 @@ public class Character : MonoBehaviour
             characterController.enabled = true;
             ropeCollider.enabled = false;
             transform.parent = null;
-            if (Input.GetAxisRaw("Horizontal") > 0)
+
+            float horizontal = Input.GetAxisRaw("Horizontal");
+            if (horizontal > 0)
             {
                 transform.rotation = Quaternion.Euler(-transform.rotation.x, 90, 0);
-
             }
             else
             {
                 transform.rotation = Quaternion.Euler(-transform.rotation.x, -90, 0);
             }
+
+
             onRope = false;
             move_direction.y = jumpForce;
+            move_direction.x = horizontal * runSpeed;
 
         }
     }
@@ -246,7 +243,7 @@ public class Character : MonoBehaviour
         if (body == null || body.isKinematic)
             return;
 
-        if (hit.gameObject.CompareTag("Rope")) {
+        if (hit.gameObject.CompareTag("Rope") && !characterController.isGrounded) {
             onRope = true;
             ropeTransform = hit.gameObject.transform;
             ropeRigidbody = ropeTransform.gameObject.GetComponent<Rigidbody>();
