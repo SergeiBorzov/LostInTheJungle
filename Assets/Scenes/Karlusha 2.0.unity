@@ -776,31 +776,6 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 17694db872588974fb24a6e2db25fa39, type: 2}
-    - target: {fileID: 5797815509073197197, guid: 8d1bccc7d7f39de48b6da6e9ee512c2b,
-        type: 3}
-      propertyPath: m_Radius
-      value: 0.32
-      objectReference: {fileID: 0}
-    - target: {fileID: 5797815509073197197, guid: 8d1bccc7d7f39de48b6da6e9ee512c2b,
-        type: 3}
-      propertyPath: m_Height
-      value: 1.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 5797815509073197197, guid: 8d1bccc7d7f39de48b6da6e9ee512c2b,
-        type: 3}
-      propertyPath: m_Center.y
-      value: 0.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 5797815509073197187, guid: 8d1bccc7d7f39de48b6da6e9ee512c2b,
-        type: 3}
-      propertyPath: jumpForce
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 5797815509073197187, guid: 8d1bccc7d7f39de48b6da6e9ee512c2b,
-        type: 3}
-      propertyPath: "slowingDown\u0421oeff"
-      value: 2
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8d1bccc7d7f39de48b6da6e9ee512c2b, type: 3}
 --- !u!1 &963194225

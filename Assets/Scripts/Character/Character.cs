@@ -8,6 +8,7 @@ public class Character : MonoBehaviour
     [SerializeField] private float gravityScale = 5.0f;
     [SerializeField] private float jumpForce = 2.0f;
     [SerializeField] private float pushForce = 5.0f;
+
     [SerializeField] private float slowingDownСoeff = 5.0f;
 
     public enum TransitionParameter
@@ -22,11 +23,16 @@ public class Character : MonoBehaviour
     public Animator animator;
     private CharacterController characterController;
 
+    private Transform ropeTransform;
+    private Rigidbody ropeRigidbody;
+    private CapsuleCollider ropeCollider;
+
     private Vector3 move_direction = new Vector3(0.0f, 0.0f, 0.0f);
     private Vector3 movementOffset = new Vector3(0.0f, 0.0f, 0.0f);
 
     /* Useful flags */
     private bool lookingRight = true;
+    private bool onRope = false;
 
     void Start() {
         characterController = GetComponent<CharacterController>();
@@ -49,14 +55,12 @@ public class Character : MonoBehaviour
 
     public void StandingJump() // вызывается внутри самой анимации (не в автомате)
     {
-        //move_direction.y = 0.0f;
         move_direction.y = jumpForce;
-        //Debug.Log("Character y velocity" + move_direction.y);
     }
 
-    void Update() {
-        // move_direction = new Vector3(0.0f, 0.0f, 0.0f);
-
+    
+    void Movement()
+    {
         ////------------------------Check move----------------------------------
         float horizontal_move = Input.GetAxis("Horizontal");
         if (Mathf.Abs(horizontal_move) > 0.01f)
@@ -68,23 +72,26 @@ public class Character : MonoBehaviour
             animator.SetBool(TransitionParameter.Move.ToString(), false);
         }
 
+        
         move_direction.x = horizontal_move * runSpeed;
+       
+       
+
 
         ///---------------------------------------------------------------------
 
         ///-----------------------Check grounded--------------------------------
         if (characterController.isGrounded)
         {
+            
             animator.SetBool(TransitionParameter.isGrounded.ToString(), true);
 
-            if ( !animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormalPrep") &&
+            if (!animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormalPrep") &&
                  !animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormalLanding") &&
-                 !animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormal") )
+                 !animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormal"))
             {
-                //Debug.Log("Jumping");
                 move_direction.y = -9.8f;
             }
-            //move_direction.y = -9.8f;
         }
         else
         {
@@ -103,7 +110,6 @@ public class Character : MonoBehaviour
             animator.SetBool(Character.TransitionParameter.Turn.ToString(), false);
             if (Mathf.Abs(horizontal_move) > 0.01f)
             {
-                //move_direction.y = 0.0f;
                 move_direction.y = jumpForce;
             }
 
@@ -141,13 +147,11 @@ public class Character : MonoBehaviour
         {
             if (horizontal_move > 0.0f && !lookingRight)
             {
-                //Flip();
                 animator.SetBool(TransitionParameter.Turn.ToString(), true);
             }
 
             if (horizontal_move < 0.0f && lookingRight)
             {
-                //Flip();
                 animator.SetBool(TransitionParameter.Turn.ToString(), true);
             }
         }
@@ -159,34 +163,117 @@ public class Character : MonoBehaviour
         }
 
         ///------------------Don't move in standing jump------------------------
-        if ( animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormalPrep") ||
-             animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormalLanding") || 
-             animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormal") )
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormalPrep") ||
+             animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormalLanding") ||
+             animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormal"))
         {
-            //Debug.Log("Jumping");
             move_direction.x = 0.0f;
         }
         ///---------------------------------------------------------------------
 
         characterController.Move(movementOffset + move_direction * Time.deltaTime);
-
-       // Debug.Log("Character y velocity" + move_direction.y);
     }
 
-    private void OnControllerColliderHit(ControllerColliderHit hit)
+    void MovementOnRope()
     {
-        Rigidbody body = hit.collider.attachedRigidbody;
-
-        // no rigidbody
-        if (body == null || body.isKinematic)
-            return;
-
-        // We want to push objects below us
-        if (hit.moveDirection.y < -0.3f)
+        float forceCoefficient;
+        float swingPower = 0.1f;
+        /* Swinging */
+        if (Input.GetButton("Horizontal") && Input.GetAxisRaw("Horizontal") > 0)
         {
-            Vector3 pushDir = new Vector3(0, hit.moveDirection.y, 0);
-            body.velocity = pushDir * pushForce;
+
+            forceCoefficient = Mathf.Clamp(Vector3.Dot(ropeTransform.up, Vector3.right), 0, 1);
+            ropeRigidbody.AddForce(swingPower*forceCoefficient*Vector3.right, ForceMode.Impulse);
+
+        }
+        else if (Input.GetButton("Horizontal") && Input.GetAxisRaw("Horizontal") < 0)
+        {
+            forceCoefficient = Mathf.Clamp(Vector3.Dot(ropeTransform.up, Vector3.left), 0, 1);
+            ropeRigidbody.AddForce(swingPower*forceCoefficient * Vector3.left, ForceMode.Impulse);
+        }
+
+        if (Input.GetButtonDown("Jump"))
+        {
+            characterController.enabled = true;
+            ropeCollider.enabled = false;
+            transform.parent = null;
+
+            float horizontal = Input.GetAxisRaw("Horizontal");
+            if (horizontal > 0)
+            {
+                transform.rotation = Quaternion.Euler(-transform.rotation.x, 90, 0);
+            }
+            else
+            {
+                transform.rotation = Quaternion.Euler(-transform.rotation.x, -90, 0);
+            }
+
+
+            onRope = false;
+            move_direction.y = jumpForce;
+            move_direction.x = horizontal * runSpeed;
+
         }
     }
 
+    void Update() {
+       
+
+        if (!onRope)
+        {
+            Movement();
+        }
+        else
+        {
+            MovementOnRope();
+        }
+    }
+
+
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        
+        if (hit.collider != ropeCollider && ropeCollider != null)
+        {
+            ropeCollider.enabled = true;
+        }
+
+        Rigidbody body = hit.collider.attachedRigidbody;
+        
+        if (body == null || body.isKinematic)
+            return;
+
+        if (hit.gameObject.CompareTag("Rope") && !characterController.isGrounded) {
+            onRope = true;
+            ropeTransform = hit.gameObject.transform;
+            ropeRigidbody = ropeTransform.gameObject.GetComponent<Rigidbody>();
+            ropeCollider = ropeTransform.gameObject.GetComponent<CapsuleCollider>();
+            characterController.enabled = false;
+            transform.SetParent(ropeTransform);
+
+            // We want to push objects in front of us
+            if (Mathf.Abs(hit.moveDirection.x) > 0.3f)
+            {
+                Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, 0);
+                body.velocity = pushDir * pushForce;
+            }
+        }
+        else
+        {
+            // We want to push objects below us
+            if (hit.moveDirection.y < -0.3f)
+            {
+                Vector3 pushDir = new Vector3(0, hit.moveDirection.y, 0);
+                body.velocity = pushDir * pushForce;
+            }
+
+            // We want to push objects in front of us
+            if (Mathf.Abs(hit.moveDirection.x) > 0.3f)
+            {
+                Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, 0);
+                body.velocity = pushDir * pushForce;
+            }
+        }
+
+    }
 }
