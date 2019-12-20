@@ -432,10 +432,10 @@ AnimatorStateMachine:
     m_Position: {x: -520, y: 300, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 2965488148369147291}
-    m_Position: {x: 280, y: 140, z: 0}
+    m_Position: {x: 90, y: 140, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 7031748341922932874}
-    m_Position: {x: 40, y: 250, z: 0}
+    m_Position: {x: -20, y: 220, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -581,7 +581,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: RunningTurn
-  m_Speed: 1.5
+  m_Speed: 2
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -7302769148601052219}
@@ -631,7 +631,7 @@ AnimatorState:
   - {fileID: 3821027635227219263}
   - {fileID: -1300480267582204401}
   m_Position: {x: 50, y: 50, z: 0}
-  m_IKOnFeet: 0
+  m_IKOnFeet: 1
   m_WriteDefaultValues: 1
   m_Mirror: 0
   m_SpeedParameterActive: 0
@@ -740,7 +740,7 @@ AnimatorStateTransition:
   m_TransitionDuration: 0.02059257
   m_TransitionOffset: 0
   m_ExitTime: 0.96831894
-  m_HasExitTime: 1
+  m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
@@ -911,7 +911,7 @@ AnimatorState:
   m_StateMachineBehaviours:
   - {fileID: -3342229695283429500}
   m_Position: {x: 50, y: 50, z: 0}
-  m_IKOnFeet: 0
+  m_IKOnFeet: 1
   m_WriteDefaultValues: 1
   m_Mirror: 0
   m_SpeedParameterActive: 0

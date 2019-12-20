@@ -21,8 +21,8 @@ public class RunningTurn : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        characterControl.Flip();
-        animator.SetBool(Character.TransitionParameter.Turn.ToString(), false);
+        characterControl.Flip(); // это должно быть именно тут 
+        animator.SetBool(Character.TransitionParameter.Turn.ToString(), false); // это должно быть именно тут 
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()

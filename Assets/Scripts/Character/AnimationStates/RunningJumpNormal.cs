@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RunningJumpLanding : StateMachineBehaviour
+public class RunningJumpNormal : StateMachineBehaviour
 {
     Character characterControl;
 
@@ -21,7 +21,7 @@ public class RunningJumpLanding : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        animator.SetBool(Character.TransitionParameter.Jump.ToString(), false);
+        //animator.SetBool(Character.TransitionParameter.Jump.ToString(), false);
         //animator.SetBool(Character.TransitionParameter.Turn.ToString(), false);
         //animator.SetBool(Character.TransitionParameter.Move.ToString(), true);
     }
