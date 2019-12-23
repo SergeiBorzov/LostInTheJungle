@@ -20,10 +20,10 @@ public class Character : MonoBehaviour
         isGrounded,
     }
 
-    public Animator animator;
+    private Animator animator;
     private CharacterController characterController;
 
-    private Transform ropeTransform;
+    private GameObject rope;
     private Rigidbody ropeRigidbody;
     private CapsuleCollider ropeCollider;
 
@@ -182,13 +182,13 @@ public class Character : MonoBehaviour
         if (Input.GetButton("Horizontal") && Input.GetAxisRaw("Horizontal") > 0)
         {
 
-            forceCoefficient = Mathf.Clamp(Vector3.Dot(ropeTransform.up, Vector3.right), 0, 1);
+            forceCoefficient = Mathf.Clamp(Vector3.Dot(rope.transform.up, Vector3.right), 0, 1);
             ropeRigidbody.AddForce(swingPower*forceCoefficient*Vector3.right, ForceMode.Impulse);
 
         }
         else if (Input.GetButton("Horizontal") && Input.GetAxisRaw("Horizontal") < 0)
         {
-            forceCoefficient = Mathf.Clamp(Vector3.Dot(ropeTransform.up, Vector3.left), 0, 1);
+            forceCoefficient = Mathf.Clamp(Vector3.Dot(rope.transform.up, Vector3.left), 0, 1);
             ropeRigidbody.AddForce(swingPower*forceCoefficient * Vector3.left, ForceMode.Impulse);
         }
 
@@ -198,6 +198,7 @@ public class Character : MonoBehaviour
             ropeCollider.enabled = false;
             transform.parent = null;
 
+            var ropeScript = rope.GetComponentInParent<Rope>();
             float horizontal = Input.GetAxisRaw("Horizontal");
             if (horizontal > 0)
             {
@@ -217,8 +218,6 @@ public class Character : MonoBehaviour
     }
 
     void Update() {
-
-        Debug.Log(move_direction.y);
         if (!onRope)
         {
             Movement();
@@ -245,11 +244,17 @@ public class Character : MonoBehaviour
 
         if (hit.gameObject.CompareTag("Rope") && !characterController.isGrounded) {
             onRope = true;
-            ropeTransform = hit.gameObject.transform;
-            ropeRigidbody = ropeTransform.gameObject.GetComponent<Rigidbody>();
-            ropeCollider = ropeTransform.gameObject.GetComponent<CapsuleCollider>();
+   
+
+            // WS - hit.point
+            // vec3 = topPoint - hit.point = length первой штуки
+            // SetTensioned height = 
+            rope = hit.gameObject;
+            var ropeScript = rope.GetComponentInParent<Rope>();
+            ropeRigidbody = rope.GetComponent<Rigidbody>();
+            ropeCollider = rope.GetComponent<CapsuleCollider>();
             characterController.enabled = false;
-            transform.SetParent(ropeTransform);
+            transform.SetParent(rope.transform);
 
             // We want to push objects in front of us
             if (Mathf.Abs(hit.moveDirection.x) > 0.3f)
