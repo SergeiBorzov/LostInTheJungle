@@ -40,17 +40,15 @@ public class Rope : MonoBehaviour
         Vector3[] ropePoints = new Vector3[5];
 
 
-        /* Somewhere here bug */ // Why??
-        List<Transform> segmentTransforms = new List<Transform>(gameObject.GetComponentsInChildren<Transform>());
-        segmentTransforms.Remove(transform);
-        segmentTransforms.Remove(transform.Find("Top"));
+        List<CapsuleCollider> segmentTransforms = new List<CapsuleCollider>(gameObject.GetComponentsInChildren<CapsuleCollider>());
+
         for (int i = 0; i < 4; i++)
         {            
             if (i == 0)
             {
-                ropePoints[0] = segmentTransforms[i].position + segmentTransforms[i].up * (ropeHeight / 8.0f);
+                ropePoints[0] = segmentTransforms[i].transform.position + segmentTransforms[i].transform.up * (ropeHeight / 8.0f);
             }
-            ropePoints[i + 1] = segmentTransforms[i].position - segmentTransforms[i].up * (ropeHeight / 8.0f);
+            ropePoints[i + 1] = segmentTransforms[i].transform.position - segmentTransforms[i].transform.up * (ropeHeight / 8.0f);
         }
 
         List<Vector3> curvePositions = new List<Vector3>();
@@ -81,13 +79,27 @@ public class Rope : MonoBehaviour
         return points[0];
     }
 
+    public CapsuleCollider GiveCurrentSegment(Vector3 worldSpacePosition)
+    {
+        CapsuleCollider[] colliders = gameObject.GetComponentsInChildren<CapsuleCollider>();
+
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            if( worldSpacePosition.y > (colliders[i].transform.position - (colliders[i].transform.up*ropeHeight/8.0f)).y
+                && worldSpacePosition.y < (colliders[i].transform.position + (colliders[i].transform.up * ropeHeight / 8.0f)).y)
+            {
+                return colliders[i];
+            }
+        }
+
+        return null;
+    }
 
     public void CreateRope()
     {
 
         if (!ropeBuilded)
         {
-            Rigidbody topRigidbody = CreateTop();
             GameObject[] segments = new GameObject[4];
 
 
@@ -111,15 +123,6 @@ public class Rope : MonoBehaviour
                 HingeJoint hingeJoint = segments[i].AddComponent<HingeJoint>();
                 hingeJoint.axis = Vector3.forward;
                 hingeJoint.anchor = new Vector3(0.0f, ropeHeight / 8.0f, 0.0f);
-                if (i == 0)
-                {
-                    hingeJoint.connectedBody = topRigidbody;
-                }
-                else
-                {
-                    hingeJoint.connectedBody = segments[i - 1].GetComponent<Rigidbody>();
-                }
-
                 hingeJoint.useLimits = true;
                 hingeJoint.enablePreprocessing = false;
                 hingeJoint.limits = new JointLimits
@@ -127,6 +130,17 @@ public class Rope : MonoBehaviour
                     min = -ropeMaxAngle,
                     max = ropeMaxAngle
                 };
+
+                if (i == 0)
+                {
+                    continue;
+                }
+                else
+                {
+                    hingeJoint.connectedBody = segments[i - 1].GetComponent<Rigidbody>();
+                }
+
+               
             }
 
             // Adding lineRenderer
@@ -140,41 +154,71 @@ public class Rope : MonoBehaviour
         }
     }
 
-    /* 
-    public void SetTensionHeight(Vector3 hitPoint)
+     
+   /* public void SetTensionHeight(Vector3 hitPoint)
     {
-        
-        Vector3 topPosition = transform.Find("Top").transform.position;
-        float length = Vector3.Distance(topPosition, hitPoint);
-        float ratio = length / ropeHeight;
 
         var tensionedPart = transform.Find("Segment0").gameObject;
         var tensionedCollider = tensionedPart.GetComponent<CapsuleCollider>();
-        float tensionedPartLength = ropeHeight * ratio;
-        tensionedPart.transform.localPosition = new Vector3(0.0f, ropeHeight / 2.0f - tensionedPartLength/2.0f, 0.0f);
-        tensionedCollider.center = new Vector3(0.0f, 0.0f, 0.0f);
-        tensionedCollider.height = tensionedPartLength;
+
+        var topPosition = tensionedCollider.center + new Vector3(0.0f, tensionedCollider.height / 2.0f, 0.0f);
+        var hitPosition = tensionedCollider.transform.InverseTransformPoint(hitPoint);
+        float length = Vector3.Distance(topPosition, hitPosition);
+
+        //tensionedPart.transform.localPosition = new Vector3(0.0f, ropeHeight / 2.0f - length / 2.0f, 0.0f);
+        tensionedPart.transform.localPosition = new Vector3(0.0f, ropeHeight / 2.0f - length, 0.0f);
+        //tensionedCollider.center = new Vector3(0.0f, ropeHeight/2.0f - length, 0.0f);
+        tensionedCollider.height = length;
+
+        var hingeJoint = tensionedPart.GetComponent<HingeJoint>();
+        hingeJoint.anchor = new Vector3(0.0f, length / 2.0f, 0.0f);
+
+
+        //tensionedPart.transform.localPosition = new Vector3(0.0f, ropeHeight / 2.0f - tensionedPartLength/2.0f, 0.0f);
+
         // Other colliders!
         for (int i = 1; i <= 3; i++)
-        {
+         {
+            
             var tailPart = transform.Find("Segment" + i).gameObject;
-            var tailCollider = tailPart.GetComponent<CapsuleCollider>();
-            float colliderLength = (ropeHeight - ropeHeight * ratio) / 3.0f;
-            tailPart.transform.localPosition = new Vector3(0.0f, ropeHeight / 2.0f - tensionedPartLength - colliderLength/2.0f - (i-1)*colliderLength, 0.0f);
-            tailCollider.center = new Vector3(0.0f, 0.0f, 0.0f);
-            tailCollider.height = colliderLength;
            
-        }
+            var tailCollider = tailPart.GetComponent<CapsuleCollider>();
+            var tailJoint = tailPart.GetComponent<HingeJoint>();
+            tailCollider.enabled = false;
+            //float colliderLength = (ropeHeight - length) / 3.0f;
+           //tailJoint.anchor = new Vector3(0.0f, colliderLength, 0.0f);
+
+            //tailPart.transform.localPosition = new Vector3(0.0f, ropeHeight / 2.0f - length - colliderLength / 2.0f - (i-1) * colliderLength);
+           // tailCollider.height = colliderLength;
+
+           /* if (i > 1)
+            {
+                
+            }
+            else
+            {
+                //tailPart.transform.localPosition = hitPosition;
+                Debug.Log(hitPosition);
+                //tailPart.transform.localPosition = new Vector3(0.0f, ropeHeight / 2.0f - length - colliderLength/2.0f - (i-1)*colliderLength, 0.0f);
+                //tailCollider.center = tailPart.transform.localPosition - new Vector3(0.0f, colliderLength/2.0f + (i-1) * colliderLength, 0.0f);
+                //tailCollider.center = new Vector3(0.0f, colliderLe;
+                
+                //tailCollider.center = hitPosition;
+            }
+
+           
+
+           
+
+         }
 
 
 
 
-    }
-
-    */
+    }*/
 
 
-    private Rigidbody CreateTop()
+    /*private Rigidbody CreateTop()
     {
         GameObject top = new GameObject("Top");
         top.transform.SetParent(transform);
@@ -184,7 +228,7 @@ public class Rope : MonoBehaviour
         topRigidbody.isKinematic = true;
 
         return topRigidbody;
-    }
+    }*/
 
     
 

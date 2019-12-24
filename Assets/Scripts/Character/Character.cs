@@ -24,6 +24,7 @@ public class Character : MonoBehaviour
     private CharacterController characterController;
 
     private GameObject rope;
+    private Rope ropeScript;
     private Rigidbody ropeRigidbody;
     private CapsuleCollider ropeCollider;
 
@@ -174,6 +175,28 @@ public class Character : MonoBehaviour
         characterController.Move(movementOffset + move_direction * Time.deltaTime);
     }
 
+    Vector3 RopeClimbing(bool up)
+    {
+        CapsuleCollider currentSegmentCollider = ropeScript.GiveCurrentSegment(transform.position);
+
+        if (currentSegmentCollider == null)
+        {
+            Debug.Log("Strange bug");
+            return new Vector3(0.0f, 0.0f, 0.0f);
+        }
+        else
+        {
+            transform.SetParent(currentSegmentCollider.transform);
+            Vector3 offset = currentSegmentCollider.transform.up * Time.deltaTime;
+            if (!up)
+            {
+                offset *= -1;
+            }
+            return transform.position + offset;
+
+        }
+    }
+
     void MovementOnRope()
     {
         float forceCoefficient;
@@ -192,13 +215,23 @@ public class Character : MonoBehaviour
             ropeRigidbody.AddForce(swingPower*forceCoefficient * Vector3.left, ForceMode.Impulse);
         }
 
+
+        if (Input.GetButton("Vertical") && Input.GetAxisRaw("Vertical") > 0)
+        {
+            transform.position = RopeClimbing(true);
+        }
+        else if (Input.GetButton("Vertical") && Input.GetAxisRaw("Vertical") < 0)
+        {
+            transform.position = RopeClimbing(false);
+        }
+
         if (Input.GetButtonDown("Jump"))
         {
             characterController.enabled = true;
             ropeCollider.enabled = false;
             transform.parent = null;
 
-            var ropeScript = rope.GetComponentInParent<Rope>();
+            ropeScript = rope.GetComponentInParent<Rope>();
             float horizontal = Input.GetAxisRaw("Horizontal");
             if (horizontal > 0)
             {
@@ -246,11 +279,8 @@ public class Character : MonoBehaviour
             onRope = true;
    
 
-            // WS - hit.point
-            // vec3 = topPoint - hit.point = length первой штуки
-            // SetTensioned height = 
             rope = hit.gameObject;
-            var ropeScript = rope.GetComponentInParent<Rope>();
+            ropeScript = rope.GetComponentInParent<Rope>();
             ropeRigidbody = rope.GetComponent<Rigidbody>();
             ropeCollider = rope.GetComponent<CapsuleCollider>();
             characterController.enabled = false;
