@@ -20,24 +20,30 @@ public class Character : MonoBehaviour
         isGrounded,
     }
 
+    public enum MovementState
+    {
+        FreeMove,
+        Rope,
+        JumpOffRope
+    }
+
     private Animator animator;
     private CharacterController characterController;
-
-    private GameObject rope;
+    private Rigidbody rigidBody;
     private Rope ropeScript;
-    private Rigidbody ropeRigidbody;
-    private CapsuleCollider ropeCollider;
 
     private Vector3 move_direction = new Vector3(0.0f, 0.0f, 0.0f);
     private Vector3 movementOffset = new Vector3(0.0f, 0.0f, 0.0f);
 
     /* Useful flags */
     private bool lookingRight = true;
-    private bool onRope = false;
+
+    MovementState currentState = MovementState.FreeMove;
 
     void Start() {
         characterController = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
+        //cableComponent = GetComponent<CableComponent>();
     }
 
     public void Flip() // вызывается самой анимацией, когда переходит в состояние поворота в автомате
@@ -60,10 +66,12 @@ public class Character : MonoBehaviour
     }
 
     
-    void Movement()
+    private void Movement()
     {
         ////------------------------Check move----------------------------------
+
         float horizontal_move = Input.GetAxis("Horizontal");
+
         if (Mathf.Abs(horizontal_move) > 0.01f)
         {
             animator.SetBool(TransitionParameter.Move.ToString(), true);
@@ -175,7 +183,7 @@ public class Character : MonoBehaviour
         characterController.Move(movementOffset + move_direction * Time.deltaTime);
     }
 
-    Vector3 RopeClimbing(bool up)
+    /*Vector3 RopeClimbing(bool up)
     {
         CapsuleCollider currentSegmentCollider = ropeScript.GiveCurrentSegment(transform.position);
 
@@ -195,43 +203,42 @@ public class Character : MonoBehaviour
             return transform.position + offset;
 
         }
-    }
+    }*/
 
-    void MovementOnRope()
+    private void MovementOnRope()
     {
         float forceCoefficient;
-        float swingPower = 0.1f;
+        float swingPower = 0.5f;
+
         /* Swinging */
         if (Input.GetButton("Horizontal") && Input.GetAxisRaw("Horizontal") > 0)
         {
 
-            forceCoefficient = Mathf.Clamp(Vector3.Dot(rope.transform.up, Vector3.right), 0, 1);
-            ropeRigidbody.AddForce(swingPower*forceCoefficient*Vector3.right, ForceMode.Impulse);
+            forceCoefficient = Mathf.Clamp(Vector3.Dot(transform.up, Vector3.right), 0, 1);
+            rigidBody.AddForce(swingPower*forceCoefficient*Vector3.right, ForceMode.Impulse);
 
         }
         else if (Input.GetButton("Horizontal") && Input.GetAxisRaw("Horizontal") < 0)
         {
-            forceCoefficient = Mathf.Clamp(Vector3.Dot(rope.transform.up, Vector3.left), 0, 1);
-            ropeRigidbody.AddForce(swingPower*forceCoefficient * Vector3.left, ForceMode.Impulse);
+            forceCoefficient = Mathf.Clamp(Vector3.Dot(transform.up, Vector3.left), 0, 1);
+            rigidBody.AddForce(swingPower*forceCoefficient * Vector3.left, ForceMode.Impulse);
         }
 
 
-        if (Input.GetButton("Vertical") && Input.GetAxisRaw("Vertical") > 0)
+        /*if (Input.GetButton("Vertical") && Input.GetAxisRaw("Vertical") > 0)
         {
-            transform.position = RopeClimbing(true);
+            //transform.position = RopeClimbing(true);
         }
         else if (Input.GetButton("Vertical") && Input.GetAxisRaw("Vertical") < 0)
         {
-            transform.position = RopeClimbing(false);
-        }
+            //transform.position = RopeClimbing(false);
+        }*/
 
         if (Input.GetButtonDown("Jump"))
         {
             characterController.enabled = true;
-            ropeCollider.enabled = false;
             transform.parent = null;
 
-            ropeScript = rope.GetComponentInParent<Rope>();
             float horizontal = Input.GetAxisRaw("Horizontal");
             if (horizontal > 0)
             {
@@ -242,72 +249,100 @@ public class Character : MonoBehaviour
                 transform.rotation = Quaternion.Euler(-transform.rotation.x, -90, 0);
             }
 
-
-            onRope = false;
+            ropeScript.SetDefaultEndPoint(transform);
+            currentState = MovementState.JumpOffRope;
             move_direction.y = jumpForce;
             move_direction.x = horizontal * runSpeed;
 
         }
     }
 
-    void Update() {
-        if (!onRope)
+    private void JumpOffRope()
+    {
+       
+        move_direction += Physics.gravity * gravityScale * Time.deltaTime;
+        characterController.Move(movementOffset + move_direction * Time.deltaTime);
+        if (characterController.isGrounded)
         {
-            Movement();
+            currentState = MovementState.FreeMove;
         }
-        else
+    }
+
+    void Update() {
+        switch (currentState)
         {
-            MovementOnRope();
+            case MovementState.FreeMove:
+            {
+                Movement();
+                break;
+            }
+
+            case MovementState.Rope:
+            {
+                MovementOnRope();
+                break;
+            }
+
+            case MovementState.JumpOffRope:
+            {
+                JumpOffRope();
+                break;
+            }
+
+        }
+    }
+
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Rope"))
+        {
+            if (currentState == MovementState.FreeMove) {
+                characterController.enabled = false;
+                transform.SetParent(other.gameObject.transform);
+                
+
+                ropeScript = other.gameObject.GetComponent<Rope>();
+                ropeScript.CreateEndPoint(transform);
+                rigidBody = gameObject.GetComponent<Rigidbody>();
+
+
+
+                currentState = MovementState.Rope;
+            }
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("Rope"))
+        {
+            currentState = MovementState.FreeMove;
         }
     }
 
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        
-        if (hit.collider != ropeCollider && ropeCollider != null)
-        {
-            ropeCollider.enabled = true;
-        }
 
         Rigidbody body = hit.collider.attachedRigidbody;
         
         if (body == null || body.isKinematic)
             return;
 
-        if (hit.gameObject.CompareTag("Rope") && !characterController.isGrounded) {
-            onRope = true;
-   
-
-            rope = hit.gameObject;
-            ropeScript = rope.GetComponentInParent<Rope>();
-            ropeRigidbody = rope.GetComponent<Rigidbody>();
-            ropeCollider = rope.GetComponent<CapsuleCollider>();
-            characterController.enabled = false;
-            transform.SetParent(rope.transform);
-
-            // We want to push objects in front of us
-            if (Mathf.Abs(hit.moveDirection.x) > 0.3f)
-            {
-                Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, 0);
-                body.velocity = pushDir * pushForce;
-            }
-        }
-        else
+       
+        // We want to push objects below us
+        if (hit.moveDirection.y < -0.3f)
         {
-            // We want to push objects below us
-            if (hit.moveDirection.y < -0.3f)
-            {
-                Vector3 pushDir = new Vector3(0, hit.moveDirection.y, 0);
-                body.velocity = pushDir * pushForce;
-            }
-
-            // We want to push objects in front of us
-            if (Mathf.Abs(hit.moveDirection.x) > 0.3f)
-            {
-                Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, 0);
-                body.velocity = pushDir * pushForce;
-            }
+            Vector3 pushDir = new Vector3(0, hit.moveDirection.y, 0);
+            body.velocity = pushDir * pushForce;
+        }
+        
+        // We want to push objects in front of us
+        if (Mathf.Abs(hit.moveDirection.x) > 0.3f)
+        {
+            Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, 0);
+            body.velocity = pushDir * pushForce;
         }
 
     }

@@ -7,19 +7,19 @@ public class RopeBridge : MonoBehaviour
    
 
     [SerializeField]
-    private GameObject bridgePlank;
+    private GameObject bridgePlank = null;
 
     [SerializeField]
-    private GameObject bridgeColumn;
+    private GameObject bridgeColumn = null;
 
     [SerializeField]
-    private uint planksNumber;
+    private uint planksNumber = 0;
 
     [SerializeField]
-    private float plankDistance;
+    private float plankDistance = 0.0f;
 
     [SerializeField]
-    private Vector3 plankScale; 
+    private Vector3 plankScale = new Vector3(); 
 
     private bool bridgeBuilded = false;
     public void BuildBridge()

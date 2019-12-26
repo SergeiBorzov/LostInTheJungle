@@ -5,7 +5,7 @@ using UnityEngine;
 public class PostRender : MonoBehaviour
 {
     [SerializeField]
-    ReflectionCamera reflectionCameraScript;
+    ReflectionCamera reflectionCameraScript = null;
 
 
     private void OnPostRender()

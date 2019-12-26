@@ -9,7 +9,7 @@ public class ReflectionCamera : MonoBehaviour
     Material waterMaterial;
 
     [SerializeField]
-    private Transform waterTransform;
+    private Transform waterTransform = null;
 
     private Camera reflectionCamera;
     void Start()
