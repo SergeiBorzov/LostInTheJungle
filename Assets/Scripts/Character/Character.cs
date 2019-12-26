@@ -29,8 +29,9 @@ public class Character : MonoBehaviour
 
     private Animator animator;
     private CharacterController characterController;
-    private Rigidbody rigidBody;
     private Rope ropeScript;
+    private Rigidbody ropeRigidbody;
+    private Collider[] ropeColliders;
 
     private Vector3 move_direction = new Vector3(0.0f, 0.0f, 0.0f);
     private Vector3 movementOffset = new Vector3(0.0f, 0.0f, 0.0f);
@@ -208,20 +209,20 @@ public class Character : MonoBehaviour
     private void MovementOnRope()
     {
         float forceCoefficient;
-        float swingPower = 0.5f;
+        float swingPower = 0.2f;
 
         /* Swinging */
         if (Input.GetButton("Horizontal") && Input.GetAxisRaw("Horizontal") > 0)
         {
 
             forceCoefficient = Mathf.Clamp(Vector3.Dot(transform.up, Vector3.right), 0, 1);
-            rigidBody.AddForce(swingPower*forceCoefficient*Vector3.right, ForceMode.Impulse);
+            ropeRigidbody.AddForce(swingPower*forceCoefficient*Vector3.right, ForceMode.Impulse);
 
         }
         else if (Input.GetButton("Horizontal") && Input.GetAxisRaw("Horizontal") < 0)
         {
             forceCoefficient = Mathf.Clamp(Vector3.Dot(transform.up, Vector3.left), 0, 1);
-            rigidBody.AddForce(swingPower*forceCoefficient * Vector3.left, ForceMode.Impulse);
+            ropeRigidbody.AddForce(swingPower*forceCoefficient * Vector3.left, ForceMode.Impulse);
         }
 
 
@@ -236,7 +237,7 @@ public class Character : MonoBehaviour
 
         if (Input.GetButtonDown("Jump"))
         {
-            characterController.enabled = true;
+            //characterController.enabled = true;
             transform.parent = null;
 
             float horizontal = Input.GetAxisRaw("Horizontal");
@@ -249,10 +250,12 @@ public class Character : MonoBehaviour
                 transform.rotation = Quaternion.Euler(-transform.rotation.x, -90, 0);
             }
 
-            ropeScript.SetDefaultEndPoint(transform);
+            characterController.detectCollisions = false;
             currentState = MovementState.JumpOffRope;
             move_direction.y = jumpForce;
             move_direction.x = horizontal * runSpeed;
+            characterController.enabled = true;
+
 
         }
     }
@@ -264,8 +267,15 @@ public class Character : MonoBehaviour
         characterController.Move(movementOffset + move_direction * Time.deltaTime);
         if (characterController.isGrounded)
         {
+            foreach (Collider ropeCollider in ropeColliders)
+            {
+                Physics.IgnoreCollision(gameObject.GetComponent<Collider>(), ropeCollider, false);
+            }
+           
             currentState = MovementState.FreeMove;
         }
+
+        transform.position += move_direction * Time.deltaTime;
     }
 
     void Update() {
@@ -293,35 +303,6 @@ public class Character : MonoBehaviour
     }
 
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("Rope"))
-        {
-            if (currentState == MovementState.FreeMove) {
-                characterController.enabled = false;
-                transform.SetParent(other.gameObject.transform);
-                
-
-                ropeScript = other.gameObject.GetComponent<Rope>();
-                ropeScript.CreateEndPoint(transform);
-                rigidBody = gameObject.GetComponent<Rigidbody>();
-
-
-
-                currentState = MovementState.Rope;
-            }
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.CompareTag("Rope"))
-        {
-            currentState = MovementState.FreeMove;
-        }
-    }
-
-
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
 
@@ -330,14 +311,13 @@ public class Character : MonoBehaviour
         if (body == null || body.isKinematic)
             return;
 
-       
         // We want to push objects below us
         if (hit.moveDirection.y < -0.3f)
         {
             Vector3 pushDir = new Vector3(0, hit.moveDirection.y, 0);
             body.velocity = pushDir * pushForce;
         }
-        
+
         // We want to push objects in front of us
         if (Mathf.Abs(hit.moveDirection.x) > 0.3f)
         {
@@ -345,5 +325,25 @@ public class Character : MonoBehaviour
             body.velocity = pushDir * pushForce;
         }
 
+
+        if (hit.gameObject.CompareTag("Rope"))
+        {
+            if (currentState == MovementState.FreeMove)
+            {
+                characterController.enabled = false;
+                transform.SetParent(hit.gameObject.transform);
+                ropeScript = hit.gameObject.GetComponent<Rope>();
+                ropeRigidbody = hit.gameObject.GetComponent<Rigidbody>();
+                ropeColliders = hit.gameObject.transform.parent.gameObject.GetComponentsInChildren<Collider>();
+
+                foreach(Collider ropeCollider in ropeColliders)
+                {
+                    Physics.IgnoreCollision(gameObject.GetComponent<Collider>(), ropeCollider, true);
+                }
+
+                currentState = MovementState.Rope;
+            }
+            
+        }
     }
 }
