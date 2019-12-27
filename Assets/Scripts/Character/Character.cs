@@ -39,9 +39,11 @@ public class Character : MonoBehaviour
     /* Useful flags */
     private bool lookingRight = true;
 
-    MovementState currentState = MovementState.FreeMove;
+    private MovementState currentState = MovementState.FreeMove;
 
     void Start() {
+        currentState = MovementState.FreeMove;
+        Debug.Log(currentState);
         characterController = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
         //cableComponent = GetComponent<CableComponent>();
@@ -209,7 +211,7 @@ public class Character : MonoBehaviour
     private void MovementOnRope()
     {
         float forceCoefficient;
-        float swingPower = 0.2f;
+        float swingPower = 0.15f;
 
         /* Swinging */
         if (Input.GetButton("Horizontal") && Input.GetAxisRaw("Horizontal") > 0)
@@ -252,6 +254,8 @@ public class Character : MonoBehaviour
 
             characterController.detectCollisions = false;
             currentState = MovementState.JumpOffRope;
+            Debug.Log(currentState);
+
             move_direction.y = jumpForce;
             move_direction.x = horizontal * runSpeed;
             characterController.enabled = true;
@@ -273,6 +277,7 @@ public class Character : MonoBehaviour
             }
            
             currentState = MovementState.FreeMove;
+            Debug.Log(currentState);
         }
 
         transform.position += move_direction * Time.deltaTime;
@@ -328,7 +333,7 @@ public class Character : MonoBehaviour
 
         if (hit.gameObject.CompareTag("Rope"))
         {
-            if (currentState == MovementState.FreeMove)
+            if (currentState == MovementState.FreeMove && !characterController.isGrounded)
             {
                 characterController.enabled = false;
                 transform.SetParent(hit.gameObject.transform);
@@ -342,6 +347,7 @@ public class Character : MonoBehaviour
                 }
 
                 currentState = MovementState.Rope;
+                Debug.Log(currentState);
             }
             
         }
