@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6452178562904611371}
   - component: {fileID: 6452178562904611412}
   - component: {fileID: 6452178562904611413}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: HighGrass
   m_TagString: Untagged
   m_Icon: {fileID: 0}

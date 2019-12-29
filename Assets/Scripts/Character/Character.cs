@@ -11,6 +11,13 @@ public class Character : MonoBehaviour
 
     [SerializeField] private float slowingDownСoeff = 5.0f;
 
+
+    private List<Transform> possibleTargetList = null;
+    private List<Transform> targetList = null;
+    private Transform target = null;
+    private bool targetFixed = false;
+    private int targetIndex = 0;
+
     public enum TransitionParameter
     {
         Move,
@@ -24,11 +31,16 @@ public class Character : MonoBehaviour
     {
         FreeMove,
         Rope,
-        JumpOffRope
+        JumpOffRope,
+        Fight
     }
 
     private Animator animator;
     private CharacterController characterController;
+    private BoxCollider targetTrigger;
+
+
+
     private Rope ropeScript;
     private Rigidbody ropeRigidbody;
     private Collider[] ropeColliders;
@@ -46,7 +58,11 @@ public class Character : MonoBehaviour
         Debug.Log(currentState);
         characterController = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
-        //cableComponent = GetComponent<CableComponent>();
+        targetTrigger = GetComponent<BoxCollider>();
+        targetTrigger.enabled = false;
+        possibleTargetList = new List<Transform>();
+        targetList = new List<Transform>();
+
     }
 
     public void Flip() // вызывается самой анимацией, когда переходит в состояние поворота в автомате
@@ -72,6 +88,14 @@ public class Character : MonoBehaviour
     private void Movement()
     {
         ////------------------------Check move----------------------------------
+
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            currentState = MovementState.Fight;
+            targetTrigger.enabled = true;
+            return;
+        }
 
         float horizontal_move = Input.GetAxis("Horizontal");
 
@@ -283,6 +307,187 @@ public class Character : MonoBehaviour
         transform.position += move_direction * Time.deltaTime;
     }
 
+
+    private void FindTargets()
+    {
+        if (possibleTargetList.Count != 0)
+        {
+            targetList.Clear();
+            foreach (Transform possibleTarget in possibleTargetList)
+            {
+                Vector3 rayDirection = possibleTarget.position - transform.position;
+                RaycastHit hit;
+                if (Physics.Raycast(transform.position, rayDirection, out hit, Mathf.Infinity))
+                {
+                    if (hit.transform.gameObject.CompareTag("Target"))
+                    {
+                        targetList.Add(possibleTarget);
+                        //target = possibleTarget;
+                        //target.gameObject.GetComponent<Target>().ChangeMaterial();
+                    }
+                }
+            }
+        }
+    }
+
+    private void ChooseTarget()
+    {
+        target = targetList[targetIndex];
+        target.gameObject.GetComponent<Target>().ChangeMaterial();
+    }
+
+    private void CheckTarget()
+    {
+        Vector3 rayDirection = target.position - transform.position;
+
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, rayDirection, out hit, Mathf.Infinity))
+        {
+            if (hit.transform.gameObject.CompareTag("Target"))
+            {
+                return;
+            }
+
+            if (!targetFixed)
+            {
+                Debug.Log("MSG 1");
+                targetList.Remove(target);
+                target.gameObject.GetComponent<Target>().SetDefaultMaterial();
+                target = null;
+                targetIndex = 0;
+            }
+            
+        }
+        else
+        {
+            if (!targetFixed)
+            {
+                Debug.Log("MSG 2");
+                targetList.Remove(target);
+                target.gameObject.GetComponent<Target>().SetDefaultMaterial();
+                target = null;
+                targetIndex = 0;
+            }
+        }
+
+    }
+
+    private void ReleaseTargets()
+    {
+        if (target != null && !targetFixed)
+        {
+            target.gameObject.GetComponent<Target>().SetDefaultMaterial();
+        }
+        possibleTargetList.Clear();
+        targetList.Clear();
+        target = null;
+    }
+
+    private void FixTarget()
+    {
+        targetFixed = true;
+        //fixedTarget = target;
+        //targetList.Remove(fixedTarget);
+    }
+
+    private void Fight()
+    {
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            currentState = MovementState.FreeMove;
+            ReleaseTargets();
+            targetTrigger.enabled = false;
+            return;
+        }
+
+       
+        FindTargets();
+        Debug.Log("TargetList" + targetList.Count);
+
+
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            if (targetList.Count != 0 && targetList.Count != 1)
+            {
+                targetIndex = ((targetIndex + 1) % targetList.Count + targetList.Count) % targetList.Count;
+                if (target != null)
+                {
+                    target.GetComponent<Target>().ChangeMaterial();
+                }
+                ChooseTarget();
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            if (targetList.Count != 0 && targetList.Count != 1)
+            {
+                targetIndex = ((targetIndex - 1) % targetList.Count + targetList.Count) % targetList.Count;
+                if (target != null)
+                {
+                    target.GetComponent<Target>().ChangeMaterial();
+                }
+                ChooseTarget();
+            }
+        }
+       
+
+        if (target != null)
+        {
+            CheckTarget();
+        }
+        else
+        {
+            if (targetList.Count != 0)
+            {
+                ChooseTarget();
+            }
+        }
+
+
+        if (Input.GetButtonDown("Jump"))
+        {
+            FixTarget();
+            Debug.Log("Fixed Target called!");
+        }
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            if (targetFixed)
+            {
+                Debug.Log("Dissolve called!");
+                target.GetComponent<Target>().StartDissolve(transform.position + transform.forward + new Vector3(0.0f, 1.0f, 0.0f));
+                //target = null;
+            }
+            currentState = MovementState.FreeMove;
+            ReleaseTargets();
+            targetTrigger.enabled = false;
+            return;
+        }
+        float horizontal_move = Input.GetAxis("Horizontal");
+        move_direction.x = horizontal_move * runSpeed;
+
+
+        if (!characterController.isGrounded)
+        {
+            animator.SetBool(TransitionParameter.isGrounded.ToString(), false);
+            move_direction += Physics.gravity * gravityScale * Time.deltaTime;
+        }
+        else
+        {
+            move_direction.y = -9.8f;
+        }
+
+
+        if (Mathf.Abs(transform.position.z) > 0.01f)
+        {
+            movementOffset.z = (0.0f - transform.position.z) * 0.1f;
+        }
+
+        characterController.Move(movementOffset + move_direction * Time.deltaTime);
+    }
+
+
     void Update() {
         switch (currentState)
         {
@@ -304,9 +509,39 @@ public class Character : MonoBehaviour
                 break;
             }
 
+            case MovementState.Fight:
+            {
+                Fight();
+                break;
+            }
+                
         }
     }
 
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Target"))
+        {
+            possibleTargetList.Add(other.gameObject.transform);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("Target"))
+        {
+            possibleTargetList.Remove(other.gameObject.transform);
+            targetList.Remove(other.gameObject.transform);
+            if (target == other.gameObject.transform)
+            {
+                other.gameObject.GetComponent<Target>().SetDefaultMaterial();
+                target = null;
+            }
+            targetIndex = 0;
+
+        }
+    }
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {

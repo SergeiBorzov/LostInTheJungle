@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 8140002995860129569}
   - component: {fileID: 985196674208300311}
   - component: {fileID: 6814111491602448878}
-  m_Layer: 0
-  m_Name: fern
+  m_Layer: 2
+  m_Name: Fern
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 7041438743407906496}
   - component: {fileID: 2081561904208114934}
   - component: {fileID: 5755522184273758223}
-  m_Layer: 0
-  m_Name: blueplant
+  m_Layer: 2
+  m_Name: BluePlant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
