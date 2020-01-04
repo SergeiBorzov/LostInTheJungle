@@ -12,6 +12,8 @@ public class Character : MonoBehaviour
     [SerializeField] private float slowingDownСoeff = 5.0f;
 
 
+    [SerializeField]
+    private Transform eye;
     private List<Transform> possibleTargetList = null;
     private List<Transform> targetList = null;
     private Transform target = null;
@@ -25,6 +27,8 @@ public class Character : MonoBehaviour
         ForceTransition,
         Jump,
         isGrounded,
+        PickSpearThrow,
+        SpearThrow,
     }
 
     public enum MovementState
@@ -40,6 +44,7 @@ public class Character : MonoBehaviour
     private BoxCollider targetTrigger;
 
 
+    private CharacterIK characterIKscript;
 
     private Rope ropeScript;
     private Rigidbody ropeRigidbody;
@@ -62,6 +67,7 @@ public class Character : MonoBehaviour
         targetTrigger.enabled = false;
         possibleTargetList = new List<Transform>();
         targetList = new List<Transform>();
+        characterIKscript = GetComponent<CharacterIK>();
 
     }
 
@@ -91,9 +97,32 @@ public class Character : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F))
         {
             currentState = MovementState.Fight;
+            animator.SetBool(TransitionParameter.PickSpearThrow.ToString(), true);
             targetTrigger.enabled = true;
             return;
         }
+
+
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            if (targetFixed)
+            {
+                Debug.Log("Dissolve called!");
+                target.GetComponent<Target>().StartDissolve(transform.position + transform.forward + new Vector3(0.0f, 1.0f, 0.0f));
+                target = null;
+            }
+            //currentState = MovementState.FreeMove;
+            //ReleaseTargets();
+            //targetTrigger.enabled = false;
+            //return;
+        }
+
+
+
+
+
+
 
         float horizontal_move = Input.GetAxis("Horizontal");
 
@@ -307,15 +336,23 @@ public class Character : MonoBehaviour
             targetList.Clear();
             foreach (Transform possibleTarget in possibleTargetList)
             {
-                Vector3 rayDirection = possibleTarget.position - transform.position;
-                RaycastHit hit;
-                if (Physics.Raycast(transform.position, rayDirection, out hit, Mathf.Infinity))
+                Vector3 rayDirection = possibleTarget.position - eye.position;
+                rayDirection.Normalize();
+
+                if (Vector3.Dot(rayDirection, eye.forward) > 0.0f)
                 {
-                    if (hit.transform.gameObject.CompareTag("Target"))
+                    RaycastHit hit;
+                    if (Physics.Raycast(eye.position, rayDirection, out hit, Mathf.Infinity))
                     {
-                        targetList.Add(possibleTarget);
-                        //target = possibleTarget;
-                        //target.gameObject.GetComponent<Target>().ChangeMaterial();
+                        // Don't delete useful for debug
+                        // Debug.DrawRay(eye.position, rayDirection*10, Color.green);
+
+                        if (hit.transform.gameObject.CompareTag("Target"))
+                        {
+                            targetList.Add(possibleTarget);
+                            //target = possibleTarget;
+                            //target.gameObject.GetComponent<Target>().ChangeMaterial();
+                        }
                     }
                 }
             }
@@ -326,6 +363,7 @@ public class Character : MonoBehaviour
     {
         target = targetList[targetIndex];
         target.gameObject.GetComponent<Target>().ChangeMaterial();
+        characterIKscript.SetTarget(target.transform);
     }
 
     private void CheckTarget()
@@ -372,12 +410,16 @@ public class Character : MonoBehaviour
         }
         possibleTargetList.Clear();
         targetList.Clear();
-        target = null;
+        //target = null;
     }
 
     private void FixTarget()
     {
         targetFixed = true;
+        animator.SetBool(TransitionParameter.SpearThrow.ToString(), true);
+        ReleaseTargets();
+        targetTrigger.enabled = false;
+        currentState = MovementState.FreeMove;
         //fixedTarget = target;
         //targetList.Remove(fixedTarget);
     }
@@ -388,6 +430,7 @@ public class Character : MonoBehaviour
         {
             currentState = MovementState.FreeMove;
             ReleaseTargets();
+            animator.SetBool(TransitionParameter.PickSpearThrow.ToString(), false);
             targetTrigger.enabled = false;
             return;
         }
@@ -440,22 +483,9 @@ public class Character : MonoBehaviour
         if (Input.GetButtonDown("Jump"))
         {
             FixTarget();
-            Debug.Log("Fixed Target called!");
         }
 
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            if (targetFixed)
-            {
-                Debug.Log("Dissolve called!");
-                target.GetComponent<Target>().StartDissolve(transform.position + transform.forward + new Vector3(0.0f, 1.0f, 0.0f));
-                //target = null;
-            }
-            currentState = MovementState.FreeMove;
-            ReleaseTargets();
-            targetTrigger.enabled = false;
-            return;
-        }
+       
         float horizontal_move = Input.GetAxis("Horizontal");
         move_direction.x = horizontal_move * runSpeed;
 

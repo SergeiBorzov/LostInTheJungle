@@ -29,8 +29,8 @@ public class Target : MonoBehaviour
         Renderer renderer = GetComponent<Renderer>();
         while (ft > 0.0f)
         {
-            Debug.Log("Time " + Time.deltaTime);
-            Debug.Log("Ft " + ft);
+            //Debug.Log("Time " + Time.deltaTime);
+            //Debug.Log("Ft " + ft);
             ft = ft - Time.deltaTime*0.25f;
             renderer.material.SetFloat("_AlphaThreshold", ft);
             yield return null;

@@ -5,9 +5,6 @@ using UnityEngine;
 public class CharacterIK : MonoBehaviour
 {
     private Animator animator = null;
-
-
-    [SerializeField]
     private Transform targetTransform = null;
 
 
@@ -16,13 +13,27 @@ public class CharacterIK : MonoBehaviour
         targetTransform = newTransform;
     }
 
+    public Transform GetTarget()
+    {
+        return targetTransform;
+    }
+
+    public void ReleaseTarget()
+    {
+        targetTransform = null;
+    }
+
     private void Start()
     {
         animator = gameObject.GetComponent<Animator>();
     }
     private void OnAnimatorIK(int layerIndex)
     {
-        animator.SetLookAtWeight(0.6f, 0.6f, 0.6f);
-        animator.SetLookAtPosition(targetTransform.position);
+        if (targetTransform != null)
+        {
+            animator.SetLookAtWeight(0.6f, 0.6f, 0.6f);
+            animator.SetLookAtPosition(targetTransform.position);
+        }
+        
     }
 }
