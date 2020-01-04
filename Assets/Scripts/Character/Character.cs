@@ -88,8 +88,6 @@ public class Character : MonoBehaviour
     private void Movement()
     {
         ////------------------------Check move----------------------------------
-
-
         if (Input.GetKeyDown(KeyCode.F))
         {
             currentState = MovementState.Fight;
@@ -107,13 +105,7 @@ public class Character : MonoBehaviour
         {
             animator.SetBool(TransitionParameter.Move.ToString(), false);
         }
-
-        
         move_direction.x = horizontal_move * runSpeed;
-       
-       
-
-
         ///---------------------------------------------------------------------
 
         ///-----------------------Check grounded--------------------------------
@@ -178,7 +170,7 @@ public class Character : MonoBehaviour
         ///---------------------------------------------------------------------
 
         ///-------------------------Check turn----------------------------------
-        if ( !animator.GetCurrentAnimatorStateInfo(0).IsName("RunningJump") && 
+        if ( /*!animator.GetCurrentAnimatorStateInfo(0).IsName("RunningJump") && */
              !animator.GetCurrentAnimatorStateInfo(0).IsName("RunningJumpLanding") )
         {
             if (horizontal_move > 0.0f && !lookingRight)
