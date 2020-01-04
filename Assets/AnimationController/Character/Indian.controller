@@ -389,7 +389,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d7d21c896c7f4e24b9aada8be29f4f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TransitionTiming: 1
+  TransitionTiming: 0.92
 --- !u!1101 &1218025680881836190
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
