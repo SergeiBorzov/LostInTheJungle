@@ -31,7 +31,7 @@ public class Spear : MonoBehaviour
         spearTransform.SetParent(rightHandHold);
     }
 
-    private void RemoveSpear()
+    public void RemoveSpear()
     {
         spearTransform.SetParent(spineTransform);
         spearTransform.localPosition = originalPosition;

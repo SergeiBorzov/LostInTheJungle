@@ -2,24 +2,31 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+public interface ICharacterState
+{
+    void OnStateEnter(Character character);
+    void Update(Character character);
+
+    void OnStateExit(Character character);
+
+    void OnTriggerEnter(Character character, Collider other);
+    void OnTriggerExit(Character character, Collider other);
+}
+
 public class Character : MonoBehaviour
 {
-    [SerializeField] private float runSpeed = 1.0f;
-    [SerializeField] private float gravityScale = 5.0f;
-    [SerializeField] private float jumpForce = 2.0f;
-    [SerializeField] private float pushForce = 5.0f;
+    #region EditorVariables
+    [SerializeField] public float runSpeed = 7.0f;
+    [SerializeField] public float gravityScale = 3.0f;
+    [SerializeField] public float jumpForce = 10.0f;
+    [SerializeField] public float pushForce = 5.0f;
+    [SerializeField] public float slowingDown = 2.0f;
+    [SerializeField] public Transform portObjectHere;
+    [SerializeField] public Transform eye;
+    #endregion
 
-    [SerializeField] private float slowingDownСoeff = 5.0f;
-
-
-    [SerializeField]
-    private Transform eye;
-    private List<Transform> possibleTargetList = null;
-    private List<Transform> targetList = null;
-    private Transform target = null;
-    private bool targetFixed = false;
-    private int targetIndex = 0;
-
+    #region Fields
     public enum TransitionParameter
     {
         Move,
@@ -29,51 +36,37 @@ public class Character : MonoBehaviour
         isGrounded,
         PickSpearThrow,
         SpearThrow,
+        HaveSpear
     }
 
-    public enum MovementState
-    {
-        FreeMove,
-        Rope,
-        JumpOffRope,
-        Fight
-    }
+    private ICharacterState currentState;
+    public static FreeMoveState freeMoveState = new FreeMoveState();
+    public static ThrowSpearState throwSpearState = new ThrowSpearState();
 
     private Animator animator;
-    private CharacterController characterController;
     private BoxCollider targetTrigger;
 
+    [HideInInspector]
+    public Vector3 moveDirection = new Vector3();
+    [HideInInspector]
+    public Transform Target;
+    [HideInInspector]
+    public bool TargetFixed;
+    [HideInInspector]
+    public bool LookingRight = true;
+    #endregion
 
-    private CharacterIK characterIKscript;
-
+    /*#region RopeMovementFields
     private Rope ropeScript;
     private Rigidbody ropeRigidbody;
     private Collider[] ropeColliders;
+    #endregion*/
 
-    private Vector3 move_direction = new Vector3(0.0f, 0.0f, 0.0f);
-    private Vector3 movementOffset = new Vector3(0.0f, 0.0f, 0.0f);
+    #region MethodsForAnimationScripts
 
-    /* Useful flags */
-    private bool lookingRight = true;
-
-    private MovementState currentState = MovementState.FreeMove;
-
-    void Start() {
-        currentState = MovementState.FreeMove;
-        Debug.Log(currentState);
-        characterController = GetComponent<CharacterController>();
-        animator = GetComponent<Animator>();
-        targetTrigger = GetComponent<BoxCollider>();
-        targetTrigger.enabled = false;
-        possibleTargetList = new List<Transform>();
-        targetList = new List<Transform>();
-        characterIKscript = GetComponent<CharacterIK>();
-
-    }
-
-    public void Flip() // вызывается самой анимацией, когда переходит в состояние поворота в автомате
+    public void Flip()
     {
-        if (lookingRight)
+        if (LookingRight)
         {
             transform.rotation = Quaternion.Euler(0.0f, -90.0f, 0.0f);
         }
@@ -82,154 +75,48 @@ public class Character : MonoBehaviour
            transform.rotation = Quaternion.Euler(0.0f, 90.0f, 0.0f);
         }
 
-        lookingRight = !lookingRight;
+        LookingRight = !LookingRight;
     }
+    #endregion
 
-    public void StandingJump() // вызывается внутри самой анимации (не в автомате)
+    #region MethodsForAnimationEvents
+    public void StandingJump()
     {
-        move_direction.y = jumpForce;
+        moveDirection.y = jumpForce;
     }
+    #endregion
 
-    
-    private void Movement()
+    #region MethodsForCharacterState
+    public void SetState(ICharacterState characterState)
     {
-        ////------------------------Check move----------------------------------
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            currentState = MovementState.Fight;
-            animator.SetBool(TransitionParameter.PickSpearThrow.ToString(), true);
-            targetTrigger.enabled = true;
-            return;
-        }
-
-
-
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            if (targetFixed)
-            {
-                Debug.Log("Dissolve called!");
-                target.GetComponent<Target>().StartDissolve(transform.position + transform.forward + new Vector3(0.0f, 1.0f, 0.0f));
-                target = null;
-            }
-            //currentState = MovementState.FreeMove;
-            //ReleaseTargets();
-            //targetTrigger.enabled = false;
-            //return;
-        }
-
-
-
-
-
-
-
-        float horizontal_move = Input.GetAxis("Horizontal");
-
-        if (Mathf.Abs(horizontal_move) > 0.01f)
-        {
-            animator.SetBool(TransitionParameter.Move.ToString(), true);
-        }
-        else
-        {
-            animator.SetBool(TransitionParameter.Move.ToString(), false);
-        }
-        move_direction.x = horizontal_move * runSpeed;
-        ///---------------------------------------------------------------------
-
-        ///-----------------------Check grounded--------------------------------
-        if (characterController.isGrounded)
-        {
-            
-            animator.SetBool(TransitionParameter.isGrounded.ToString(), true);
-
-            if (!animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormalPrep") &&
-                 !animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormalLanding") &&
-                 !animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormal"))
-            {
-                move_direction.y = -9.8f;
-            }
-        }
-        else
-        {
-            animator.SetBool(TransitionParameter.isGrounded.ToString(), false);
-            move_direction += Physics.gravity * gravityScale * Time.deltaTime;
-        }
-        ///---------------------------------------------------------------------
-
-        ///-------------------------Check jump----------------------------------
-        if ( Input.GetButtonDown("Jump") && characterController.isGrounded && 
-             !animator.GetCurrentAnimatorStateInfo(0).IsName("RunningJumpLanding") &&
-             !animator.GetCurrentAnimatorStateInfo(0).IsName("RunningJump") )
-        {
-            animator.SetBool(Character.TransitionParameter.Jump.ToString(), true);
-            animator.SetBool(Character.TransitionParameter.Move.ToString(), false);
-            animator.SetBool(Character.TransitionParameter.Turn.ToString(), false);
-            if (Mathf.Abs(horizontal_move) > 0.01f)
-            {
-                move_direction.y = jumpForce;
-            }
-
-        }
-        ///---------------------------------------------------------------------
-         
-        ///--------------No new jumps and move backwards in jump---------------------
-        if ( animator.GetCurrentAnimatorStateInfo(0).IsName("RunningJump") ||
-             animator.GetCurrentAnimatorStateInfo(0).IsName("RunningJumpLanding"))
-        {
-            if (lookingRight && horizontal_move < 0.0f)
-            {
-                move_direction.x = -(move_direction.x + slowingDownСoeff);
-            }
-
-            if (!lookingRight && horizontal_move > 0.0f)
-            {
-                move_direction.x = -(move_direction.x - slowingDownСoeff);
-            }
-
-        }
-        ///---------------------------------------------------------------------
-
-        ///--------------------------No jump in turning-------------------------
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("RunningTurn"))
-        {
-            move_direction.x = 0.0f;
-            move_direction.y = 0.0f;
-        }
-        ///---------------------------------------------------------------------
-
-        ///-------------------------Check turn----------------------------------
-        if ( /*!animator.GetCurrentAnimatorStateInfo(0).IsName("RunningJump") && */
-             !animator.GetCurrentAnimatorStateInfo(0).IsName("RunningJumpLanding") )
-        {
-            if (horizontal_move > 0.0f && !lookingRight)
-            {
-                animator.SetBool(TransitionParameter.Turn.ToString(), true);
-            }
-
-            if (horizontal_move < 0.0f && lookingRight)
-            {
-                animator.SetBool(TransitionParameter.Turn.ToString(), true);
-            }
-        }
-        ///---------------------------------------------------------------------
-
-        if (Mathf.Abs(transform.position.z) > 0.01f)
-        {
-            movementOffset.z = (0.0f - transform.position.z) * 0.1f;
-        }
-
-        ///------------------Don't move in standing jump------------------------
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormalPrep") ||
-             animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormalLanding") ||
-             animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormal"))
-        {
-            move_direction.x = 0.0f;
-        }
-        ///---------------------------------------------------------------------
-
-        characterController.Move(movementOffset + move_direction * Time.deltaTime);
+        currentState.OnStateExit(this);
+        currentState = characterState;
+        currentState.OnStateEnter(this);
     }
+    #endregion
+
+    private void Start()
+    {
+        Target = null;
+        TargetFixed = false;
+
+        animator = GetComponent<Animator>();
+        animator.SetBool(TransitionParameter.HaveSpear.ToString(), true);
+
+        targetTrigger = GetComponent<BoxCollider>();
+        targetTrigger.enabled = false;
+
+        currentState = Character.freeMoveState;
+        currentState.OnStateEnter(this);
+
+        Debug.Log(currentState);
+    }
+
+    private void Update()
+    {
+        currentState.Update(this);
+    }
+
 
     /*Vector3 RopeClimbing(bool up)
     {
@@ -253,12 +140,12 @@ public class Character : MonoBehaviour
         }
     }*/
 
-    private void MovementOnRope()
+  /*  private void MovementOnRope()
     {
         float forceCoefficient;
         float swingPower = 0.15f;
 
-        /* Swinging */
+        // Swinging 
         if (Input.GetButton("Horizontal") && Input.GetAxisRaw("Horizontal") > 0)
         {
 
@@ -273,14 +160,14 @@ public class Character : MonoBehaviour
         }
 
 
-        /*if (Input.GetButton("Vertical") && Input.GetAxisRaw("Vertical") > 0)
-        {
+        //if (Input.GetButton("Vertical") && Input.GetAxisRaw("Vertical") > 0)
+        //{
             //transform.position = RopeClimbing(true);
-        }
-        else if (Input.GetButton("Vertical") && Input.GetAxisRaw("Vertical") < 0)
-        {
+        //}
+       // else if (Input.GetButton("Vertical") && Input.GetAxisRaw("Vertical") < 0)
+       // {
             //transform.position = RopeClimbing(false);
-        }*/
+       // }
 
         if (Input.GetButtonDown("Jump"))
         {
@@ -307,9 +194,10 @@ public class Character : MonoBehaviour
 
 
         }
-    }
+    } 
+    */
 
-    private void JumpOffRope()
+    /*private void JumpOffRope()
     {
        
         move_direction += Physics.gravity * gravityScale * Time.deltaTime;
@@ -326,248 +214,21 @@ public class Character : MonoBehaviour
         }
 
         transform.position += move_direction * Time.deltaTime;
-    }
-
-
-    private void FindTargets()
-    {
-        if (possibleTargetList.Count != 0)
-        {
-            targetList.Clear();
-            foreach (Transform possibleTarget in possibleTargetList)
-            {
-                Vector3 rayDirection = possibleTarget.position - eye.position;
-                rayDirection.Normalize();
-
-                if (Vector3.Dot(rayDirection, eye.forward) > 0.0f)
-                {
-                    RaycastHit hit;
-                    if (Physics.Raycast(eye.position, rayDirection, out hit, Mathf.Infinity))
-                    {
-                        // Don't delete useful for debug
-                        // Debug.DrawRay(eye.position, rayDirection*10, Color.green);
-
-                        if (hit.transform.gameObject.CompareTag("Target"))
-                        {
-                            targetList.Add(possibleTarget);
-                            //target = possibleTarget;
-                            //target.gameObject.GetComponent<Target>().ChangeMaterial();
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private void ChooseTarget()
-    {
-        target = targetList[targetIndex];
-        target.gameObject.GetComponent<Target>().ChangeMaterial();
-        characterIKscript.SetTarget(target.transform);
-    }
-
-    private void CheckTarget()
-    {
-        Vector3 rayDirection = target.position - transform.position;
-
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position, rayDirection, out hit, Mathf.Infinity))
-        {
-            if (hit.transform.gameObject.CompareTag("Target"))
-            {
-                return;
-            }
-
-            if (!targetFixed)
-            {
-                Debug.Log("MSG 1");
-                targetList.Remove(target);
-                target.gameObject.GetComponent<Target>().SetDefaultMaterial();
-                target = null;
-                targetIndex = 0;
-            }
-            
-        }
-        else
-        {
-            if (!targetFixed)
-            {
-                Debug.Log("MSG 2");
-                targetList.Remove(target);
-                target.gameObject.GetComponent<Target>().SetDefaultMaterial();
-                target = null;
-                targetIndex = 0;
-            }
-        }
-
-    }
-
-    private void ReleaseTargets()
-    {
-        if (target != null && !targetFixed)
-        {
-            target.gameObject.GetComponent<Target>().SetDefaultMaterial();
-        }
-        possibleTargetList.Clear();
-        targetList.Clear();
-        //target = null;
-    }
-
-    private void FixTarget()
-    {
-        targetFixed = true;
-        animator.SetBool(TransitionParameter.SpearThrow.ToString(), true);
-        ReleaseTargets();
-        targetTrigger.enabled = false;
-        currentState = MovementState.FreeMove;
-        //fixedTarget = target;
-        //targetList.Remove(fixedTarget);
-    }
-
-    private void Fight()
-    {
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            currentState = MovementState.FreeMove;
-            ReleaseTargets();
-            animator.SetBool(TransitionParameter.PickSpearThrow.ToString(), false);
-            targetTrigger.enabled = false;
-            return;
-        }
-
-       
-        FindTargets();
-        Debug.Log("TargetList" + targetList.Count);
-
-
-        if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            if (targetList.Count != 0 && targetList.Count != 1)
-            {
-                targetIndex = ((targetIndex + 1) % targetList.Count + targetList.Count) % targetList.Count;
-                if (target != null)
-                {
-                    target.GetComponent<Target>().ChangeMaterial();
-                }
-                ChooseTarget();
-            }
-        }
-
-        if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            if (targetList.Count != 0 && targetList.Count != 1)
-            {
-                targetIndex = ((targetIndex - 1) % targetList.Count + targetList.Count) % targetList.Count;
-                if (target != null)
-                {
-                    target.GetComponent<Target>().ChangeMaterial();
-                }
-                ChooseTarget();
-            }
-        }
-       
-
-        if (target != null)
-        {
-            CheckTarget();
-        }
-        else
-        {
-            if (targetList.Count != 0)
-            {
-                ChooseTarget();
-            }
-        }
-
-
-        if (Input.GetButtonDown("Jump"))
-        {
-            FixTarget();
-        }
-
-       
-        float horizontal_move = Input.GetAxis("Horizontal");
-        move_direction.x = horizontal_move * runSpeed;
-
-
-        if (!characterController.isGrounded)
-        {
-            animator.SetBool(TransitionParameter.isGrounded.ToString(), false);
-            move_direction += Physics.gravity * gravityScale * Time.deltaTime;
-        }
-        else
-        {
-            move_direction.y = -9.8f;
-        }
-
-
-        if (Mathf.Abs(transform.position.z) > 0.01f)
-        {
-            movementOffset.z = (0.0f - transform.position.z) * 0.1f;
-        }
-
-        characterController.Move(movementOffset + move_direction * Time.deltaTime);
-    }
-
-
-    void Update() {
-        switch (currentState)
-        {
-            case MovementState.FreeMove:
-            {
-                Movement();
-                break;
-            }
-
-            case MovementState.Rope:
-            {
-                MovementOnRope();
-                break;
-            }
-
-            case MovementState.JumpOffRope:
-            {
-                JumpOffRope();
-                break;
-            }
-
-            case MovementState.Fight:
-            {
-                Fight();
-                break;
-            }
-                
-        }
-    }
-
+    }*/
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Target"))
-        {
-            possibleTargetList.Add(other.gameObject.transform);
-        }
+        currentState.OnTriggerEnter(this, other);
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Target"))
-        {
-            possibleTargetList.Remove(other.gameObject.transform);
-            targetList.Remove(other.gameObject.transform);
-            if (target == other.gameObject.transform)
-            {
-                other.gameObject.GetComponent<Target>().SetDefaultMaterial();
-                target = null;
-            }
-            targetIndex = 0;
-
-        }
+        currentState.OnTriggerExit(this, other);
     }
 
+    // Move to state 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-
         Rigidbody body = hit.collider.attachedRigidbody;
         
         if (body == null || body.isKinematic)
@@ -588,7 +249,7 @@ public class Character : MonoBehaviour
         }
 
 
-        if (hit.gameObject.CompareTag("Rope"))
+       /* if (hit.gameObject.CompareTag("Rope"))
         {
             if (currentState == MovementState.FreeMove && !characterController.isGrounded)
             {
@@ -607,6 +268,6 @@ public class Character : MonoBehaviour
                 Debug.Log(currentState);
             }
             
-        }
+        } */
     }
 }

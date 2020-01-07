@@ -23,7 +23,7 @@ public class Target : MonoBehaviour
 
     private IEnumerator Dissolve(Vector3 newPosition)
     {
-        float ft = 0.5f;
+        float ft = 0.4f;
 
 
         Renderer renderer = GetComponent<Renderer>();
@@ -31,7 +31,7 @@ public class Target : MonoBehaviour
         {
             //Debug.Log("Time " + Time.deltaTime);
             //Debug.Log("Ft " + ft);
-            ft = ft - Time.deltaTime*0.25f;
+            ft = ft - Time.deltaTime*0.5f;
             renderer.material.SetFloat("_AlphaThreshold", ft);
             yield return null;
         }
@@ -40,9 +40,9 @@ public class Target : MonoBehaviour
         transform.position = newPosition;
 
         bool shadowsBackOn = false;
-        while (ft < 0.5f)
+        while (ft < 0.4f)
         {
-            ft = ft + Time.deltaTime * 0.25f;
+            ft = ft + Time.deltaTime * 0.5f;
             renderer.material.SetFloat("_AlphaThreshold", ft);
 
             //if (!shadowsBackOn && ft > 0.3f)
