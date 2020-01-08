@@ -13,6 +13,7 @@
 		_DissolveRange("DissolveRange", Range(0, 1)) = 0
     }
 
+
     SubShader
     {
         Tags {"Queue" = "AlphaTest" "RenderType" = "TransparentCutout"}

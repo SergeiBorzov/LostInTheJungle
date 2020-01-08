@@ -36,7 +36,7 @@ public class ThrowSpearState: ICharacterState
     {
         if (character.Target != null && !character.TargetFixed)
         {
-            character.Target.gameObject.GetComponent<Target>().SetDefaultMaterial();
+            character.Target.gameObject.GetComponent<Target>().SetDefaultOutline();
             character.Target = null;
         }
         possibleTargetList.Clear();
@@ -78,7 +78,7 @@ public class ThrowSpearState: ICharacterState
     {
         character.Target = targetList[targetIndex];
         Debug.Log("I'm here!");
-        character.Target.gameObject.GetComponent<Target>().ChangeMaterial();
+        character.Target.gameObject.GetComponent<Target>().ChangeOutline();
         characterIKscript.SetTarget(character.Target);
     }
 
@@ -89,9 +89,10 @@ public class ThrowSpearState: ICharacterState
             if (targetList.Count != 0 && targetList.Count != 1)
             {
                 targetIndex = ((targetIndex + 1) % targetList.Count + targetList.Count) % targetList.Count;
+                // ??????????????
                 if (character.Target != null)
                 {
-                    character.Target.GetComponent<Target>().ChangeMaterial();
+                    character.Target.GetComponent<Target>().ChangeOutline();
                 }
                 ChooseTarget(character);
             }
@@ -104,7 +105,7 @@ public class ThrowSpearState: ICharacterState
                 targetIndex = ((targetIndex - 1) % targetList.Count + targetList.Count) % targetList.Count;
                 if (character.Target != null)
                 {
-                    character.Target.GetComponent<Target>().ChangeMaterial();
+                    character.Target.GetComponent<Target>().ChangeOutline();
                 }
                 ChooseTarget(character);
             }
@@ -129,7 +130,7 @@ public class ThrowSpearState: ICharacterState
                 {
                     Debug.Log("MSG 1");
                     targetList.Remove(character.Target);
-                    character.Target.gameObject.GetComponent<Target>().SetDefaultMaterial();
+                    character.Target.gameObject.GetComponent<Target>().SetDefaultOutline();
                     character.Target = null;
                     targetIndex = 0;
                 }
@@ -141,13 +142,14 @@ public class ThrowSpearState: ICharacterState
                 {
                     Debug.Log("MSG 2");
                     targetList.Remove(character.Target);
-                    character.Target.gameObject.GetComponent<Target>().SetDefaultMaterial();
+                    character.Target.gameObject.GetComponent<Target>().SetDefaultOutline();
                     character.Target = null;
                     targetIndex = 0;
                 }
             }
         }
-        else
+
+        if (targetList.Count != 0)
         {
             ChooseTarget(character);
         }
@@ -209,7 +211,7 @@ public class ThrowSpearState: ICharacterState
             targetList.Remove(other.gameObject.transform);
             if (character.Target == other.gameObject.transform)
             {
-                other.gameObject.GetComponent<Target>().SetDefaultMaterial();
+                other.gameObject.GetComponent<Target>().SetDefaultOutline();
                 character.Target = null;
             }
             targetIndex = 0;

@@ -371,7 +371,7 @@ public class Character2 : MonoBehaviour
     private void ChooseTarget()
     {
         target = targetList[targetIndex];
-        target.gameObject.GetComponent<Target>().ChangeMaterial();
+        target.gameObject.GetComponent<Target>().ChangeOutline();
         characterIKscript.SetTarget(target.transform);
     }
 
@@ -393,7 +393,7 @@ public class Character2 : MonoBehaviour
                 {
                     Debug.Log("MSG 1");
                     targetList.Remove(target);
-                    target.gameObject.GetComponent<Target>().SetDefaultMaterial();
+                    target.gameObject.GetComponent<Target>().SetDefaultOutline();
                     target = null;
                     targetIndex = 0;
                 }
@@ -405,7 +405,7 @@ public class Character2 : MonoBehaviour
                 {
                     Debug.Log("MSG 2");
                     targetList.Remove(target);
-                    target.gameObject.GetComponent<Target>().SetDefaultMaterial();
+                    target.gameObject.GetComponent<Target>().SetDefaultOutline();
                     target = null;
                     targetIndex = 0;
                 }
@@ -421,7 +421,7 @@ public class Character2 : MonoBehaviour
     {
         if (target != null && !targetFixed)
         {
-            target.gameObject.GetComponent<Target>().SetDefaultMaterial();
+            target.gameObject.GetComponent<Target>().SetDefaultOutline();
             target = null;
         }
         possibleTargetList.Clear();
@@ -473,7 +473,7 @@ public class Character2 : MonoBehaviour
                 targetIndex = ((targetIndex + 1) % targetList.Count + targetList.Count) % targetList.Count;
                 if (target != null)
                 {
-                    target.GetComponent<Target>().ChangeMaterial();
+                    target.GetComponent<Target>().ChangeOutline();
                 }
                 ChooseTarget();
             }
@@ -486,7 +486,7 @@ public class Character2 : MonoBehaviour
                 targetIndex = ((targetIndex - 1) % targetList.Count + targetList.Count) % targetList.Count;
                 if (target != null)
                 {
-                    target.GetComponent<Target>().ChangeMaterial();
+                    target.GetComponent<Target>().ChangeOutline();
                 }
                 ChooseTarget();
             }
@@ -577,7 +577,7 @@ public class Character2 : MonoBehaviour
             targetList.Remove(other.gameObject.transform);
             if (target == other.gameObject.transform)
             {
-                other.gameObject.GetComponent<Target>().SetDefaultMaterial();
+                other.gameObject.GetComponent<Target>().SetDefaultOutline();
                 target = null;
             }
             targetIndex = 0;

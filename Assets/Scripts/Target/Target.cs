@@ -5,14 +5,22 @@ using UnityEngine;
 public class Target : MonoBehaviour
 {
     [SerializeField]
-    private Material selectMaterial = null;
-    [SerializeField]
-    private Material originalMaterial = null;
-    // Start is called before the first frame update
+    private Material dissolveMaterial;
+    private Material material;
+    private Renderer myRenderer;
+    private bool selected = false;
 
-    public void SetDefaultMaterial()
+    private void Start()
     {
-        GetComponent<Renderer>().sharedMaterial = originalMaterial;
+        myRenderer = GetComponent<Renderer>();
+        material = new Material(myRenderer.material);
+        myRenderer.material = material;
+    }
+
+    public void SetDefaultOutline()
+    {
+        myRenderer.material.SetFloat("_OutlineWidth", 0.0f);
+        selected = false;
     }
 
     public void StartDissolve(Vector3 newPosition)
@@ -23,15 +31,16 @@ public class Target : MonoBehaviour
 
     private IEnumerator Dissolve(Vector3 newPosition)
     {
+        SetDissolveMaterial();
         float ft = 0.4f;
 
-
+        SetDefaultOutline();
         Renderer renderer = GetComponent<Renderer>();
         while (ft > 0.0f)
         {
             //Debug.Log("Time " + Time.deltaTime);
             //Debug.Log("Ft " + ft);
-            ft = ft - Time.deltaTime*0.5f;
+            ft -= Time.deltaTime*0.5f;
             renderer.material.SetFloat("_AlphaThreshold", ft);
             yield return null;
         }
@@ -39,10 +48,9 @@ public class Target : MonoBehaviour
         //renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         transform.position = newPosition;
 
-        bool shadowsBackOn = false;
         while (ft < 0.4f)
         {
-            ft = ft + Time.deltaTime * 0.5f;
+            ft += Time.deltaTime * 0.5f;
             renderer.material.SetFloat("_AlphaThreshold", ft);
 
             //if (!shadowsBackOn && ft > 0.3f)
@@ -51,21 +59,28 @@ public class Target : MonoBehaviour
             //}
             yield return null;
         }
-        SetDefaultMaterial();
+        
 
         yield return null;
     }
 
-    public void ChangeMaterial()
+    private void SetDissolveMaterial()
     {
-        if (GetComponent<Renderer>().sharedMaterial == selectMaterial)
+        myRenderer.material = dissolveMaterial;
+    }
+    public void ChangeOutline()
+    {
+        if (selected)
         {
-            GetComponent<Renderer>().sharedMaterial = originalMaterial;
+            myRenderer.material.SetFloat("_OutlineWidth", 0.0f);
+            selected = false;
         }
         else
         {
-            GetComponent<Renderer>().sharedMaterial = selectMaterial; 
+            myRenderer.material.SetFloat("_OutlineWidth", 0.07f);
+            selected = true;
         }
+        
     }
 
 }
