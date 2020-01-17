@@ -20,6 +20,7 @@ public class Spear : MonoBehaviour
     private Vector3 originalPosition;
     private Quaternion originalRotation;
 
+
     private void Start()
     {
         characterIKscript = GetComponent<CharacterIK>();

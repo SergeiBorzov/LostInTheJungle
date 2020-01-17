@@ -8,7 +8,7 @@ public class Target : MonoBehaviour
     private Material dissolveMaterial;
     private Material material;
     private Renderer myRenderer;
-    private bool selected = false;
+    public bool selected = false;
 
     private void Start()
     {
@@ -59,8 +59,8 @@ public class Target : MonoBehaviour
             //}
             yield return null;
         }
-        
 
+        renderer.material = material;
         yield return null;
     }
 

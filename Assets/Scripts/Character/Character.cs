@@ -18,12 +18,14 @@ public class Character : MonoBehaviour
 {
     #region EditorVariables
     [SerializeField] public float runSpeed = 7.0f;
+    [SerializeField] public float walkSpeed = 3.0f;
     [SerializeField] public float gravityScale = 3.0f;
     [SerializeField] public float jumpForce = 10.0f;
     [SerializeField] public float pushForce = 5.0f;
     [SerializeField] public float slowingDown = 2.0f;
     [SerializeField] public Transform portObjectHere;
     [SerializeField] public Transform eye;
+    [SerializeField] public SpearScript spearLogic;
     #endregion
 
     #region Fields
@@ -36,7 +38,10 @@ public class Character : MonoBehaviour
         isGrounded,
         PickSpearThrow,
         SpearThrow,
-        HaveSpear
+        HaveSpear,
+        SpearWalkForward,
+        SpearWalkBackwards,
+        SpearTurn
     }
 
     private ICharacterState currentState;
@@ -54,6 +59,8 @@ public class Character : MonoBehaviour
     public bool TargetFixed;
     [HideInInspector]
     public bool LookingRight = true;
+    [HideInInspector]
+    public bool ThrowingSpear = false;
     #endregion
 
     /*#region RopeMovementFields
@@ -108,6 +115,8 @@ public class Character : MonoBehaviour
 
         currentState = Character.freeMoveState;
         currentState.OnStateEnter(this);
+
+        ThrowingSpear = false;
 
         Debug.Log(currentState);
     }

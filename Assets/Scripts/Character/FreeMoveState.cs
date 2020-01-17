@@ -8,11 +8,11 @@ using UnityEngine;
 
 public class FreeMoveState: ICharacterState
 {
-
     private Transform transform;
     private CharacterController characterController;
     private Animator animator;
     private Spear spearScript;
+    private SpearScript spearLogic;
     private Vector3 movementOffset = new Vector3();
     public void OnStateEnter(Character character)
     {
@@ -20,6 +20,7 @@ public class FreeMoveState: ICharacterState
         characterController = character.GetComponent<CharacterController>();
         animator = character.GetComponent<Animator>();
         spearScript = character.GetComponent<Spear>();
+        spearLogic = character.spearLogic;
 
 
         animator.SetBool(Character.TransitionParameter.HaveSpear.ToString(), true);
@@ -32,12 +33,12 @@ public class FreeMoveState: ICharacterState
             return;
         }
 
-
-
         if (Input.GetKeyDown(KeyCode.E))
         {
             if (character.TargetFixed)
             {
+                spearLogic.TriggerExit();
+                spearLogic.SetSpearActive(false);
                 Debug.Log("Dissolve called!");
                 character.Target.GetComponent<Target>().StartDissolve(character.portObjectHere.position);
                 spearScript.RemoveSpear();
@@ -145,15 +146,16 @@ public class FreeMoveState: ICharacterState
             movementOffset.z = (0.0f - transform.position.z) * 0.1f;
         }
 
-        ///------------------Don't move in standing jump------------------------
+        ///---------Don't move in standing jump or while removing spear---------
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormalPrep") ||
              animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormalLanding") ||
-             animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormal"))
+             animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormal") ||
+             animator.GetCurrentAnimatorStateInfo(0).IsName("RemoveSpear"))
         {
             character.moveDirection.x = 0.0f;
         }
         ///---------------------------------------------------------------------
-
+        
         characterController.Move(movementOffset + character.moveDirection * Time.deltaTime);
     }
 

@@ -4205,6 +4205,18 @@ CapsuleCollider:
   m_Height: 0.5555556
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1241378523 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3927887905408283742, guid: 3c074f1246219446db1e639fdfafb8ba,
+    type: 3}
+  m_PrefabInstance: {fileID: 3927887906017442865}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29d2e28000678304c90bedcb3efb7724, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1289787322
 GameObject:
   m_ObjectHideFlags: 0
@@ -5372,7 +5384,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1493104102}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -14.69, y: 1.96, z: 0}
+  m_LocalPosition: {x: -2.78, y: 3.64, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -8075,6 +8087,16 @@ PrefabInstance:
     - target: {fileID: 3927887905797520122, guid: 3c074f1246219446db1e639fdfafb8ba,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3927887905101140747, guid: 3c074f1246219446db1e639fdfafb8ba,
+        type: 3}
+      propertyPath: spearLogic
+      value: 
+      objectReference: {fileID: 1241378523}
+    - target: {fileID: 3927887905408283713, guid: 3c074f1246219446db1e639fdfafb8ba,
+        type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
