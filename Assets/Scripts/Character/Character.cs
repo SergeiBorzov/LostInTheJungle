@@ -44,7 +44,8 @@ public class Character : MonoBehaviour
         SpearTurn
     }
 
-    private ICharacterState currentState;
+    [HideInInspector]
+    public ICharacterState currentState;
     public static FreeMoveState freeMoveState = new FreeMoveState();
     public static ThrowSpearState throwSpearState = new ThrowSpearState();
 
@@ -61,6 +62,8 @@ public class Character : MonoBehaviour
     public bool LookingRight = true;
     [HideInInspector]
     public bool ThrowingSpear = false;
+    [HideInInspector]
+    public bool Aiming = false;
     #endregion
 
     /*#region RopeMovementFields

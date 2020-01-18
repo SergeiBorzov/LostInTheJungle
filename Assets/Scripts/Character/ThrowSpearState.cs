@@ -223,11 +223,15 @@ public class ThrowSpearState: ICharacterState
             return;
         }
 
-        FindTargets(character);
-        //Debug.Log("TargetList" + targetList.Count);
-        ChangeTarget(character);
-        CheckTarget(character);
-        ThrowSpear(character);
+        if (character.Aiming)
+        {
+            FindTargets(character);
+            //Debug.Log("TargetList" + targetList.Count);
+            ChangeTarget(character);
+            CheckTarget(character);
+            ThrowSpear(character);
+        }
+       
 
 
         if (Mathf.Abs(character.transform.position.z) > 0.01f)
@@ -251,6 +255,7 @@ public class ThrowSpearState: ICharacterState
         // Script
         ReleaseTargets(character);
         targetTrigger.enabled = false;
+        character.Aiming = false;
     }
 
     public void OnTriggerEnter(Character character, Collider other)

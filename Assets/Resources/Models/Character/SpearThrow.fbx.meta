@@ -33,6 +33,9 @@ ModelImporter:
   - first:
       74: -5331876909928276516
     second: Armature|SpearTurn
+  - first:
+      74: 4231465745578219389
+    second: Armature|PickSpearRun
   externalObjects: {}
   materials:
     importMaterials: 1
