@@ -41,7 +41,8 @@ public class Character : MonoBehaviour
         HaveSpear,
         SpearWalkForward,
         SpearWalkBackwards,
-        SpearTurn
+        SpearTurn,
+        isGrabbingLedge
     }
 
     [HideInInspector]
@@ -50,6 +51,7 @@ public class Character : MonoBehaviour
     public static ThrowSpearState throwSpearState = new ThrowSpearState();
 
     private Animator animator;
+    private CharacterController characterController;
     private BoxCollider targetTrigger;
 
     [HideInInspector]
@@ -64,6 +66,9 @@ public class Character : MonoBehaviour
     public bool ThrowingSpear = false;
     [HideInInspector]
     public bool Aiming = false;
+    [HideInInspector]
+    public bool isGrabbingLedge = false;
+
     #endregion
 
     /*#region RopeMovementFields
@@ -105,6 +110,17 @@ public class Character : MonoBehaviour
     }
     #endregion
 
+    public void AdjustPosition(Vector3 offset, Vector3 ledgeOffset, Transform ledge)
+    {
+        characterController.enabled = false;
+        transform.position = transform.position + offset;
+
+        transform.parent = ledge.transform;
+        transform.localPosition += ledgeOffset;
+
+        characterController.enabled = true;
+    }
+
     private void Start()
     {
         Target = null;
@@ -112,6 +128,8 @@ public class Character : MonoBehaviour
 
         animator = GetComponent<Animator>();
         animator.SetBool(TransitionParameter.HaveSpear.ToString(), true);
+
+        characterController = GetComponent<CharacterController>();
 
         targetTrigger = GetComponent<BoxCollider>();
         targetTrigger.enabled = false;
