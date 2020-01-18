@@ -246,7 +246,7 @@ public class ThrowSpearState: ICharacterState
             character.moveDirection.x = 0.0f;
         }
         ///---------------------------------------------------------------------
-        
+
         characterController.Move(movementOffset + character.moveDirection * Time.deltaTime);
     }
 

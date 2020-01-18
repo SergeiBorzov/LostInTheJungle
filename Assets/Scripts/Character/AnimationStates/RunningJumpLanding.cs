@@ -10,7 +10,7 @@ public class RunningJumpLanding : StateMachineBehaviour
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         characterControl = animator.GetComponentInParent<Character>();
-        animator.SetBool(Character.TransitionParameter.Jump.ToString(), false);
+        //animator.SetBool(Character.TransitionParameter.Jump.ToString(), false);
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

@@ -18522,7 +18522,8 @@ AnimationClip:
   - time: 0.6666667
     functionName: PickSpear
     data: 
-    objectReferenceParameter: {fileID: 0}
+    objectReferenceParameter: {fileID: 11500000, guid: 4431aea88d6c3774bbffb2e0c7f71c5a,
+      type: 3}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0

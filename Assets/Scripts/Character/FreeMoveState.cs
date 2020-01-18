@@ -27,7 +27,7 @@ public class FreeMoveState: ICharacterState
     }
     public void Update(Character character)
     {
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.F) && !character.ThrowingSpear)
         {
             character.SetState(Character.throwSpearState);
             return;
@@ -86,7 +86,7 @@ public class FreeMoveState: ICharacterState
 
         ///-------------------------Check jump----------------------------------
         if (Input.GetButtonDown("Jump") && characterController.isGrounded &&
-             !animator.GetCurrentAnimatorStateInfo(0).IsName("RunningJumpLanding") &&
+             //!animator.GetCurrentAnimatorStateInfo(0).IsName("RunningJumpLanding") &&
              !animator.GetCurrentAnimatorStateInfo(0).IsName("RunningJump"))
         {
             animator.SetBool(Character.TransitionParameter.Jump.ToString(), true);
@@ -102,7 +102,7 @@ public class FreeMoveState: ICharacterState
 
         ///--------------No new jumps and move backwards in jump---------------------
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("RunningJump") ||
-             animator.GetCurrentAnimatorStateInfo(0).IsName("RunningJumpLanding"))
+            animator.GetCurrentAnimatorStateInfo(0).IsName("RunningJumpLanding"))
         {
             if (character.LookingRight && horizontal_move < 0.0f)
             {
@@ -118,7 +118,8 @@ public class FreeMoveState: ICharacterState
         ///---------------------------------------------------------------------
 
         ///--------------------------No jump in turning-------------------------
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("RunningTurn"))
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("RunningTurn") ||
+            animator.GetCurrentAnimatorStateInfo(0).IsName("ThrowSpear"))
         {
             character.moveDirection.x = 0.0f;
             character.moveDirection.y = 0.0f;
@@ -126,8 +127,7 @@ public class FreeMoveState: ICharacterState
         ///---------------------------------------------------------------------
 
         ///-------------------------Check turn----------------------------------
-        if ( /*!animator.GetCurrentAnimatorStateInfo(0).IsName("RunningJump") && */
-             !animator.GetCurrentAnimatorStateInfo(0).IsName("RunningJumpLanding"))
+        if (!animator.GetCurrentAnimatorStateInfo(0).IsName("RunningJumpLanding"))
         {
             if (horizontal_move > 0.0f && !character.LookingRight)
             {
@@ -148,9 +148,10 @@ public class FreeMoveState: ICharacterState
 
         ///---------Don't move in standing jump or while removing spear---------
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormalPrep") ||
-             animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormalLanding") ||
-             animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormal") ||
-             animator.GetCurrentAnimatorStateInfo(0).IsName("RemoveSpear"))
+            animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormalLanding") ||
+            animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormal") ||
+            animator.GetCurrentAnimatorStateInfo(0).IsName("RemoveSpear") ||
+            animator.GetCurrentAnimatorStateInfo(0).IsName("ThrowSpear"))
         {
             character.moveDirection.x = 0.0f;
         }
