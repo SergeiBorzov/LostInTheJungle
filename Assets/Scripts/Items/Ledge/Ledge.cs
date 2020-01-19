@@ -6,4 +6,7 @@ public class Ledge : MonoBehaviour
 {
     [SerializeField]
     public Vector3 ledgeOffset;
+
+    [SerializeField]
+    public Vector3 endPoint;
 }

@@ -42,7 +42,9 @@ public class Character : MonoBehaviour
         SpearWalkForward,
         SpearWalkBackwards,
         SpearTurn,
-        isGrabbingLedge
+        isGrabbingLedge,
+        Climb,
+        Falling
     }
 
     [HideInInspector]
@@ -50,8 +52,8 @@ public class Character : MonoBehaviour
     public static FreeMoveState freeMoveState = new FreeMoveState();
     public static ThrowSpearState throwSpearState = new ThrowSpearState();
 
-    private Animator animator;
-    private CharacterController characterController;
+    public Animator animator;
+    public CharacterController characterController;
     private BoxCollider targetTrigger;
 
     [HideInInspector]
@@ -68,6 +70,8 @@ public class Character : MonoBehaviour
     public bool Aiming = false;
     [HideInInspector]
     public bool isGrabbingLedge = false;
+    [HideInInspector]
+    public Ledge grabbedLedge;
 
     #endregion
 
@@ -147,7 +151,6 @@ public class Character : MonoBehaviour
         currentState.Update(this);
     }
 
-
     /*Vector3 RopeClimbing(bool up)
     {
         CapsuleCollider currentSegmentCollider = ropeScript.GiveCurrentSegment(transform.position);
@@ -170,62 +173,62 @@ public class Character : MonoBehaviour
         }
     }*/
 
-  /*  private void MovementOnRope()
-    {
-        float forceCoefficient;
-        float swingPower = 0.15f;
+    /*  private void MovementOnRope()
+      {
+          float forceCoefficient;
+          float swingPower = 0.15f;
 
-        // Swinging 
-        if (Input.GetButton("Horizontal") && Input.GetAxisRaw("Horizontal") > 0)
-        {
+          // Swinging 
+          if (Input.GetButton("Horizontal") && Input.GetAxisRaw("Horizontal") > 0)
+          {
 
-            forceCoefficient = Mathf.Clamp(Vector3.Dot(transform.up, Vector3.right), 0, 1);
-            ropeRigidbody.AddForce(swingPower*forceCoefficient*Vector3.right, ForceMode.Impulse);
+              forceCoefficient = Mathf.Clamp(Vector3.Dot(transform.up, Vector3.right), 0, 1);
+              ropeRigidbody.AddForce(swingPower*forceCoefficient*Vector3.right, ForceMode.Impulse);
 
-        }
-        else if (Input.GetButton("Horizontal") && Input.GetAxisRaw("Horizontal") < 0)
-        {
-            forceCoefficient = Mathf.Clamp(Vector3.Dot(transform.up, Vector3.left), 0, 1);
-            ropeRigidbody.AddForce(swingPower*forceCoefficient * Vector3.left, ForceMode.Impulse);
-        }
-
-
-        //if (Input.GetButton("Vertical") && Input.GetAxisRaw("Vertical") > 0)
-        //{
-            //transform.position = RopeClimbing(true);
-        //}
-       // else if (Input.GetButton("Vertical") && Input.GetAxisRaw("Vertical") < 0)
-       // {
-            //transform.position = RopeClimbing(false);
-       // }
-
-        if (Input.GetButtonDown("Jump"))
-        {
-            //characterController.enabled = true;
-            transform.parent = null;
-
-            float horizontal = Input.GetAxisRaw("Horizontal");
-            if (horizontal > 0)
-            {
-                transform.rotation = Quaternion.Euler(-transform.rotation.x, 90, 0);
-            }
-            else
-            {
-                transform.rotation = Quaternion.Euler(-transform.rotation.x, -90, 0);
-            }
-
-            characterController.detectCollisions = false;
-            currentState = MovementState.JumpOffRope;
-            Debug.Log(currentState);
-
-            move_direction.y = jumpForce;
-            move_direction.x = horizontal * runSpeed;
-            characterController.enabled = true;
+          }
+          else if (Input.GetButton("Horizontal") && Input.GetAxisRaw("Horizontal") < 0)
+          {
+              forceCoefficient = Mathf.Clamp(Vector3.Dot(transform.up, Vector3.left), 0, 1);
+              ropeRigidbody.AddForce(swingPower*forceCoefficient * Vector3.left, ForceMode.Impulse);
+          }
 
 
-        }
-    } 
-    */
+          //if (Input.GetButton("Vertical") && Input.GetAxisRaw("Vertical") > 0)
+          //{
+              //transform.position = RopeClimbing(true);
+          //}
+         // else if (Input.GetButton("Vertical") && Input.GetAxisRaw("Vertical") < 0)
+         // {
+              //transform.position = RopeClimbing(false);
+         // }
+
+          if (Input.GetButtonDown("Jump"))
+          {
+              //characterController.enabled = true;
+              transform.parent = null;
+
+              float horizontal = Input.GetAxisRaw("Horizontal");
+              if (horizontal > 0)
+              {
+                  transform.rotation = Quaternion.Euler(-transform.rotation.x, 90, 0);
+              }
+              else
+              {
+                  transform.rotation = Quaternion.Euler(-transform.rotation.x, -90, 0);
+              }
+
+              characterController.detectCollisions = false;
+              currentState = MovementState.JumpOffRope;
+              Debug.Log(currentState);
+
+              move_direction.y = jumpForce;
+              move_direction.x = horizontal * runSpeed;
+              characterController.enabled = true;
+
+
+          }
+      } 
+      */
 
     /*private void JumpOffRope()
     {

@@ -50,11 +50,13 @@ public class FreeMoveState: ICharacterState
             }
         }
 
+        if (Input.GetKeyDown(KeyCode.W) && character.isGrabbingLedge)
+        {
+            animator.SetBool(Character.TransitionParameter.Climb.ToString(), true);
+        }
         if (Input.GetKeyDown(KeyCode.S) && character.isGrabbingLedge)
         {
             character.isGrabbingLedge = false;
-            // Move to Animation!
-            //character.transform.parent = null;
             animator.SetBool(Character.TransitionParameter.isGrabbingLedge.ToString(), false);
         }
 
@@ -75,14 +77,13 @@ public class FreeMoveState: ICharacterState
         ///-----------------------Check grounded--------------------------------
         if (characterController.isGrounded)
         {
-
             animator.SetBool(Character.TransitionParameter.isGrounded.ToString(), true);
 
             if (!animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormalPrep") &&
                  !animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormalLanding") &&
                  !animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormal"))
             {
-                character.moveDirection.y = -9.8f;
+                character.moveDirection.y = -0.01f;
             }
         }
         else
@@ -130,11 +131,11 @@ public class FreeMoveState: ICharacterState
             animator.GetCurrentAnimatorStateInfo(0).IsName("ThrowSpear"))
         {
             character.moveDirection.x = 0.0f;
-            character.moveDirection.y = 0.0f;
+            character.moveDirection.y = -0.01f;
         }
         ///---------------------------------------------------------------------
 
-        /// ------- No gravity while grabbing ledge
+        ///----------------- No gravity while grabbing ledge--------------------
         if (character.isGrabbingLedge)
         {
             if (!animator.GetCurrentAnimatorStateInfo(0).IsName("HangingIdle"))
@@ -144,6 +145,7 @@ public class FreeMoveState: ICharacterState
             character.moveDirection.x = 0.0f;
             character.moveDirection.y = 0.0f;
         } 
+        ///---------------------------------------------------------------------
         
         ///-------------------------Check turn----------------------------------
         if (!animator.GetCurrentAnimatorStateInfo(0).IsName("RunningJumpLanding"))
@@ -171,12 +173,22 @@ public class FreeMoveState: ICharacterState
             animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormal") ||
             animator.GetCurrentAnimatorStateInfo(0).IsName("RemoveSpear") ||
             animator.GetCurrentAnimatorStateInfo(0).IsName("ThrowSpear") ||
-            animator.GetCurrentAnimatorStateInfo(0).IsName("HangDrop"))
+            animator.GetCurrentAnimatorStateInfo(0).IsName("HangDrop") ||
+            animator.GetCurrentAnimatorStateInfo(0).IsName("FallingToLanding"))
         {
             character.moveDirection.x = 0.0f;
         }
         ///---------------------------------------------------------------------
         
+
+        if (character.moveDirection.y < -10.5f)
+        {
+            animator.SetBool(Character.TransitionParameter.Falling.ToString(), true);
+        }
+        else
+        {
+            animator.SetBool(Character.TransitionParameter.Falling.ToString(), false);
+        }
         if (!character.isGrabbingLedge)
             characterController.Move(movementOffset + character.moveDirection * Time.deltaTime);
     }
