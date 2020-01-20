@@ -938,9 +938,9 @@ MonoBehaviour:
   slowingDown: 2
   portObjectHere: {fileID: 3927887905073207744}
   eye: {fileID: 3927887906392778257}
-  spearLogic: {fileID: 0}
-  animator: {fileID: 0}
-  characterController: {fileID: 0}
+  spearLogic: {fileID: 3927887905408283742}
+  animator: {fileID: 3927887905101140750}
+  characterController: {fileID: 3927887905101140748}
   moveDirection: {x: 0, y: 0, z: 0}
   Target: {fileID: 0}
   TargetFixed: 0

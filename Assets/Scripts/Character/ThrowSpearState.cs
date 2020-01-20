@@ -171,13 +171,16 @@ public class ThrowSpearState: ICharacterState
         if (Input.GetButtonDown("Jump"))
         {
             // Script
-            //character.TargetFixed = true;
+            if (character.Target != null)
+            {
+                spearLogic.SetSpearActive(true);
+                character.ThrowingSpear = true;
+                animator.SetBool(Character.TransitionParameter.SpearThrow.ToString(), true);
+                animator.SetBool(Character.TransitionParameter.HaveSpear.ToString(), false);
+                character.SetState(Character.freeMoveState);
+            }
 
-            spearLogic.SetSpearActive(true);
-            character.ThrowingSpear = true;
-            animator.SetBool(Character.TransitionParameter.SpearThrow.ToString(), true);
-            animator.SetBool(Character.TransitionParameter.HaveSpear.ToString(), false);
-            character.SetState(Character.freeMoveState);
+            
         }
 
     }

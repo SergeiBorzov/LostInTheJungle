@@ -25,6 +25,7 @@ public class FreeMoveState: ICharacterState
 
         animator.SetBool(Character.TransitionParameter.HaveSpear.ToString(), true);
     }
+
     public void Update(Character character)
     {
         if (Input.GetKeyDown(KeyCode.F) && !character.ThrowingSpear)
@@ -83,13 +84,15 @@ public class FreeMoveState: ICharacterState
                  !animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormalLanding") &&
                  !animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormal"))
             {
-                character.moveDirection.y = -0.01f;
+                //character.moveDirection.y = -0.01f;
+                character.moveDirection.y = (Physics.gravity * character.gravityScale * Time.deltaTime).y;
             }
+
         }
         else
         {
             animator.SetBool(Character.TransitionParameter.isGrounded.ToString(), false);
-            character.moveDirection += Physics.gravity * character.gravityScale * Time.deltaTime;
+            character.moveDirection.y += (Physics.gravity * character.gravityScale * Time.deltaTime).y;
         }
         ///---------------------------------------------------------------------
 
@@ -131,7 +134,7 @@ public class FreeMoveState: ICharacterState
             animator.GetCurrentAnimatorStateInfo(0).IsName("ThrowSpear"))
         {
             character.moveDirection.x = 0.0f;
-            character.moveDirection.y = -0.01f;
+            character.moveDirection.y = (Physics.gravity * character.gravityScale * Time.deltaTime).y;
         }
         ///---------------------------------------------------------------------
 
@@ -189,6 +192,7 @@ public class FreeMoveState: ICharacterState
         {
             animator.SetBool(Character.TransitionParameter.Falling.ToString(), false);
         }
+
         if (!character.isGrabbingLedge)
             characterController.Move(movementOffset + character.moveDirection * Time.deltaTime);
     }
