@@ -901,6 +901,11 @@ PrefabInstance:
       propertyPath: m_Height
       value: 2.02
       objectReference: {fileID: 0}
+    - target: {fileID: 3927887905101140748, guid: 3c074f1246219446db1e639fdfafb8ba,
+        type: 3}
+      propertyPath: m_SlopeLimit
+      value: 72
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3c074f1246219446db1e639fdfafb8ba, type: 3}
 --- !u!4 &2010832525 stripped
