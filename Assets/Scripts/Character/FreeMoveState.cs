@@ -14,6 +14,9 @@ public class FreeMoveState: ICharacterState
     private Spear spearScript;
     private SpearScript spearLogic;
     private Vector3 movementOffset = new Vector3();
+
+    private Vector3 verticalSpeed = new Vector3(0.0f, 0.0f, 0.0f);
+
     public void OnStateEnter(Character character)
     {
         transform = character.transform;
@@ -28,6 +31,7 @@ public class FreeMoveState: ICharacterState
 
     public void Update(Character character)
     {
+
         if (Input.GetKeyDown(KeyCode.F) && !character.ThrowingSpear)
         {
             character.SetState(Character.throwSpearState);
@@ -72,11 +76,13 @@ public class FreeMoveState: ICharacterState
             animator.SetBool(Character.TransitionParameter.Move.ToString(), false);
         }
 
-        character.moveDirection.x = horizontal_move * character.runSpeed;
+        //character.moveDirection.x = horizontal_move * character.runSpeed;
+        Vector3 velocity = character.forward * Mathf.Abs(horizontal_move) * character.runSpeed;
         ///---------------------------------------------------------------------
 
         ///-----------------------Check grounded--------------------------------
-        if (characterController.isGrounded)
+        if (character.isGrounded)
+        //if (characterController.isGrounded)
         {
             animator.SetBool(Character.TransitionParameter.isGrounded.ToString(), true);
 
@@ -85,19 +91,20 @@ public class FreeMoveState: ICharacterState
                  !animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormal"))
             {
                 //character.moveDirection.y = -0.01f;
-                character.moveDirection.y = (Physics.gravity * character.gravityScale * Time.deltaTime).y;
+                character.moveDirection.y = (Physics.gravity * character.gravityScale).y;
             }
-
         }
         else
         {
+
             animator.SetBool(Character.TransitionParameter.isGrounded.ToString(), false);
-            character.moveDirection.y += (Physics.gravity * character.gravityScale * Time.deltaTime).y;
+            character.moveDirection.y += (Physics.gravity * character.gravityScale*Time.deltaTime).y;
         }
         ///---------------------------------------------------------------------
 
         ///-------------------------Check jump----------------------------------
-        if (Input.GetButtonDown("Jump") && characterController.isGrounded &&
+        //if (Input.GetButtonDown("Jump") && characterController.isGrounded &&
+        if (Input.GetButtonDown("Jump") && character.isGrounded &&
              //!animator.GetCurrentAnimatorStateInfo(0).IsName("RunningJumpLanding") &&
              !animator.GetCurrentAnimatorStateInfo(0).IsName("RunningJump"))
         {
@@ -118,12 +125,15 @@ public class FreeMoveState: ICharacterState
         {
             if (character.LookingRight && horizontal_move < 0.0f)
             {
-                character.moveDirection.x = -(character.moveDirection.x + character.slowingDown);
+                velocity.x = -((velocity.x) + character.slowingDown); 
+                //character.moveDirection.x = -(character.moveDirection.x + character.slowingDown);
             }
 
             if (!character.LookingRight && horizontal_move > 0.0f)
             {
-                character.moveDirection.x = -(character.moveDirection.x - character.slowingDown);
+                velocity.x = -((velocity.x) - character.slowingDown);
+
+                //character.moveDirection.x = -(character.moveDirection.x - character.slowingDown);
             }
 
         }
@@ -133,8 +143,9 @@ public class FreeMoveState: ICharacterState
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("RunningTurn") ||
             animator.GetCurrentAnimatorStateInfo(0).IsName("ThrowSpear"))
         {
-            character.moveDirection.x = 0.0f;
-            character.moveDirection.y = (Physics.gravity * character.gravityScale * Time.deltaTime).y;
+            velocity.x = 0.0f;
+            //character.moveDirection.x = 0.0f;
+            character.moveDirection.y = (Physics.gravity * character.gravityScale).y;
         }
         ///---------------------------------------------------------------------
 
@@ -145,7 +156,8 @@ public class FreeMoveState: ICharacterState
             {
                 animator.SetBool(Character.TransitionParameter.isGrabbingLedge.ToString(), true);
             }
-            character.moveDirection.x = 0.0f;
+            velocity.x = 0.0f;
+            //character.moveDirection.x = 0.0f;
             character.moveDirection.y = 0.0f;
         } 
         ///---------------------------------------------------------------------
@@ -179,7 +191,8 @@ public class FreeMoveState: ICharacterState
             animator.GetCurrentAnimatorStateInfo(0).IsName("HangDrop") ||
             animator.GetCurrentAnimatorStateInfo(0).IsName("FallingToLanding"))
         {
-            character.moveDirection.x = 0.0f;
+            velocity.x = 0.0f;
+            //character.moveDirection.x = 0.0f;
         }
         ///---------------------------------------------------------------------
         
@@ -193,8 +206,31 @@ public class FreeMoveState: ICharacterState
             animator.SetBool(Character.TransitionParameter.Falling.ToString(), false);
         }
 
+        if (character.groundAngle > character.maxGroundAngle) return;
+
         if (!character.isGrabbingLedge)
-            characterController.Move(movementOffset + character.moveDirection * Time.deltaTime);
+        {
+            //characterController.Move(/*movementOffset +*/ character.moveDirection * Time.deltaTime);
+            
+            Vector3 gravity_offset = new Vector3(0.0f, 0.0f, 0.0f);
+
+            if (!(character.groundAngle > character.maxGroundAngle))
+            {
+                characterController.Move(/*movementOffset +*/ velocity * Time.deltaTime);
+            }
+            
+
+            //if (!character.isGrounded)
+            //{
+                characterController.Move(/*movementOffset +*/new Vector3(0.0f,character.moveDirection.y, 0.0f) * Time.deltaTime);
+
+            //}
+
+        }
+
+
+
+
     }
 
     public void OnStateExit(Character character)

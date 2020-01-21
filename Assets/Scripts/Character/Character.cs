@@ -26,6 +26,7 @@ public class Character : MonoBehaviour
     [SerializeField] public Transform portObjectHere;
     [SerializeField] public Transform eye;
     [SerializeField] public SpearScript spearLogic;
+    [SerializeField] public float heightPadding = 0.05f;
     #endregion
 
     #region Fields
@@ -72,6 +73,23 @@ public class Character : MonoBehaviour
     public bool isGrabbingLedge = false;
     [HideInInspector]
     public Ledge grabbedLedge;
+    [HideInInspector]
+    public bool isGrounded;
+    [HideInInspector]
+    public Vector3 hitNormal;
+
+
+    [HideInInspector]
+    public Vector3 forward;
+
+    [HideInInspector]
+    public float groundAngle;
+    [HideInInspector]
+    public float maxGroundAngle = 120.0f;
+
+
+    //[HideInInspector]
+    //public bool slopeLimit;
 
     #endregion
 
@@ -148,6 +166,13 @@ public class Character : MonoBehaviour
 
     private void Update()
     {
+        
+        CalculateForward();
+        CalculateGroundAngle();
+        CheckGround();
+        //Debug.Log("Forward = " + forward);
+        //Debug.DrawLine(transform.position + new Vector3(0.0f,characterController.height/2.0f, 0.0f), transform.position + new Vector3(0.0f, characterController.height / 2.0f, 0.0f) + forward * characterController.height / 2.0f, Color.blue);
+        //Debug.DrawLine(transform.position + new Vector3(0.0f, characterController.height / 2.0f, 0.0f), transform.position + new Vector3(0.0f, characterController.height / 2.0f, 0.0f) + Vector3.down * characterController.height / 2.0f, Color.green);
         currentState.Update(this);
     }
 
@@ -249,6 +274,45 @@ public class Character : MonoBehaviour
         transform.position += move_direction * Time.deltaTime;
     }*/
 
+    public void CalculateForward()
+    {
+        if (!isGrounded)
+        {
+            forward =  transform.forward;
+        }
+        else
+        {
+            //Debug.Log("transform right = " + transform.right);
+            forward = Vector3.Cross(hitNormal, -transform.right);
+        }
+    }
+
+    public void CalculateGroundAngle()
+    {
+        if (isGrounded)
+        {
+            groundAngle = 90.0f;
+            return;
+        }
+
+        groundAngle = Vector3.Angle(hitNormal, transform.forward);
+    }
+
+    public void CheckGround()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position + new Vector3(0.0f, characterController.height / 2.0f, 0.0f), Vector3.down, out hit, characterController.height /2.0f + heightPadding, 1 << 9))
+        {
+            isGrounded = true;
+            hitNormal = hit.normal;
+        }
+        else
+        {
+            hitNormal = Vector3.up;
+            isGrounded = false;
+        }
+       
+    }
     private void OnTriggerEnter(Collider other)
     {
         currentState.OnTriggerEnter(this, other);
@@ -262,6 +326,7 @@ public class Character : MonoBehaviour
     // Move to state 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
+        //hitNormal = hit.normal;
         Rigidbody body = hit.collider.attachedRigidbody;
         
         if (body == null || body.isKinematic)

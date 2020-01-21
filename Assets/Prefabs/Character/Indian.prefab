@@ -884,8 +884,8 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 2
   m_Height: 2.02
-  m_Radius: 0.26
-  m_SlopeLimit: 45
+  m_Radius: 0.23
+  m_SlopeLimit: 90
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
@@ -935,10 +935,11 @@ MonoBehaviour:
   gravityScale: 3
   jumpForce: 10
   pushForce: 5
-  slowingDown: 2
+  slowingDown: 0.003
   portObjectHere: {fileID: 3927887905073207744}
   eye: {fileID: 3927887906392778257}
   spearLogic: {fileID: 3927887905408283742}
+  heightPadding: 0.05
   animator: {fileID: 3927887905101140750}
   characterController: {fileID: 3927887905101140748}
   moveDirection: {x: 0, y: 0, z: 0}
@@ -949,6 +950,11 @@ MonoBehaviour:
   Aiming: 0
   isGrabbingLedge: 0
   grabbedLedge: {fileID: 0}
+  isGrounded: 0
+  hitNormal: {x: 0, y: 0, z: 0}
+  forward: {x: 0, y: 0, z: 0}
+  groundAngle: 0
+  maxGroundAngle: 120
 --- !u!1 &3927887905119523543
 GameObject:
   m_ObjectHideFlags: 0
