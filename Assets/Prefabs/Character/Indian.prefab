@@ -883,7 +883,7 @@ CharacterController:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Height: 2.02
+  m_Height: 2
   m_Radius: 0.23
   m_SlopeLimit: 90
   m_StepOffset: 0.3
@@ -939,7 +939,8 @@ MonoBehaviour:
   portObjectHere: {fileID: 3927887905073207744}
   eye: {fileID: 3927887906392778257}
   spearLogic: {fileID: 3927887905408283742}
-  heightPadding: 0.03
+  heightPadding: 0
+  checkPoint: {fileID: 0}
   animator: {fileID: 3927887905101140750}
   characterController: {fileID: 3927887905101140748}
   moveDirection: {x: 0, y: 0, z: 0}
