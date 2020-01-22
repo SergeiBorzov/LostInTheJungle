@@ -31,7 +31,7 @@ public class FreeMoveState: ICharacterState
 
     public void Update(Character character)
     {
-
+        //Debug.Log("Y: " + character.moveDirection.y);
         if (Input.GetKeyDown(KeyCode.F) && !character.ThrowingSpear)
         {
             character.SetState(Character.throwSpearState);
@@ -91,7 +91,8 @@ public class FreeMoveState: ICharacterState
                  !animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormal"))
             {
                 //character.moveDirection.y = -0.01f;
-                character.moveDirection.y = (Physics.gravity * character.gravityScale).y;
+                //character.moveDirection.y = (Physics.gravity * character.gravityScale).y;
+                character.moveDirection.y = -5.0f;
             }
         }
         else
@@ -102,6 +103,17 @@ public class FreeMoveState: ICharacterState
         }
         ///---------------------------------------------------------------------
 
+        ///--------------------------No jump in turning-------------------------
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("RunningTurn") ||
+            animator.GetCurrentAnimatorStateInfo(0).IsName("ThrowSpear"))
+        {
+            velocity.x = 0.0f;
+            //character.moveDirection.x = 0.0f;
+            character.moveDirection.y = -5.0f;
+            //character.moveDirection.y = (Physics.gravity * character.gravityScale * Time.deltaTime).y;
+        }
+        ///---------------------------------------------------------------------
+      
         ///-------------------------Check jump----------------------------------
         //if (Input.GetButtonDown("Jump") && characterController.isGrounded &&
         if (Input.GetButtonDown("Jump") && character.isGrounded &&
@@ -139,15 +151,7 @@ public class FreeMoveState: ICharacterState
         }
         ///---------------------------------------------------------------------
 
-        ///--------------------------No jump in turning-------------------------
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("RunningTurn") ||
-            animator.GetCurrentAnimatorStateInfo(0).IsName("ThrowSpear"))
-        {
-            velocity.x = 0.0f;
-            //character.moveDirection.x = 0.0f;
-            character.moveDirection.y = (Physics.gravity * character.gravityScale).y;
-        }
-        ///---------------------------------------------------------------------
+       
 
         ///----------------- No gravity while grabbing ledge--------------------
         if (character.isGrabbingLedge)
@@ -179,7 +183,7 @@ public class FreeMoveState: ICharacterState
 
         if (Mathf.Abs(transform.position.z) > 0.01f)
         {
-            movementOffset.z = (0.0f - transform.position.z) * 0.1f;
+            movementOffset.z = (0.0f - transform.position.z) * 2.0f;
         }
 
         ///---------Don't move in standing jump or while removing spear---------
@@ -197,14 +201,14 @@ public class FreeMoveState: ICharacterState
         ///---------------------------------------------------------------------
         
 
-        if (character.moveDirection.y < -10.5f)
+        /*if (character.moveDirection.y < -10.5f)
         {
             animator.SetBool(Character.TransitionParameter.Falling.ToString(), true);
         }
         else
         {
             animator.SetBool(Character.TransitionParameter.Falling.ToString(), false);
-        }
+        }*/
 
         if (character.groundAngle > character.maxGroundAngle) return;
 
@@ -216,7 +220,7 @@ public class FreeMoveState: ICharacterState
 
             if (!(character.groundAngle > character.maxGroundAngle))
             {
-                characterController.Move(/*movementOffset +*/ velocity * Time.deltaTime);
+                characterController.Move((movementOffset + velocity) * Time.deltaTime);
             }
             
 

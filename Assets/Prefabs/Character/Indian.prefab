@@ -939,7 +939,7 @@ MonoBehaviour:
   portObjectHere: {fileID: 3927887905073207744}
   eye: {fileID: 3927887906392778257}
   spearLogic: {fileID: 3927887905408283742}
-  heightPadding: 0.05
+  heightPadding: 0.03
   animator: {fileID: 3927887905101140750}
   characterController: {fileID: 3927887905101140748}
   moveDirection: {x: 0, y: 0, z: 0}

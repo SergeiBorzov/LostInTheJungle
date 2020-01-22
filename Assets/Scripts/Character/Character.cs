@@ -75,9 +75,9 @@ public class Character : MonoBehaviour
     public Ledge grabbedLedge;
     [HideInInspector]
     public bool isGrounded;
+
     [HideInInspector]
     public Vector3 hitNormal;
-
 
     [HideInInspector]
     public Vector3 forward;
@@ -145,6 +145,10 @@ public class Character : MonoBehaviour
 
     private void Start()
     {
+
+        //freeMoveState = new FreeMoveState();
+        //throwSpearState = new ThrowSpearState();
+
         Target = null;
         TargetFixed = false;
 
@@ -309,10 +313,11 @@ public class Character : MonoBehaviour
         else
         {
             hitNormal = Vector3.up;
-            isGrounded = false;
-        }
-       
+            isGrounded = characterController.isGrounded;
+        }    
     }
+
+
     private void OnTriggerEnter(Collider other)
     {
         currentState.OnTriggerEnter(this, other);
