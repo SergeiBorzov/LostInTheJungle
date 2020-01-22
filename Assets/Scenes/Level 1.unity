@@ -1246,7 +1246,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 320996635}
-  m_LocalRotation: {x: 0.1613301, y: 0.041445266, z: -0.006781275, w: 0.9860066}
+  m_LocalRotation: {x: 0.1613301, y: 0.041445263, z: -0.0067812735, w: 0.9860066}
   m_LocalPosition: {x: -121.08, y: 13.41, z: -33.91}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -3454,7 +3454,6 @@ GameObject:
   - component: {fileID: 746251831}
   - component: {fileID: 746251830}
   - component: {fileID: 746251832}
-  - component: {fileID: 746251833}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -3520,7 +3519,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 746251826}
-  m_LocalRotation: {x: 0.1613301, y: 0.041445266, z: -0.006781275, w: 0.9860066}
+  m_LocalRotation: {x: 0.1613301, y: 0.041445263, z: -0.0067812735, w: 0.9860066}
   m_LocalPosition: {x: -121.08, y: 13.41, z: -33.91}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -3636,19 +3635,6 @@ MonoBehaviour:
   m_CameraActivatedEvent:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &746251833
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 746251826}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf5dc0ab04123a447a2829faf2a4042c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  reflectionCameraScript: {fileID: 1882283271}
 --- !u!1 &752134293
 GameObject:
   m_ObjectHideFlags: 0
@@ -6577,6 +6563,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Water
       objectReference: {fileID: 0}
+    - target: {fileID: 7234689536056941886, guid: 2bc2d36c595b29c4099197c3ed62846b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7234689536056941877, guid: 2bc2d36c595b29c4099197c3ed62846b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -9188,7 +9179,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!20 &1882283270
 Camera:
   m_ObjectHideFlags: 0
