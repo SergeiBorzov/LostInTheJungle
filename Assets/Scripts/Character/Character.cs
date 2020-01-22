@@ -50,6 +50,8 @@ public class Character : MonoBehaviour
 
     [HideInInspector]
     public ICharacterState currentState;
+    [HideInInspector]
+    public GameObject checkPoint = null;
     public static FreeMoveState freeMoveState = new FreeMoveState();
     public static ThrowSpearState throwSpearState = new ThrowSpearState();
 
@@ -142,6 +144,11 @@ public class Character : MonoBehaviour
 
         characterController.enabled = true;
     }
+
+    //private void HangingFalse()
+    //{
+        //isGrabbingLedge = false;
+    //}
 
     private void Start()
     {

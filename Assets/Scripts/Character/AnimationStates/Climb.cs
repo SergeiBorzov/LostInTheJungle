@@ -29,8 +29,8 @@ public class Climb : StateMachineBehaviour
         characterControl.characterController.enabled = false;
         characterControl.transform.position = characterControl.grabbedLedge.transform.position + characterControl.grabbedLedge.endPoint;
         characterControl.characterController.enabled = true;
-        characterControl.isGrabbingLedge = false;
-        animator.SetBool(Character.TransitionParameter.isGrabbingLedge.ToString(), false);
+        //characterControl.isGrabbingLedge = false;
+        //animator.SetBool(Character.TransitionParameter.isGrabbingLedge.ToString(), false);
         characterControl.transform.parent = null;
       
 

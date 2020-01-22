@@ -12,7 +12,8 @@ public class ClimbEnd : StateMachineBehaviour
 
         characterControl = animator.GetComponentInParent<Character>();
         animator.SetBool(Character.TransitionParameter.Climb.ToString(), false);
-       
+
+
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
@@ -24,7 +25,8 @@ public class ClimbEnd : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        
+        characterControl.isGrabbingLedge = false;
+        animator.SetBool(Character.TransitionParameter.isGrabbingLedge.ToString(), false);
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()

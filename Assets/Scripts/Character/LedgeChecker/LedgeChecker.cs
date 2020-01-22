@@ -25,7 +25,7 @@ public class LedgeChecker : MonoBehaviour
 
             character.AdjustPosition(offset, grabbedLedge.ledgeOffset, grabbedLedge.transform);
 
-            Debug.Log("HEY!");
+            //Debug.Log("HEY!");
             //}
            
             //character.transform.

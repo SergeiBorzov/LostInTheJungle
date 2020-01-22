@@ -29,6 +29,8 @@ public class FreeMoveState: ICharacterState
         animator.SetBool(Character.TransitionParameter.HaveSpear.ToString(), true);
     }
 
+   
+
     public void Update(Character character)
     {
         //Debug.Log("Y: " + character.moveDirection.y);
@@ -116,7 +118,7 @@ public class FreeMoveState: ICharacterState
       
         ///-------------------------Check jump----------------------------------
         //if (Input.GetButtonDown("Jump") && characterController.isGrounded &&
-        if (Input.GetButtonDown("Jump") && character.isGrounded &&
+        if (Input.GetKeyDown(KeyCode.W) && character.isGrounded &&
              //!animator.GetCurrentAnimatorStateInfo(0).IsName("RunningJumpLanding") &&
              !animator.GetCurrentAnimatorStateInfo(0).IsName("RunningJump"))
         {
