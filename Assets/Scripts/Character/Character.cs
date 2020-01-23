@@ -352,11 +352,11 @@ public class Character : MonoBehaviour
         }
 
         // We want to push objects in front of us
-        if (Mathf.Abs(hit.moveDirection.x) > 0.3f)
-        {
-            Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, 0);
-            body.velocity = pushDir * pushForce;
-        }
+       // if (Mathf.Abs(hit.moveDirection.x) > 0.3f)
+        //{
+          //  Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, 0);
+         //   body.velocity = pushDir * pushForce;
+        //}
 
 
        /* if (hit.gameObject.CompareTag("Rope"))

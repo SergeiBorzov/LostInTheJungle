@@ -4,6 +4,8 @@
     {
         _Color ("Color", Color) = (1,1,1,1)
         _NoiseTex ("Noise", 2D) = "gray" {}
+		_MainTex("Texture", 2D) = "white" {}
+		_NormalMap("Normal map", 2D) = "bump" {}
 		_Metallic("Metallic", Range(0,1)) = 0
 		_Glossiness("Glossiness", Range(0,1)) = 0
 
@@ -27,6 +29,8 @@
         #pragma target 3.0
 
         sampler2D _NoiseTex;
+		sampler2D _MainTex;
+		sampler2D _NormalMap;
 
         struct Input
         {
@@ -51,8 +55,8 @@
         {
 			o.Metallic = _Metallic;
 			o.Smoothness = _Glossiness;
-
-            fixed4 c = _Color;
+			o.Normal = tex2D(_NoiseTex, IN.uv_NoiseTex);
+			fixed4 c = tex2D(_MainTex, IN.uv_NoiseTex);
 
 			float3 noiseValue = tex2D(_NoiseTex, IN.uv_NoiseTex);
 			half dissolveClip = _AlphaThreshold - noiseValue.r;

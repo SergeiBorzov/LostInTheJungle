@@ -4,6 +4,7 @@
 	{
 		_Color("Main Color", Color) = (0.5,0.5,0.5,1)
 		_MainTex("Texture", 2D) = "white" {}
+		_NormalMap("Normal map", 2D) = "bump" {}
 		_OutlineColor("Outline color", Color) = (0,0,0,1)
 		_OutlineWidth("Outlines width", Range(0.0, 2.0)) = 1.1
 	}
@@ -22,6 +23,7 @@
 		uniform float _OutlineWidth;
 		uniform float4 _OutlineColor;
 		uniform sampler2D _MainTex;
+		uniform sampler2D _NormalMap;
 		uniform float4 _Color;
 
 		ENDCG
@@ -70,6 +72,7 @@
 				fixed4 c = tex2D(_MainTex, IN.uv_MainTex) * _Color;
 				o.Albedo = c.rgb;
 				o.Alpha = c.a;
+				o.Normal = tex2D(_NormalMap, IN.uv_MainTex);
 			}
 			ENDCG
 		}
