@@ -11,6 +11,9 @@ public class ReflectionCamera : MonoBehaviour
     [SerializeField]
     private Transform waterTransform = null;
 
+    [SerializeField]
+    private GameObject postProcessVolume;
+
     private Camera reflectionCamera;
     void Start()
     {
@@ -27,6 +30,8 @@ public class ReflectionCamera : MonoBehaviour
 
     public void RenderReflection()
     {
+
+        postProcessVolume.SetActive(false);
         Camera mainCamera = Camera.main;
         reflectionCamera.transform.position = mainCamera.transform.position;
         reflectionCamera.transform.rotation = mainCamera.transform.rotation;
@@ -58,6 +63,8 @@ public class ReflectionCamera : MonoBehaviour
 
         reflectionCamera.projectionMatrix = reflectionCamera.CalculateObliqueMatrix(clipPlaneCameraSpace);
         reflectionCamera.Render();
+        postProcessVolume.SetActive(true);
+
     }
 
 }

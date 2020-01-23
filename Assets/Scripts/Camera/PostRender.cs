@@ -5,11 +5,17 @@ using UnityEngine;
 public class PostRender : MonoBehaviour
 {
     [SerializeField]
-    ReflectionCamera reflectionCameraScript = null;
-
+    GameObject reflectionCamera;
+    [SerializeField]
+    public GameObject postProcessVolume;
 
     private void OnPostRender()
     {
-        reflectionCameraScript.RenderReflection();
+        
+        if (reflectionCamera.activeSelf)
+        {
+            reflectionCamera.GetComponent<ReflectionCamera>().RenderReflection();
+        }
+
     }
 }

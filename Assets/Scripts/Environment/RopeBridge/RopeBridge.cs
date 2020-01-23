@@ -29,36 +29,75 @@ public class RopeBridge : MonoBehaviour
         {
             List<GameObject> planks = new List<GameObject>();
             int middle = (int) planksNumber / 2;
+
             for (int i = 0; i < planksNumber; i++)
             {
-
-
-
                 planks.Add(Instantiate(bridgePlank, transform.position + (plankScale.x + plankDistance) * i * Vector3.right, Quaternion.identity));
                 planks[i].transform.localScale = plankScale;
                 planks[i].transform.SetParent(transform);
-                planks[i].GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX;
+                planks[i].GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ |RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationX;
 
-                if (i != 0)
-                {
-                    HingeJoint hingeJoint = planks[i].GetComponent<HingeJoint>();
-                    hingeJoint.anchor = new Vector3(0.5f, 0.5f, 0);
-                    hingeJoint.connectedBody = planks[i - 1].GetComponent<Rigidbody>();
-                    hingeJoint.useLimits = true;
-                    hingeJoint.limits = new JointLimits
-                    {
-                        min = -5,
-                        max = 5
-                    };
-                }
-
-                if (i == planksNumber - 1)
-                {
-                    planks[i].AddComponent<HingeJoint>();
-                }
-
-                
             }
+
+            for (int i = 0; i < planksNumber - 1; i++)
+            {
+                GameObject leftHinge = new GameObject("Left Hinge");
+                leftHinge.transform.parent = planks[i].transform;
+                leftHinge.transform.localPosition = new Vector3(0.5f + plankDistance / 2.0f, 0.0f, 0.45f);
+
+                GameObject rightHinge = new GameObject("Right Hinge");
+                rightHinge.transform.parent = planks[i].transform;
+                rightHinge.transform.localPosition = new Vector3(0.5f + plankDistance / 2.0f, 0.0f, -0.45f);
+
+                var nextLeft = leftHinge.AddComponent<HingeJoint>();
+                //nextLeft.axis = new Vector3(0.0f, 0.0f, 1.0f);
+                nextLeft.connectedBody = planks[i + 1].GetComponent<Rigidbody>();
+
+                nextLeft.useLimits = true;
+                nextLeft.limits = new JointLimits
+                {
+                    min = -1,
+                    max = 1
+                };
+
+                var previousLeft = leftHinge.AddComponent<HingeJoint>();
+                //previousLeft.axis = new Vector3(0.0f, 0.0f, 1.0f);
+                previousLeft.connectedBody = planks[i].GetComponent<Rigidbody>();
+                previousLeft.useLimits = true;
+                previousLeft.limits = new JointLimits
+                {
+                    min = -1,
+                    max = 1
+                };
+
+                var nextRight = leftHinge.AddComponent<HingeJoint>();
+                //nextRight.axis = new Vector3(0.0f, 0.0f, 1.0f);
+                nextRight.connectedBody = planks[i + 1].GetComponent<Rigidbody>();
+                nextRight.useLimits = true;
+                nextRight.limits = new JointLimits
+                {
+                    min = -1,
+                    max = 1
+                };
+
+
+                var previousRight = leftHinge.AddComponent<HingeJoint>();
+                //previousRight.axis = new Vector3(0.0f, 0.0f, 1.0f);
+                previousRight.connectedBody = planks[i].GetComponent<Rigidbody>();
+                previousRight.useLimits = true;
+                previousRight.limits = new JointLimits
+                {
+                    min = -1,
+                    max = 1
+                };
+
+
+            }
+
+            planks[0].GetComponent<Rigidbody>().constraints |= RigidbodyConstraints.FreezePosition;
+            planks[(int)planksNumber - 1].GetComponent<Rigidbody>().constraints |= RigidbodyConstraints.FreezePosition;
+
+
 
             int index = planks.Count;
             Vector3[] offsets = new Vector3[4];

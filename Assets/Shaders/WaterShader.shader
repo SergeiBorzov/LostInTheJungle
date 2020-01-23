@@ -38,7 +38,8 @@ Shader "Custom/WaterShader"
 
     SubShader
     {
-        Tags {"Queue" = "Transparent" "IgnoreProjector" = "True" "RenderType" = "Transparent" "DisableBatching" = "True"}
+        //Tags {"Queue" = "Transparent" "IgnoreProjector" = "True" "RenderType" = "Transparent" "DisableBatching" = "True"}
+		Tags {"Queue" = "Transparent" "RenderType" = "Transparent"}
 		Blend One OneMinusSrcAlpha
 		//Cull Off
 		ZWrite Off
@@ -167,7 +168,7 @@ Shader "Custom/WaterShader"
 
 			float3 normalWS = WorldNormalVector(IN, o.Normal);
 			float2 screenPos = (IN.screenPos.xy / IN.screenPos.w);
-			screenPos = float2(1 - screenPos.x, screenPos.y) + normalWS.xz* 0.15;
+			screenPos = float2(1 - screenPos.x, screenPos.y) + normalWS.xz* 0.35;
 
 			//screenPos = TRANSFORM_TEX(screenPos, _ReflectionMap);
 		
