@@ -5,134 +5,105 @@ using UnityEngine;
 
 public interface ICharacterState
 {
-    void OnStateEnter(Character character);
-    void Update(Character character);
-
-    void OnStateExit(Character character);
-
-    void OnTriggerEnter(Character character, Collider other);
-    void OnTriggerExit(Character character, Collider other);
+    void OnStateEnter(GameObject character);
+    void Update();
+    void OnStateExit();
+    void OnTriggerEnter(Collider other);
+    void OnTriggerExit(Collider other);
 }
 
 public class Character : MonoBehaviour
 {
+    private ICharacterState currentState;
+
+
     #region EditorVariables
-    [SerializeField] public float runSpeed = 7.0f;
-    [SerializeField] public float walkSpeed = 3.0f;
-    [SerializeField] public float gravityScale = 3.0f;
-    [SerializeField] public float jumpForce = 10.0f;
-    [SerializeField] public float pushForce = 5.0f;
-    [SerializeField] public float slowingDown = 2.0f;
-    [SerializeField] public Transform portObjectHere;
-    [SerializeField] public Transform eye;
-    [SerializeField] public SpearScript spearLogic;
     [SerializeField] public float heightPadding = 0.05f;
     #endregion
 
-    #region Fields
+    #region TransitionParameters
     public enum TransitionParameter
     {
         Move,
         Turn,
         ForceTransition,
         Jump,
+        RunningJump,
         isGrounded,
-        PickSpearThrow,
-        SpearThrow,
-        HaveSpear,
-        SpearWalkForward,
-        SpearWalkBackwards,
-        SpearTurn,
         isGrabbingLedge,
         Climb,
         Falling
     }
+    #endregion
+
+
+    #region Physics
+    [SerializeField] public float gravityScale = 3.0f;
+
+    public Vector3 verticalVelocity = Vector3.zero;
+    private Vector3 hitNormal;
+    [HideInInspector] public Vector3 forward;
+    [HideInInspector] public float groundAngle;
+    [HideInInspector] public float maxGroundAngle = 120.0f;
+    [HideInInspector] public bool isGrounded = false;
+
+    private Vector3 centeredPosition;
+
+    [SerializeField] public float jumpForce = 10.0f;
+
+
+
+
 
     [HideInInspector]
-    public ICharacterState currentState;
+    public bool gravityOn = true;
     [HideInInspector]
-    public GameObject checkPoint = null;
-    public static FreeMoveState freeMoveState = new FreeMoveState();
-    public static ThrowSpearState throwSpearState = new ThrowSpearState();
-
-    public Animator animator;
-    public CharacterController characterController;
-    private BoxCollider targetTrigger;
-
+    public bool moveOn = true;
     [HideInInspector]
-    public Vector3 moveDirection = new Vector3();
+    public bool isIdle = true;
     [HideInInspector]
-    public Transform Target;
+    public bool lookingRight = true;
     [HideInInspector]
-    public bool TargetFixed;
+    public bool isLanding = false;
     [HideInInspector]
-    public bool LookingRight = true;
-    [HideInInspector]
-    public bool ThrowingSpear = false;
-    [HideInInspector]
-    public bool Aiming = false;
+    public bool isTurning = false;
     [HideInInspector]
     public bool isGrabbingLedge = false;
     [HideInInspector]
+    public bool isJumping = false;
+    [HideInInspector]
+    public bool isClimbing = false;
+    [HideInInspector]
+    public bool isDroping = false;
+    #endregion
+
+
+    #region Components
+    private CharacterController characterController;
+    private Animator animator;
     public Ledge grabbedLedge;
-    [HideInInspector]
-    public bool isGrounded;
-
-    [HideInInspector]
-    public Vector3 hitNormal;
-
-    [HideInInspector]
-    public Vector3 forward;
-
-    [HideInInspector]
-    public float groundAngle;
-    [HideInInspector]
-    public float maxGroundAngle = 120.0f;
-
-
-    //[HideInInspector]
-    //public bool slopeLimit;
-
     #endregion
 
-    /*#region RopeMovementFields
-    private Rope ropeScript;
-    private Rigidbody ropeRigidbody;
-    private Collider[] ropeColliders;
-    #endregion*/
 
-    #region MethodsForAnimationScripts
-
-    public void Flip()
+    public void SetAnimatorHanging()
     {
-        if (LookingRight)
-        {
-            transform.rotation = Quaternion.Euler(0.0f, -90.0f, 0.0f);
-        }
-        else
-        {
-           transform.rotation = Quaternion.Euler(0.0f, 90.0f, 0.0f);
-        }
-
-        LookingRight = !LookingRight;
+        animator.SetBool(Character.TransitionParameter.isGrabbingLedge.ToString(), true);
     }
-    #endregion
 
-    #region MethodsForAnimationEvents
     public void StandingJump()
     {
-        moveDirection.y = jumpForce;
+        Debug.Log("EVENT");
+        gravityOn = false;
+        verticalVelocity.y = jumpForce;
     }
-    #endregion
 
-    #region MethodsForCharacterState
-    public void SetState(ICharacterState characterState)
+    public void PerformClimb()
     {
-        currentState.OnStateExit(this);
-        currentState = characterState;
-        currentState.OnStateEnter(this);
+        characterController.enabled = false;
+        transform.position = grabbedLedge.transform.position + grabbedLedge.endPoint;
+        characterController.enabled = true;
+        transform.parent = null;
     }
-    #endregion
 
     public void AdjustPosition(Vector3 offset, Vector3 ledgeOffset, Transform ledge)
     {
@@ -145,160 +116,35 @@ public class Character : MonoBehaviour
         characterController.enabled = true;
     }
 
-    //private void HangingFalse()
-    //{
-        //isGrabbingLedge = false;
-    //}
-
-    private void Start()
+    public void Flip()
     {
-
-        //freeMoveState = new FreeMoveState();
-        //throwSpearState = new ThrowSpearState();
-
-        Target = null;
-        TargetFixed = false;
-
-        animator = GetComponent<Animator>();
-        animator.SetBool(TransitionParameter.HaveSpear.ToString(), true);
-
-        characterController = GetComponent<CharacterController>();
-
-        targetTrigger = GetComponent<BoxCollider>();
-        targetTrigger.enabled = false;
-
-        currentState = Character.freeMoveState;
-        currentState.OnStateEnter(this);
-
-        ThrowingSpear = false;
-
-        Debug.Log(currentState);
-    }
-
-    private void Update()
-    {
-        
-        CalculateForward();
-        CalculateGroundAngle();
-        CheckGround();
-        //Debug.Log("Forward = " + forward);
-        //Debug.DrawLine(transform.position + new Vector3(0.0f,characterController.height/2.0f, 0.0f), transform.position + new Vector3(0.0f, characterController.height / 2.0f, 0.0f) + forward * characterController.height / 2.0f, Color.blue);
-        //Debug.DrawLine(transform.position + new Vector3(0.0f, characterController.height / 2.0f, 0.0f), transform.position + new Vector3(0.0f, characterController.height / 2.0f, 0.0f) + Vector3.down * characterController.height / 2.0f, Color.green);
-        currentState.Update(this);
-    }
-
-    /*Vector3 RopeClimbing(bool up)
-    {
-        CapsuleCollider currentSegmentCollider = ropeScript.GiveCurrentSegment(transform.position);
-
-        if (currentSegmentCollider == null)
+        if (lookingRight)
         {
-            Debug.Log("Strange bug");
-            return new Vector3(0.0f, 0.0f, 0.0f);
+            transform.rotation = Quaternion.Euler(0.0f, -90.0f, 0.0f);
         }
         else
         {
-            transform.SetParent(currentSegmentCollider.transform);
-            Vector3 offset = currentSegmentCollider.transform.up * Time.deltaTime;
-            if (!up)
-            {
-                offset *= -1;
-            }
-            return transform.position + offset;
-
-        }
-    }*/
-
-    /*  private void MovementOnRope()
-      {
-          float forceCoefficient;
-          float swingPower = 0.15f;
-
-          // Swinging 
-          if (Input.GetButton("Horizontal") && Input.GetAxisRaw("Horizontal") > 0)
-          {
-
-              forceCoefficient = Mathf.Clamp(Vector3.Dot(transform.up, Vector3.right), 0, 1);
-              ropeRigidbody.AddForce(swingPower*forceCoefficient*Vector3.right, ForceMode.Impulse);
-
-          }
-          else if (Input.GetButton("Horizontal") && Input.GetAxisRaw("Horizontal") < 0)
-          {
-              forceCoefficient = Mathf.Clamp(Vector3.Dot(transform.up, Vector3.left), 0, 1);
-              ropeRigidbody.AddForce(swingPower*forceCoefficient * Vector3.left, ForceMode.Impulse);
-          }
-
-
-          //if (Input.GetButton("Vertical") && Input.GetAxisRaw("Vertical") > 0)
-          //{
-              //transform.position = RopeClimbing(true);
-          //}
-         // else if (Input.GetButton("Vertical") && Input.GetAxisRaw("Vertical") < 0)
-         // {
-              //transform.position = RopeClimbing(false);
-         // }
-
-          if (Input.GetButtonDown("Jump"))
-          {
-              //characterController.enabled = true;
-              transform.parent = null;
-
-              float horizontal = Input.GetAxisRaw("Horizontal");
-              if (horizontal > 0)
-              {
-                  transform.rotation = Quaternion.Euler(-transform.rotation.x, 90, 0);
-              }
-              else
-              {
-                  transform.rotation = Quaternion.Euler(-transform.rotation.x, -90, 0);
-              }
-
-              characterController.detectCollisions = false;
-              currentState = MovementState.JumpOffRope;
-              Debug.Log(currentState);
-
-              move_direction.y = jumpForce;
-              move_direction.x = horizontal * runSpeed;
-              characterController.enabled = true;
-
-
-          }
-      } 
-      */
-
-    /*private void JumpOffRope()
-    {
-       
-        move_direction += Physics.gravity * gravityScale * Time.deltaTime;
-        characterController.Move(movementOffset + move_direction * Time.deltaTime);
-        if (characterController.isGrounded)
-        {
-            foreach (Collider ropeCollider in ropeColliders)
-            {
-                Physics.IgnoreCollision(gameObject.GetComponent<Collider>(), ropeCollider, false);
-            }
-           
-            currentState = MovementState.FreeMove;
-            Debug.Log(currentState);
+            transform.rotation = Quaternion.Euler(0.0f, 90.0f, 0.0f);
         }
 
-        transform.position += move_direction * Time.deltaTime;
-    }*/
+        lookingRight = !lookingRight;
+    }
 
-    public void CalculateForward()
+
+    // Recalculate forward vector, to fight jittering on terrain slopes
+    private void CalculateForward()
     {
         if (!isGrounded)
         {
-            forward =  transform.forward;
+            forward = transform.forward;
         }
         else
         {
-            //Debug.Log("transform right = " + transform.right);
-            forward = Vector3.Cross(hitNormal, -transform.right);
+            forward = Vector3.Cross(transform.right, hitNormal);
         }
     }
 
-    public void CalculateGroundAngle()
+    private void CalculateGroundAngle()
     {
         if (isGrounded)
         {
@@ -309,10 +155,10 @@ public class Character : MonoBehaviour
         groundAngle = Vector3.Angle(hitNormal, transform.forward);
     }
 
-    public void CheckGround()
+    private void CheckGround()
     {
         RaycastHit hit;
-        if (Physics.Raycast(transform.position + new Vector3(0.0f, characterController.height / 2.0f, 0.0f), Vector3.down, out hit, characterController.height /2.0f + heightPadding, 1 << 9))
+        if (Physics.Raycast(centeredPosition, Vector3.down, out hit, characterController.height / 2.0f + heightPadding, 1 << 9))
         {
             isGrounded = true;
             hitNormal = hit.normal;
@@ -321,63 +167,71 @@ public class Character : MonoBehaviour
         {
             hitNormal = Vector3.up;
             isGrounded = characterController.isGrounded;
-        }    
+        }
+
+        animator.SetBool(Character.TransitionParameter.isGrounded.ToString(), isGrounded);
+
+    }
+
+    public void SetState(ICharacterState characterState)
+    {
+        if (currentState != null)
+        {
+            currentState.OnStateExit();
+        }
+        currentState = characterState;
+        currentState.OnStateEnter(gameObject);
+    }
+
+    void Start()
+    {
+        characterController = GetComponent<CharacterController>();
+        animator = GetComponent<Animator>();
+        isTurning = false;
+        isLanding = false;
+
+        centeredPosition = transform.position + new Vector3(0.0f, characterController.height / 2.0f, 0.0f);
+        SetState(new FreeMoveState());
+    }
+
+    private void ApplyGravity()
+    {
+        if (gravityOn && !isGrounded)
+        {
+            verticalVelocity.y += (Physics.gravity * gravityScale * Time.deltaTime).y;
+        }
+    }
+
+    private void FightJittering()
+    {
+        characterController.Move(new Vector3(0.0f, verticalVelocity.y, 0.0f) * Time.deltaTime);
+    }
+    void Update()
+    {
+        CalculateForward();
+        CalculateGroundAngle();
+        CheckGround();
+
+        currentState.Update();
+
+        ApplyGravity();
+        FightJittering();
     }
 
 
     private void OnTriggerEnter(Collider other)
     {
-        currentState.OnTriggerEnter(this, other);
+        currentState.OnTriggerEnter(other);
     }
 
     private void OnTriggerExit(Collider other)
     {
-        currentState.OnTriggerExit(this, other);
+        currentState.OnTriggerExit(other);
     }
 
-    // Move to state 
-    private void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        //hitNormal = hit.normal;
-        Rigidbody body = hit.collider.attachedRigidbody;
-        
-        if (body == null || body.isKinematic)
-            return;
-
-        // We want to push objects below us
-        if (hit.moveDirection.y < -0.3f)
-        {
-            Vector3 pushDir = new Vector3(0, hit.moveDirection.y, 0);
-            body.velocity = pushDir * pushForce;
-        }
-
-        // We want to push objects in front of us
-       // if (Mathf.Abs(hit.moveDirection.x) > 0.3f)
-        //{
-          //  Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, 0);
-         //   body.velocity = pushDir * pushForce;
-        //}
 
 
-       /* if (hit.gameObject.CompareTag("Rope"))
-        {
-            if (currentState == MovementState.FreeMove && !characterController.isGrounded)
-            {
-                characterController.enabled = false;
-                transform.SetParent(hit.gameObject.transform);
-                ropeScript = hit.gameObject.GetComponent<Rope>();
-                ropeRigidbody = hit.gameObject.GetComponent<Rigidbody>();
-                ropeColliders = hit.gameObject.transform.parent.gameObject.GetComponentsInChildren<Collider>();
 
-                foreach(Collider ropeCollider in ropeColliders)
-                {
-                    Physics.IgnoreCollision(gameObject.GetComponent<Collider>(), ropeCollider, true);
-                }
 
-                currentState = MovementState.Rope;
-                Debug.Log(currentState);
-            }
-            
-        } */
-    }
+
 }

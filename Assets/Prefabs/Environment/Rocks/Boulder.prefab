@@ -74,8 +74,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e51118c0171a8aa409d156119ca02fd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ledgeOffset: {x: -0.0334, y: -0.0272, z: 0}
-  endPoint: {x: 0, y: 0, z: 0}
+  ledgeOffset: {x: -0.0334, y: -0.0272, z: 0.17}
+  endPoint: {x: 0, y: 0, z: 1}
 --- !u!1 &1699275456042317131
 GameObject:
   m_ObjectHideFlags: 0

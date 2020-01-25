@@ -2,74 +2,53 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
-
-
-
-public class FreeMoveState: ICharacterState
+public class FreeMoveState : ICharacterState
 {
-    private Transform transform;
+    private GameObject character;
+    private Character characterScript;
     private CharacterController characterController;
     private Animator animator;
-    private Spear spearScript;
-    private SpearScript spearLogic;
-    private Vector3 movementOffset = new Vector3();
 
-    private Vector3 verticalSpeed = new Vector3(0.0f, 0.0f, 0.0f);
+    private Vector3 movementOffset = Vector3.zero;
+    #region MoveFields
+    [SerializeField] public float runSpeed = 7.0f;
+    [SerializeField] public float walkSpeed = 3.0f;
+    [SerializeField] public float pushForce = 5.0f;
+    [SerializeField] public float slowingDown = 2.0f;
+    #endregion
 
-    public void OnStateEnter(Character character)
+    private bool isTurning = false;
+
+    private Vector3 velocity = Vector3.zero;
+   
+    public void OnStateEnter(GameObject ch)
     {
-        transform = character.transform;
+        character = ch;
+        characterScript = character.GetComponent<Character>();
         characterController = character.GetComponent<CharacterController>();
         animator = character.GetComponent<Animator>();
-        spearScript = character.GetComponent<Spear>();
-        spearLogic = character.spearLogic;
-
-
-        animator.SetBool(Character.TransitionParameter.HaveSpear.ToString(), true);
     }
 
-   
 
-    public void Update(Character character)
+    private void Move(Vector3 velocity)
     {
-        //Debug.Log("Y: " + character.moveDirection.y);
-        if (Input.GetKeyDown(KeyCode.F) && !character.ThrowingSpear)
+        if (characterScript.moveOn)
         {
-            character.SetState(Character.throwSpearState);
-            return;
-        }
-
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            if (character.TargetFixed)
+            if (Mathf.Abs(character.transform.position.z) > 0.01f)
             {
-                spearLogic.TriggerExit();
-                spearLogic.SetSpearActive(false);
-                Debug.Log("Dissolve called!");
-                character.Target.GetComponent<Target>().StartDissolve(character.portObjectHere.position);
-                spearScript.RemoveSpear();
+                movementOffset.z = (0.0f - character.transform.position.z) * 2.0f;
+            }
 
-
-                animator.SetBool(Character.TransitionParameter.HaveSpear.ToString(), true);
-                character.Target = null;
-                character.TargetFixed = false;
+            if (!(characterScript.groundAngle > characterScript.maxGroundAngle))
+            {
+                characterController.Move((movementOffset + velocity) * Time.deltaTime);
             }
         }
+    }
 
-        if (Input.GetKeyDown(KeyCode.W) && character.isGrabbingLedge)
-        {
-            animator.SetBool(Character.TransitionParameter.Climb.ToString(), true);
-        }
-        if (Input.GetKeyDown(KeyCode.S) && character.isGrabbingLedge)
-        {
-            character.isGrabbingLedge = false;
-            animator.SetBool(Character.TransitionParameter.isGrabbingLedge.ToString(), false);
-        }
-
-        float horizontal_move = Input.GetAxis("Horizontal");
-
-        if (Mathf.Abs(horizontal_move) > 0.01f)
+    private void SetAnimatorMoveState(float horizontalMove)
+    {
+        if (Mathf.Abs(horizontalMove) > 0.01f && !characterScript.isJumping && !characterScript.isDroping)
         {
             animator.SetBool(Character.TransitionParameter.Move.ToString(), true);
         }
@@ -77,181 +56,118 @@ public class FreeMoveState: ICharacterState
         {
             animator.SetBool(Character.TransitionParameter.Move.ToString(), false);
         }
+    }
 
-        //character.moveDirection.x = horizontal_move * character.runSpeed;
-        Vector3 velocity = character.forward * Mathf.Abs(horizontal_move) * character.runSpeed;
-        ///---------------------------------------------------------------------
-
-        ///-----------------------Check grounded--------------------------------
-        if (character.isGrounded)
-        //if (characterController.isGrounded)
+    private void SetAnimatorTurnState(float horizontalMove)
+    {
+        ///-------------------------Check turn----------------------------------
+        if (!characterScript.isLanding)
         {
-            animator.SetBool(Character.TransitionParameter.isGrounded.ToString(), true);
-
-            if (!animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormalPrep") &&
-                 !animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormalLanding") &&
-                 !animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormal"))
+            if (horizontalMove > 0.0f && !characterScript.lookingRight)
             {
-                //character.moveDirection.y = -0.01f;
-                //character.moveDirection.y = (Physics.gravity * character.gravityScale).y;
-                character.moveDirection.y = -5.0f;
+                animator.SetBool(Character.TransitionParameter.Turn.ToString(), true);
+            }
+
+
+            if (horizontalMove < 0.0f && characterScript.lookingRight)
+            {
+                animator.SetBool(Character.TransitionParameter.Turn.ToString(), true);
             }
         }
-        else
+    }
+
+    private void SetAnimatorClimbState()
+    {
+        if (Input.GetKeyDown(KeyCode.W) && characterScript.isGrabbingLedge)
         {
-
-            animator.SetBool(Character.TransitionParameter.isGrounded.ToString(), false);
-            character.moveDirection.y += (Physics.gravity * character.gravityScale*Time.deltaTime).y;
+            animator.SetBool(Character.TransitionParameter.Climb.ToString(), true);
         }
-        ///---------------------------------------------------------------------
+        if (Input.GetKeyDown(KeyCode.S) && characterScript.isGrabbingLedge && !characterScript.isClimbing)
+        {
+            characterScript.isGrabbingLedge = false;
+            animator.SetBool(Character.TransitionParameter.isGrabbingLedge.ToString(), false);
+        }
+    }
 
-        ///--------------------------No jump in turning-------------------------
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("RunningTurn") ||
-            animator.GetCurrentAnimatorStateInfo(0).IsName("ThrowSpear"))
+    private void SetAnimatorHangingState()
+    {
+        if (characterScript.isGrabbingLedge)
         {
             velocity.x = 0.0f;
-            //character.moveDirection.x = 0.0f;
-            character.moveDirection.y = -5.0f;
-            //character.moveDirection.y = (Physics.gravity * character.gravityScale * Time.deltaTime).y;
+            characterScript.verticalVelocity = Vector3.zero;
+            characterScript.gravityOn = false;
         }
-        ///---------------------------------------------------------------------
-      
-        ///-------------------------Check jump----------------------------------
-        //if (Input.GetButtonDown("Jump") && characterController.isGrounded &&
-        if (Input.GetKeyDown(KeyCode.W) && character.isGrounded &&
-             //!animator.GetCurrentAnimatorStateInfo(0).IsName("RunningJumpLanding") &&
-             !animator.GetCurrentAnimatorStateInfo(0).IsName("RunningJump"))
+    }
+
+
+    
+
+    private void SetAnimatorJumpState(float horizontalMove)
+    {
+        if (Input.GetKeyDown(KeyCode.W) && characterScript.isGrounded
+            && !characterScript.isTurning && !characterScript.isJumping && !characterScript.isDroping)
         {
             animator.SetBool(Character.TransitionParameter.Jump.ToString(), true);
             animator.SetBool(Character.TransitionParameter.Move.ToString(), false);
             animator.SetBool(Character.TransitionParameter.Turn.ToString(), false);
-            if (Mathf.Abs(horizontal_move) > 0.01f)
+
+
+            if (Mathf.Abs(horizontalMove) > 0.01f && !characterScript.isIdle)
             {
-                character.moveDirection.y = character.jumpForce;
+                animator.SetBool(Character.TransitionParameter.RunningJump.ToString(), true);
+                characterScript.verticalVelocity.y = characterScript.jumpForce;
             }
 
         }
-        ///---------------------------------------------------------------------
 
-        ///--------------No new jumps and move backwards in jump---------------------
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("RunningJump") ||
-            animator.GetCurrentAnimatorStateInfo(0).IsName("RunningJumpLanding"))
+    }
+
+    private void SetGravity()
+    {
+        if (characterScript.isGrounded)
         {
-            if (character.LookingRight && horizontal_move < 0.0f)
+            if (!characterScript.isJumping)
             {
-                velocity.x = -((velocity.x) + character.slowingDown); 
-                //character.moveDirection.x = -(character.moveDirection.x + character.slowingDown);
+                characterScript.verticalVelocity.y = -5.0f;
             }
-
-            if (!character.LookingRight && horizontal_move > 0.0f)
-            {
-                velocity.x = -((velocity.x) - character.slowingDown);
-
-                //character.moveDirection.x = -(character.moveDirection.x - character.slowingDown);
-            }
-
-        }
-        ///---------------------------------------------------------------------
-
-       
-
-        ///----------------- No gravity while grabbing ledge--------------------
-        if (character.isGrabbingLedge)
-        {
-            if (!animator.GetCurrentAnimatorStateInfo(0).IsName("HangingIdle"))
-            {
-                animator.SetBool(Character.TransitionParameter.isGrabbingLedge.ToString(), true);
-            }
-            velocity.x = 0.0f;
-            //character.moveDirection.x = 0.0f;
-            character.moveDirection.y = 0.0f;
-        } 
-        ///---------------------------------------------------------------------
-        
-        ///-------------------------Check turn----------------------------------
-        if (!animator.GetCurrentAnimatorStateInfo(0).IsName("RunningJumpLanding"))
-        {
-            if (horizontal_move > 0.0f && !character.LookingRight)
-            {
-                animator.SetBool(Character.TransitionParameter.Turn.ToString(), true);
-            }
-
-            if (horizontal_move < 0.0f && character.LookingRight)
-            {
-                animator.SetBool(Character.TransitionParameter.Turn.ToString(), true);
-            }
-        }
-        ///---------------------------------------------------------------------
-
-        if (Mathf.Abs(transform.position.z) > 0.01f)
-        {
-            movementOffset.z = (0.0f - transform.position.z) * 2.0f;
-        }
-
-        ///---------Don't move in standing jump or while removing spear---------
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormalPrep") ||
-            animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormalLanding") ||
-            animator.GetCurrentAnimatorStateInfo(0).IsName("JumpNormal") ||
-            animator.GetCurrentAnimatorStateInfo(0).IsName("RemoveSpear") ||
-            animator.GetCurrentAnimatorStateInfo(0).IsName("ThrowSpear") ||
-            animator.GetCurrentAnimatorStateInfo(0).IsName("HangDrop") ||
-            animator.GetCurrentAnimatorStateInfo(0).IsName("FallingToLanding"))
-        {
-            velocity.x = 0.0f;
-            //character.moveDirection.x = 0.0f;
-        }
-        ///---------------------------------------------------------------------
-        
-
-        /*if (character.moveDirection.y < -10.5f)
-        {
-            animator.SetBool(Character.TransitionParameter.Falling.ToString(), true);
+            characterScript.gravityOn = false;
         }
         else
         {
-            animator.SetBool(Character.TransitionParameter.Falling.ToString(), false);
-        }*/
-
-        if (character.groundAngle > character.maxGroundAngle) return;
-
-        if (!character.isGrabbingLedge)
-        {
-            //characterController.Move(/*movementOffset +*/ character.moveDirection * Time.deltaTime);
-            
-            Vector3 gravity_offset = new Vector3(0.0f, 0.0f, 0.0f);
-
-            if (!(character.groundAngle > character.maxGroundAngle))
-            {
-                characterController.Move((movementOffset + velocity) * Time.deltaTime);
-            }
-            
-
-            //if (!character.isGrounded)
-            //{
-                characterController.Move(/*movementOffset +*/new Vector3(0.0f,character.moveDirection.y, 0.0f) * Time.deltaTime);
-
-            //}
-
+            characterScript.gravityOn = true;
         }
-
-
-
-
     }
 
-    public void OnStateExit(Character character)
+    public void Update()
+    {
+       
+        float horizontalMove = Input.GetAxis("Horizontal");
+
+        SetAnimatorClimbState();
+        SetAnimatorMoveState(horizontalMove);
+        velocity = characterScript.forward * Mathf.Abs(horizontalMove) * runSpeed;
+
+        SetGravity();
+        SetAnimatorJumpState(horizontalMove);
+        SetAnimatorHangingState();
+        SetAnimatorTurnState(horizontalMove);
+        Move(velocity);
+    }
+
+    public void OnStateExit()
     {
         return;
     }
 
-    public void OnTriggerEnter(Character character, Collider other)
+    public void OnTriggerEnter(Collider other)
     {
         return;
     }
 
-    public void OnTriggerExit(Character character, Collider other)
+    public void OnTriggerExit(Collider other)
     {
         return;
     }
+
 
 }
