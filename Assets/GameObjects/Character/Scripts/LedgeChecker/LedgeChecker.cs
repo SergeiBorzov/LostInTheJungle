@@ -14,27 +14,30 @@ public class LedgeChecker : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        
         if (other.gameObject.CompareTag("Ledge"))
         {
-            character.isGrabbingLedge = true;
-            character.SetAnimatorHanging();
+           
+            if (!character.isGrabbingLedge)
+            {
+                character.isGrabbingLedge = true;
+                character.SetAnimatorHanging();
 
-            grabbedLedge = other.gameObject.GetComponent<Ledge>();
-            character.grabbedLedge = grabbedLedge;
+                grabbedLedge = other.gameObject.GetComponent<Ledge>();
+                character.grabbedLedge = grabbedLedge;
 
-            Vector3 offset = -transform.position + grabbedLedge.transform.position;
+                Vector3 offset = -transform.position + grabbedLedge.transform.position;
 
-            character.AdjustPosition(offset, grabbedLedge.ledgeOffset, grabbedLedge.transform);
-
+                character.AdjustPosition(offset, grabbedLedge.ledgeOffset, grabbedLedge.transform);
+            }
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Ledge"))
+        /*if (other.gameObject.CompareTag("Ledge"))
         {
             grabbedLedge = null;
         }
+        */
     }
 }

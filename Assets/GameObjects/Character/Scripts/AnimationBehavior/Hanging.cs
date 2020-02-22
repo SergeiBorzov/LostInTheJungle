@@ -10,6 +10,7 @@ public class Hanging : StateMachineBehaviour
     {
         characterScript = animator.GetComponentInParent<Character>();
         characterScript.moveOn = false;
+
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

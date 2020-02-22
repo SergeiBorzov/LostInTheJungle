@@ -32,7 +32,9 @@ public class Character : MonoBehaviour
         isGrounded,
         isGrabbingLedge,
         Climb,
-        Falling
+        Falling,
+        HangUp,
+        HangDown
     }
     #endregion
 
@@ -57,7 +59,7 @@ public class Character : MonoBehaviour
 
     [HideInInspector]
     public bool gravityOn = true;
-    [HideInInspector]
+    //[HideInInspector]
     public bool moveOn = true;
     [HideInInspector]
     public bool isIdle = true;
@@ -67,23 +69,37 @@ public class Character : MonoBehaviour
     public bool isLanding = false;
     [HideInInspector]
     public bool isTurning = false;
-    [HideInInspector]
+    //[HideInInspector]
     public bool isGrabbingLedge = false;
     [HideInInspector]
     public bool isJumping = false;
-    [HideInInspector]
+    //[HideInInspector]
     public bool isClimbing = false;
     [HideInInspector]
     public bool isDroping = false;
+    [HideInInspector]
+    public bool isHangJumping = false;
     #endregion
 
 
     #region Components
     private CharacterController characterController;
     private Animator animator;
+
+    // Public just for testing
     public Ledge grabbedLedge;
     #endregion
 
+
+    public bool IsClimbLedge()
+    {
+        return grabbedLedge.next == null;
+    }
+
+    public bool IsDropLedge()
+    {
+        return grabbedLedge.previous == null;
+    }
 
     public void SetAnimatorHanging()
     {
@@ -92,9 +108,16 @@ public class Character : MonoBehaviour
 
     public void StandingJump()
     {
-        Debug.Log("EVENT");
         gravityOn = false;
         verticalVelocity.y = jumpForce;
+    }
+
+    public void HangJump()
+    {
+        isGrabbingLedge = false;
+        moveOn = true;
+        verticalVelocity.y = jumpForce;
+        transform.parent = null;
     }
 
     public void PerformClimb()
@@ -103,6 +126,27 @@ public class Character : MonoBehaviour
         transform.position = grabbedLedge.transform.position + grabbedLedge.endPoint;
         characterController.enabled = true;
         transform.parent = null;
+    }
+
+    public void PerformHangUp()
+    {
+        characterController.enabled = false;
+        grabbedLedge = grabbedLedge.next.gameObject.GetComponent<Ledge>();
+        transform.position += grabbedLedge.hangOffset;
+        transform.parent = grabbedLedge.transform;
+        characterController.enabled = true;
+    }
+
+    public void PerformHangDown()
+    {
+        characterController.enabled = false;
+        grabbedLedge = grabbedLedge.previous.gameObject.GetComponent<Ledge>();
+
+        Vector3 offset = grabbedLedge.hangOffset;
+        offset.y = -offset.y;
+        transform.position += offset;
+        transform.parent = grabbedLedge.transform;
+        characterController.enabled = true;
     }
 
     public void AdjustPosition(Vector3 offset, Vector3 ledgeOffset, Transform ledge)

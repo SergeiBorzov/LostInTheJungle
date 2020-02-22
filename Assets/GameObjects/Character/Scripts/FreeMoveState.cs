@@ -9,6 +9,8 @@ public class FreeMoveState : ICharacterState
     private CharacterController characterController;
     private Animator animator;
 
+    private Ledge grabbedLedge;
+
     private Vector3 movementOffset = Vector3.zero;
     #region MoveFields
     [SerializeField] public float runSpeed = 7.0f;
@@ -76,15 +78,45 @@ public class FreeMoveState : ICharacterState
 
     private void SetAnimatorClimbState()
     {
-        if (Input.GetKeyDown(KeyCode.W) && characterScript.isGrabbingLedge)
+        if ( ((characterScript.lookingRight && Input.GetKey(KeyCode.A)) ||
+               (!characterScript.lookingRight && Input.GetKey(KeyCode.D))) &&
+                Input.GetKeyDown(KeyCode.Space) &&
+                characterScript.isGrabbingLedge &&
+                !characterScript.isClimbing)
         {
-            animator.SetBool(Character.TransitionParameter.Climb.ToString(), true);
-        }
-        if (Input.GetKeyDown(KeyCode.S) && characterScript.isGrabbingLedge && !characterScript.isClimbing)
-        {
-            characterScript.isGrabbingLedge = false;
+            characterScript.isHangJumping = true;
             animator.SetBool(Character.TransitionParameter.isGrabbingLedge.ToString(), false);
+            animator.SetBool(Character.TransitionParameter.Jump.ToString(), true);
         }
+        else
+        {
+            if (Input.GetKey(KeyCode.Space) && characterScript.isGrabbingLedge && !characterScript.isClimbing && !characterScript.isHangJumping)
+            {
+                if (characterScript.IsClimbLedge())
+                {
+                    animator.SetBool(Character.TransitionParameter.Climb.ToString(), true);
+                }
+                else
+                {
+                    animator.SetBool(Character.TransitionParameter.HangUp.ToString(), true);
+                }
+            }
+            else if (Input.GetKey(KeyCode.S) && characterScript.isGrabbingLedge && !characterScript.isClimbing && !characterScript.isHangJumping)
+            {
+                if (characterScript.IsDropLedge())
+                {
+                    characterScript.isGrabbingLedge = false;
+                    animator.SetBool(Character.TransitionParameter.isGrabbingLedge.ToString(), false);
+                }
+                else
+                {
+                    animator.SetBool(Character.TransitionParameter.HangDown.ToString(), true);
+                }
+            }
+        }
+       
+
+       
     }
 
     private void SetAnimatorHangingState()
@@ -102,7 +134,7 @@ public class FreeMoveState : ICharacterState
 
     private void SetAnimatorJumpState(float horizontalMove)
     {
-        if (Input.GetKeyDown(KeyCode.W) && characterScript.isGrounded
+        if (Input.GetKeyDown(KeyCode.Space) && characterScript.isGrounded
             && !characterScript.isTurning && !characterScript.isJumping && !characterScript.isDroping)
         {
             animator.SetBool(Character.TransitionParameter.Jump.ToString(), true);
@@ -145,10 +177,13 @@ public class FreeMoveState : ICharacterState
         SetAnimatorClimbState();
         SetAnimatorMoveState(horizontalMove);
         velocity = characterScript.forward * Mathf.Abs(horizontalMove) * runSpeed;
-
         SetGravity();
         SetAnimatorJumpState(horizontalMove);
         SetAnimatorHangingState();
+        /*if (characterScript.isHangJumping)
+        {
+            velocity.x = -1.0f;
+        }*/
         SetAnimatorTurnState(horizontalMove);
         Move(velocity);
     }

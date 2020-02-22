@@ -9,4 +9,13 @@ public class Ledge : MonoBehaviour
 
     [SerializeField]
     public Vector3 endPoint;
+
+    [SerializeField]
+    public Vector3 hangOffset;
+
+    [SerializeField]
+    public Transform next;
+
+    [SerializeField]
+    public Transform previous;
 }
