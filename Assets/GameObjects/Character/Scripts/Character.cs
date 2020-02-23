@@ -33,6 +33,7 @@ public class Character : MonoBehaviour
         isGrabbingLedge,
         Climb,
         Falling,
+        LandingNeeded,
         HangUp,
         HangDown
     }
@@ -61,8 +62,10 @@ public class Character : MonoBehaviour
     public bool gravityOn = true;
     //[HideInInspector]
     public bool moveOn = true;
-    [HideInInspector]
+    //[HideInInspector]
     public bool isIdle = true;
+    //[HideInInspector]
+    public bool isRunning = false;
     [HideInInspector]
     public bool lookingRight = true;
     [HideInInspector]
@@ -75,10 +78,14 @@ public class Character : MonoBehaviour
     public bool isJumping = false;
     //[HideInInspector]
     public bool isClimbing = false;
-    [HideInInspector]
+    //[HideInInspector]
     public bool isDroping = false;
-    [HideInInspector]
+    //[HideInInspector]
     public bool isHangJumping = false;
+    //[HideInInspector]
+    public bool isFalling = false;
+    //[HideInInspector]
+    
     #endregion
 
 

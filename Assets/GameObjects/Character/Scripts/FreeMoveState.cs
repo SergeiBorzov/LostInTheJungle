@@ -13,10 +13,17 @@ public class FreeMoveState : ICharacterState
 
     private Vector3 movementOffset = Vector3.zero;
     #region MoveFields
-    [SerializeField] public float runSpeed = 7.0f;
-    [SerializeField] public float walkSpeed = 3.0f;
-    [SerializeField] public float pushForce = 5.0f;
-    [SerializeField] public float slowingDown = 2.0f;
+    [SerializeField] private float runSpeed = 7.0f;
+    [SerializeField] private float walkSpeed = 3.0f;
+    [SerializeField] private float pushForce = 5.0f;
+    [SerializeField] private float slowingDown = 2.0f;
+    [SerializeField] private float timeToFallJump = 0.75f;
+    [SerializeField] private float timeToFallNoJump = 0.05f;
+    [SerializeField] private float timeLandingNeeded = 0.3f;
+    [SerializeField] private float timeFallingJump;
+    [SerializeField] private float timeFallingNoJump;
+
+    private float timeFalling;
     #endregion
 
     private Vector3 velocity = Vector3.zero;
@@ -27,6 +34,8 @@ public class FreeMoveState : ICharacterState
         characterScript = character.GetComponent<Character>();
         characterController = character.GetComponent<CharacterController>();
         animator = character.GetComponent<Animator>();
+        timeFallingJump = timeToFallJump;
+        timeFallingNoJump = timeToFallNoJump;
     }
 
 
@@ -61,7 +70,7 @@ public class FreeMoveState : ICharacterState
     private void SetAnimatorTurnState(float horizontalMove)
     {
         ///-------------------------Check turn----------------------------------
-        if (!characterScript.isLanding)
+        if (!characterScript.isLanding && !characterScript.isGrabbingLedge && !characterScript.isHangJumping)
         {
             if (horizontalMove > 0.0f && !characterScript.lookingRight)
             {
@@ -90,7 +99,7 @@ public class FreeMoveState : ICharacterState
         }
         else
         {
-            if (Input.GetKey(KeyCode.Space) && characterScript.isGrabbingLedge && !characterScript.isClimbing && !characterScript.isHangJumping)
+            if (Input.GetKey(KeyCode.W) && characterScript.isGrabbingLedge && !characterScript.isClimbing && !characterScript.isHangJumping)
             {
                 if (characterScript.IsClimbLedge())
                 {
@@ -170,7 +179,42 @@ public class FreeMoveState : ICharacterState
 
     public void Update()
     {
-       
+        if (!characterScript.isGrounded && !characterScript.isGrabbingLedge)
+        {
+            if (characterScript.isIdle || characterScript.isRunning)
+            {
+                timeFallingNoJump -= Time.deltaTime;
+                if (timeFallingNoJump < 0.0f)
+                {
+                    characterScript.isFalling = true;
+                    animator.SetBool(Character.TransitionParameter.Falling.ToString(), true);
+                }
+                if (timeFallingNoJump < -timeLandingNeeded)
+                {
+                    animator.SetBool(Character.TransitionParameter.LandingNeeded.ToString(), true);
+                }
+            }
+            else
+            {
+                timeFallingJump -= Time.deltaTime;
+                if (timeFallingJump < 0.0f)
+                {
+                    characterScript.isFalling = true;
+                    animator.SetBool(Character.TransitionParameter.Falling.ToString(), true);
+                }
+                if (timeFallingJump < -timeLandingNeeded)
+                {
+                    animator.SetBool(Character.TransitionParameter.LandingNeeded.ToString(), true);
+                }
+            }
+        }
+        else
+        {
+            characterScript.isFalling = false;
+            timeFallingJump = timeToFallJump;
+            timeFallingNoJump = timeToFallNoJump;
+            animator.SetBool(Character.TransitionParameter.Falling.ToString(), false);
+        }
         // Move Physics into global state?
         float horizontalMove = Input.GetAxis("Horizontal");
 
@@ -180,10 +224,6 @@ public class FreeMoveState : ICharacterState
         SetGravity();
         SetAnimatorJumpState(horizontalMove);
         SetAnimatorHangingState();
-        /*if (characterScript.isHangJumping)
-        {
-            velocity.x = -1.0f;
-        }*/
         SetAnimatorTurnState(horizontalMove);
         Move(velocity);
     }
