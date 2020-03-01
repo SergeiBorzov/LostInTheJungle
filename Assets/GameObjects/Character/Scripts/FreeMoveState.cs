@@ -161,23 +161,7 @@ public class FreeMoveState : ICharacterState
 
     }
 
-    private void SetGravity()
-    {
-        if (characterScript.isGrounded)
-        {
-            if (!characterScript.isJumping)
-            {
-                characterScript.verticalVelocity.y = -5.0f;
-            }
-            characterScript.gravityOn = false;
-        }
-        else
-        {
-            characterScript.gravityOn = true;
-        }
-    }
-
-    public void Update()
+    private void SetFallingState()
     {
         if (!characterScript.isGrounded && !characterScript.isGrabbingLedge)
         {
@@ -215,6 +199,27 @@ public class FreeMoveState : ICharacterState
             timeFallingNoJump = timeToFallNoJump;
             animator.SetBool(Character.TransitionParameter.Falling.ToString(), false);
         }
+    }
+
+    private void SetGravity()
+    {
+        if (characterScript.isGrounded)
+        {
+            if (!characterScript.isJumping)
+            {
+                characterScript.verticalVelocity.y = -5.0f;
+            }
+            characterScript.gravityOn = false;
+        }
+        else
+        {
+            characterScript.gravityOn = true;
+        }
+    }
+
+    public void Update()
+    {
+        SetFallingState();
         // Move Physics into global state?
         float horizontalMove = Input.GetAxis("Horizontal");
 
