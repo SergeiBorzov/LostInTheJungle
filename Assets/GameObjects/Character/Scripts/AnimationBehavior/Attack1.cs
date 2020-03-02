@@ -22,9 +22,6 @@ public class Attack1 : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        //characterScript.moveOn = true;
-        Debug.Log("Hello World! Not End");
-
         characterScript.isFight = false;
     }
 

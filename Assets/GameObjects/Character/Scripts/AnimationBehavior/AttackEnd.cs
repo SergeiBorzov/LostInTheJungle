@@ -10,9 +10,6 @@ public class AttackEnd : StateMachineBehaviour
     {
         characterScript = animator.GetComponentInParent<Character>();
         characterScript.isFight = true;
-        Debug.Log("Hello World! End");
-        //animator.SetBool(Character.TransitionParameter.Fight.ToString(), false);
-        //animator.SetBool(Character.TransitionParameter.Fight.ToString(), false);
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
@@ -24,10 +21,8 @@ public class AttackEnd : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        //characterScript.moveOn = true;
         animator.SetBool(Character.TransitionParameter.Fight.ToString(), false);
         characterScript.isFight = false;
-
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()

@@ -51,7 +51,6 @@ public class FreeMoveState : ICharacterState
 
             if (characterScript.isFight)
             {
-                //velocity = characterScript.forward * fightSpeed;
                 characterController.Move((movementOffset + characterScript.forward * fightSpeed) * Time.deltaTime);
             }
             else if (!(characterScript.groundAngle > characterScript.maxGroundAngle))
@@ -228,7 +227,6 @@ public class FreeMoveState : ICharacterState
         if (Input.GetMouseButtonDown(0) && (characterScript.isIdle || characterScript.isRunning || characterScript.isFight))
         {
             animator.SetBool(Character.TransitionParameter.Fight.ToString(), true);
-            //characterScript.moveOn = false;
         }
     }
 
