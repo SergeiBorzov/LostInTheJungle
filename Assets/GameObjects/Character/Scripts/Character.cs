@@ -35,7 +35,8 @@ public class Character : MonoBehaviour
         Falling,
         LandingNeeded,
         HangUp,
-        HangDown
+        HangDown,
+        Fight
     }
     #endregion
 
@@ -72,6 +73,8 @@ public class Character : MonoBehaviour
     public bool isLanding = false;
     [HideInInspector]
     public bool isTurning = false;
+    //[HideInInspector]
+    public bool isFight = false;
     //[HideInInspector]
     public bool isGrabbingLedge = false;
     [HideInInspector]

@@ -20,6 +20,7 @@ public class FreeMoveState : ICharacterState
     [SerializeField] private float timeToFallJump = 0.75f;
     [SerializeField] private float timeToFallNoJump = 0.05f;
     [SerializeField] private float timeLandingNeeded = 0.3f;
+    [SerializeField] private float fightSpeed = 1.0f;
     [SerializeField] private float timeFallingJump;
     [SerializeField] private float timeFallingNoJump;
 
@@ -48,7 +49,12 @@ public class FreeMoveState : ICharacterState
                 movementOffset.z = (0.0f - character.transform.position.z) * 2.0f;
             }
 
-            if (!(characterScript.groundAngle > characterScript.maxGroundAngle))
+            if (characterScript.isFight)
+            {
+                //velocity = characterScript.forward * fightSpeed;
+                characterController.Move((movementOffset + characterScript.forward * fightSpeed) * Time.deltaTime);
+            }
+            else if (!(characterScript.groundAngle > characterScript.maxGroundAngle))
             {
                 characterController.Move((movementOffset + velocity) * Time.deltaTime);
             }
@@ -217,6 +223,15 @@ public class FreeMoveState : ICharacterState
         }
     }
 
+    private void SetAnimatorFight(float horizontalMove)
+    {
+        if (Input.GetMouseButtonDown(0) && (characterScript.isIdle || characterScript.isRunning || characterScript.isFight))
+        {
+            animator.SetBool(Character.TransitionParameter.Fight.ToString(), true);
+            //characterScript.moveOn = false;
+        }
+    }
+
     public void Update()
     {
         SetFallingState();
@@ -230,6 +245,7 @@ public class FreeMoveState : ICharacterState
         SetAnimatorJumpState(horizontalMove);
         SetAnimatorHangingState();
         SetAnimatorTurnState(horizontalMove);
+        SetAnimatorFight(horizontalMove);
         Move(velocity);
     }
 
