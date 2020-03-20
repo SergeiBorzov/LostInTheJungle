@@ -13,18 +13,21 @@ public class FreeMoveState : ICharacterState
 
     private Vector3 movementOffset = Vector3.zero;
     #region MoveFields
-    [SerializeField] private float runSpeed = 7.0f;
-    [SerializeField] private float walkSpeed = 3.0f;
-    [SerializeField] private float pushForce = 5.0f;
-    [SerializeField] private float slowingDown = 2.0f;
-    [SerializeField] private float timeToFallJump = 0.75f;
-    [SerializeField] private float timeToFallNoJump = 0.05f;
-    [SerializeField] private float timeLandingNeeded = 0.3f;
-    [SerializeField] private float fightSpeed = 1.0f;
-    [SerializeField] private float timeFallingJump;
-    [SerializeField] private float timeFallingNoJump;
-
+    private float runSpeed = 7.0f;
+    private float walkSpeed = 3.0f;
+    private float pushForce = 5.0f;
+    private float slowingDown = 2.0f;
+    private float timeToFallJump = 0.75f;
+    private float timeToFallNoJump = 0.05f;
+    private float timeLandingNeeded = 0.3f;
+    private float fightSpeed = 1.0f;
+    private float timeFallingJump;
+    private float timeFallingNoJump;
     private float timeFalling;
+
+    private uint comboCounter = 0;
+    private float timeToCombo = 0.7f;
+    private float clickTime;
     #endregion
 
     private Vector3 velocity = Vector3.zero;
@@ -49,7 +52,7 @@ public class FreeMoveState : ICharacterState
                 movementOffset.z = (0.0f - character.transform.position.z) * 2.0f;
             }
 
-            if (characterScript.isFight)
+            if (characterScript.isFight || characterScript.isFightEnd)
             {
                 characterController.Move((movementOffset + characterScript.forward * fightSpeed) * Time.deltaTime);
             }
@@ -224,16 +227,28 @@ public class FreeMoveState : ICharacterState
 
     private void SetAnimatorFight(float horizontalMove)
     {
+        if (Time.time - clickTime > timeToCombo)
+        {
+            characterScript.clicks = 0;
+        }
+
         if (Input.GetMouseButtonDown(0) && (characterScript.isIdle || characterScript.isRunning || characterScript.isFight))
         {
-            animator.SetBool(Character.TransitionParameter.Fight.ToString(), true);
+            clickTime = Time.time;
+            characterScript.clicks++;
+            if (characterScript.clicks == 1)
+            {
+                animator.SetBool(Character.TransitionParameter.Fight.ToString(), true);
+            }
+           // Debug.Log(1);
+            characterScript.clicks = Mathf.Clamp(characterScript.clicks, 0, 3);
         }
     }
 
     public void Update()
     {
+        Debug.Log("Combo " + characterScript.clicks);
         SetFallingState();
-        // Move Physics into global state?
         float horizontalMove = Input.GetAxis("Horizontal");
 
         SetAnimatorClimbState();

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6807936607851510804}
   - component: {fileID: 2164405304012376303}
   - component: {fileID: 2164405304012376279}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cylinder_cell.003
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -123,7 +123,7 @@ GameObject:
   - component: {fileID: 5425082971744186150}
   - component: {fileID: 2164405304012376302}
   - component: {fileID: 2164405304012376278}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cylinder_cell.004
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -233,7 +233,7 @@ GameObject:
   - component: {fileID: 3149127283148688972}
   - component: {fileID: 2164405304012376296}
   - component: {fileID: 2164405304012376272}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cylinder_cell.002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -343,7 +343,7 @@ GameObject:
   - component: {fileID: 6653972771135716075}
   - component: {fileID: 2164405304012376300}
   - component: {fileID: 2164405304012376276}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cylinder_cell.006
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -453,7 +453,7 @@ GameObject:
   - component: {fileID: 8138901922754979856}
   - component: {fileID: 2164405304012376291}
   - component: {fileID: 2164405304012376299}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cylinder_cell.007
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -563,7 +563,7 @@ GameObject:
   - component: {fileID: 8264872534008499877}
   - component: {fileID: 2164405304012376297}
   - component: {fileID: 2164405304012376273}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cylinder_cell.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -673,7 +673,7 @@ GameObject:
   - component: {fileID: 427657169084976907}
   - component: {fileID: 2164405304012376298}
   - component: {fileID: 2164405304012376274}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cylinder_cell
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -779,8 +779,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6589672143141250016}
-  m_Layer: 0
-  m_Name: ceramicfractured
+  m_Layer: 10
+  m_Name: ceramicFractured
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -821,7 +821,7 @@ GameObject:
   - component: {fileID: 1585921740079482813}
   - component: {fileID: 2164405304012376301}
   - component: {fileID: 2164405304012376277}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cylinder_cell.005
   m_TagString: Untagged
   m_Icon: {fileID: 0}

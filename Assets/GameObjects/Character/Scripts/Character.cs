@@ -36,7 +36,8 @@ public class Character : MonoBehaviour
         LandingNeeded,
         HangUp,
         HangDown,
-        Fight
+        Fight,
+        FightEnd
     }
     #endregion
 
@@ -54,6 +55,8 @@ public class Character : MonoBehaviour
     private Vector3 centeredPosition;
 
     [SerializeField] public float jumpForce = 10.0f;
+
+    [HideInInspector] public int clicks = 0;
 
 
 
@@ -75,6 +78,8 @@ public class Character : MonoBehaviour
     public bool isTurning = false;
     //[HideInInspector]
     public bool isFight = false;
+    //[HideInInspector]
+    public bool isFightEnd = false;
     //[HideInInspector]
     public bool isGrabbingLedge = false;
     [HideInInspector]

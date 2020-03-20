@@ -6,10 +6,18 @@ public class Fracture : MonoBehaviour
 {
     [SerializeField]
     private GameObject fracturedVersion;
-
-    private void OnMouseDown()
+    /*
+    public void Action()
     {
         Instantiate(fracturedVersion, transform.position, transform.rotation);
         Destroy(gameObject);
     }
+    */
+    public void Action()
+    {
+        var go = Instantiate(fracturedVersion, transform.position, transform.rotation);
+        Destroy(gameObject);
+        Destroy(go, 3.0f);
+    }
+    
 }

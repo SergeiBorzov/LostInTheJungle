@@ -922,13 +922,17 @@ MonoBehaviour:
   gravityOn: 1
   moveOn: 1
   isIdle: 1
+  isRunning: 0
   lookingRight: 1
   isLanding: 0
   isTurning: 0
+  isFight: 0
   isGrabbingLedge: 0
   isJumping: 0
   isClimbing: 0
   isDroping: 0
+  isHangJumping: 0
+  isFalling: 0
   grabbedLedge: {fileID: 0}
 --- !u!1 &3927887905119523543
 GameObject:

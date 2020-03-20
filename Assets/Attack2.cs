@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Attack1 : StateMachineBehaviour
+public class Attack2 : StateMachineBehaviour
 {
     Character characterScript;
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
@@ -16,9 +16,9 @@ public class Attack1 : StateMachineBehaviour
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if (characterScript.clicks >= 2)
+        if (characterScript.clicks >= 3)
         {
-            animator.SetBool(Character.TransitionParameter.Fight.ToString(), true);
+            animator.SetBool(Character.TransitionParameter.FightEnd.ToString(), true);
             characterScript.isFight = true;
         }
         //else
@@ -30,13 +30,13 @@ public class Attack1 : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if (characterScript.clicks < 2)
+        if (characterScript.clicks < 3)
         {
-             characterScript.isFight = false;
+            characterScript.isFight = false;
         }
-         
+       
         /*
-        if (characterScript.clicks >= 1)
+        if (characterScript.clicks >= 2)
         {
             animator.SetBool(Character.TransitionParameter.Fight.ToString(), true);
         }
