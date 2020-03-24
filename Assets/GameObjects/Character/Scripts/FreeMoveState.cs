@@ -18,14 +18,13 @@ public class FreeMoveState : ICharacterState
     private float pushForce = 5.0f;
     private float slowingDown = 2.0f;
     private float timeToFallJump = 0.75f;
-    private float timeToFallNoJump = 0.05f;
+    private float timeToFallNoJump = 0.1f;
     private float timeLandingNeeded = 0.3f;
     private float fightSpeed = 1.0f;
     private float timeFallingJump;
     private float timeFallingNoJump;
     private float timeFalling;
 
-    private uint comboCounter = 0;
     private float timeToCombo = 0.7f;
     private float clickTime;
     #endregion
@@ -152,7 +151,8 @@ public class FreeMoveState : ICharacterState
     private void SetAnimatorJumpState(float horizontalMove)
     {
         if (Input.GetKeyDown(KeyCode.Space) && characterScript.isGrounded
-            && !characterScript.isTurning && !characterScript.isJumping && !characterScript.isDroping)
+            && !characterScript.isTurning && !characterScript.isJumping && !characterScript.isDroping
+            && !characterScript.isFight && !characterScript.isFightEnd)
         {
             animator.SetBool(Character.TransitionParameter.Jump.ToString(), true);
             animator.SetBool(Character.TransitionParameter.Move.ToString(), false);

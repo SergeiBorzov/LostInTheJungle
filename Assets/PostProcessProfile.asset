@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-7599457798076784459
+--- !u!114 &-7369502477652337067
 MonoBehaviour:
   m_ObjectHideFlags: 3
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9,23 +9,42 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 556797029e73b2347956b6579e77e05b, type: 3}
-  m_Name: DepthOfField
+  m_Script: {fileID: 11500000, guid: 48a79b01ea5641d4aa6daa2e23605641, type: 3}
+  m_Name: Bloom
   m_EditorClassIdentifier: 
   active: 1
   enabled:
     overrideState: 1
     value: 1
-  focusDistance:
+  intensity:
     overrideState: 1
-    value: 2.88
-  aperture:
+    value: 2
+  threshold:
     overrideState: 1
-    value: 4.4
-  focalLength:
+    value: 1
+  softKnee:
     overrideState: 1
-    value: 44
-  kernelSize:
+    value: 1
+  clamp:
+    overrideState: 1
+    value: 65472
+  diffusion:
+    overrideState: 1
+    value: 4
+  anamorphicRatio:
+    overrideState: 1
+    value: -1
+  color:
+    overrideState: 1
+    value: {r: 1, g: 1, b: 1, a: 1}
+  fastMode:
+    overrideState: 1
+    value: 0
+  dirtTexture:
+    overrideState: 1
+    value: {fileID: 0}
+    defaultState: 1
+  dirtIntensity:
     overrideState: 1
     value: 0
 --- !u!114 &-1947120905444193219
@@ -40,7 +59,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adb84e30e02715445aeb9959894e3b4d, type: 3}
   m_Name: ColorGrading
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   enabled:
     overrideState: 1
     value: 1
@@ -1352,5 +1371,5 @@ MonoBehaviour:
   m_Name: PostProcessProfile
   m_EditorClassIdentifier: 
   settings:
-  - {fileID: -7599457798076784459}
   - {fileID: -1947120905444193219}
+  - {fileID: -7369502477652337067}

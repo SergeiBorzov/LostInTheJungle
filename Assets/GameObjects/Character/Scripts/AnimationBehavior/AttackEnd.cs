@@ -27,7 +27,6 @@ public class AttackEnd : StateMachineBehaviour
         characterScript.isFight = false;
         characterScript.isFightEnd = false;
         characterScript.clicks = 0;
-
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()

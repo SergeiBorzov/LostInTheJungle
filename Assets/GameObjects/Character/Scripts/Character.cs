@@ -64,11 +64,11 @@ public class Character : MonoBehaviour
 
     [HideInInspector]
     public bool gravityOn = true;
-    //[HideInInspector]
+    [HideInInspector]
     public bool moveOn = true;
-    //[HideInInspector]
+    [HideInInspector]
     public bool isIdle = true;
-    //[HideInInspector]
+    [HideInInspector]
     public bool isRunning = false;
     [HideInInspector]
     public bool lookingRight = true;
@@ -80,19 +80,18 @@ public class Character : MonoBehaviour
     public bool isFight = false;
     //[HideInInspector]
     public bool isFightEnd = false;
-    //[HideInInspector]
+    [HideInInspector]
     public bool isGrabbingLedge = false;
     [HideInInspector]
     public bool isJumping = false;
-    //[HideInInspector]
+    [HideInInspector]
     public bool isClimbing = false;
-    //[HideInInspector]
+    [HideInInspector]
     public bool isDroping = false;
-    //[HideInInspector]
+    [HideInInspector]
     public bool isHangJumping = false;
-    //[HideInInspector]
+    [HideInInspector]
     public bool isFalling = false;
-    //[HideInInspector]
     
     #endregion
 
@@ -101,9 +100,64 @@ public class Character : MonoBehaviour
     private CharacterController characterController;
     private Animator animator;
 
-    // Public just for testing
     public Ledge grabbedLedge;
+
+    public Sword swordScript;
+    public Collider swordCollider;
+
+    [SerializeField]
+    private ParticleSystem trail;
+
+    [SerializeField]
+    private ParticleSystem trail2;
+
+    [SerializeField]
+    private ParticleSystem trail3;
     #endregion
+
+
+
+
+    private void EventTrailOn()
+    {
+        trail.Play();
+        swordCollider.enabled = true;
+        swordScript.canDamage = true;
+    }
+
+    private void EventTrailOff()
+    {
+        trail.Stop();
+        swordCollider.enabled = false;
+    }
+
+    private void EventTrail2On()
+    {
+        trail2.Play();
+        swordCollider.enabled = true;
+        swordScript.canDamage = true;
+    }
+
+    private void EventTrail2Off()
+    {
+        trail2.Stop();
+        swordCollider.enabled = false;
+    }
+
+    private void EventTrail3On()
+    {
+        trail3.Play();
+        swordCollider.enabled = true;
+        swordScript.canDamage = true;
+    }
+
+    private void EventTrail3Off()
+    {
+        trail3.Stop();
+        swordCollider.enabled = false;
+    }
+
+
 
 
     public bool IsClimbLedge()
@@ -249,8 +303,13 @@ public class Character : MonoBehaviour
         isTurning = false;
         isLanding = false;
 
+        swordScript = GetComponentInChildren<Sword>();
+        swordCollider = swordScript.GetComponent<Collider>();
         centeredPosition = transform.position + new Vector3(0.0f, characterController.height / 2.0f, 0.0f);
         SetState(new FreeMoveState());
+        trail.Stop();
+        trail2.Stop();
+        trail3.Stop();
     }
 
     private void ApplyGravity()
@@ -300,6 +359,13 @@ public class Character : MonoBehaviour
         }
         else
         {
+            Enemy enemyScript = body.gameObject.GetComponent<Enemy>();
+            if (enemyScript != null)
+            {
+                return;
+            }
+
+
             Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
 
             // If you know how fast your character is trying to move,

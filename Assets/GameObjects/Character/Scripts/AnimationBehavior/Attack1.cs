@@ -21,10 +21,6 @@ public class Attack1 : StateMachineBehaviour
             animator.SetBool(Character.TransitionParameter.Fight.ToString(), true);
             characterScript.isFight = true;
         }
-        //else
-        //{
-        //    characterScript.isFight = false;
-        //}
     }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
@@ -32,9 +28,9 @@ public class Attack1 : StateMachineBehaviour
     {
         if (characterScript.clicks < 2)
         {
-             characterScript.isFight = false;
+            characterScript.isFight = false;
         }
-         
+
         /*
         if (characterScript.clicks >= 1)
         {
