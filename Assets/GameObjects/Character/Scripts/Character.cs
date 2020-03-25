@@ -296,6 +296,13 @@ public class Character : MonoBehaviour
         currentState.OnStateEnter(gameObject);
     }
 
+    private void Awake()
+    {
+        trail.Stop();
+        trail2.Stop();
+        trail3.Stop();
+    }
+
     void Start()
     {
         characterController = GetComponent<CharacterController>();
@@ -307,9 +314,7 @@ public class Character : MonoBehaviour
         swordCollider = swordScript.GetComponent<Collider>();
         centeredPosition = transform.position + new Vector3(0.0f, characterController.height / 2.0f, 0.0f);
         SetState(new FreeMoveState());
-        trail.Stop();
-        trail2.Stop();
-        trail3.Stop();
+        
     }
 
     private void ApplyGravity()
