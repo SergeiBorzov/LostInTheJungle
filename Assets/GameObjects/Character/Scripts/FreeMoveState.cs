@@ -14,9 +14,9 @@ public class FreeMoveState : ICharacterState
     private Vector3 movementOffset = Vector3.zero;
     #region MoveFields
     private float runSpeed = 7.0f;
-    private float walkSpeed = 3.0f;
-    private float pushForce = 5.0f;
-    private float slowingDown = 2.0f;
+    //private float walkSpeed = 3.0f;
+    //private float pushForce = 5.0f;
+    //private float slowingDown = 2.0f;
     private float timeToFallJump = 0.75f;
     private float timeToFallNoJump = 0.1f;
     private float timeLandingNeeded = 0.3f;

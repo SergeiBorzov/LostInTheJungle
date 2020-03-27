@@ -367,6 +367,7 @@ public class Character : MonoBehaviour
             Enemy enemyScript = body.gameObject.GetComponent<Enemy>();
             if (enemyScript != null)
             {
+                Debug.Log("Was here!");
                 return;
             }
 

@@ -25,7 +25,7 @@ public class Sword : MonoBehaviour
             return;
         }
 
-        Enemy enemy = collision.gameObject.GetComponent<Enemy>();
+        /*Enemy enemy = collision.gameObject.GetComponent<Enemy>();
         if (enemy != null)
         {
             if (canDamage)
@@ -34,6 +34,6 @@ public class Sword : MonoBehaviour
                 canDamage = false;
             }
             return;
-        }
+        }*/
     }
 }
