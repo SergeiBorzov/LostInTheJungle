@@ -252,8 +252,4 @@ QualitySettings:
     - Lumin
     - WebGL
     - tvOS
-  m_PerPlatformDefaultQuality:
-    Android: 0
-    Standalone: 0
-    Windows Store Apps: 0
-    iPhone: 0
+  m_PerPlatformDefaultQuality: {}

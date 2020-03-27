@@ -1,0 +1,63 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Gates : MonoBehaviour
+{
+    // Start is called before the first frame update
+
+    private Animator animator;
+
+    [SerializeField]
+    private GateButton button1;
+
+    [SerializeField]
+    private GateButton button2;
+
+    [SerializeField]
+    private GateButton button3;
+
+    int current = 0;
+    private void Awake()
+    {
+        animator = GetComponent<Animator>();
+        animator.enabled = false;
+    }
+
+
+    public void Check(int order)
+    {
+        if (order == 1 && current == 0)
+        {
+            current = 1;
+        }
+        else if (order == 2 && current == 1)
+        {
+            current = 2;
+        }
+        else if (order == 3 && current == 2)
+        {
+            OpenGates();
+        }
+        else
+        {
+            Reset();
+        }
+    }
+
+    private void Reset()
+    {
+        current = 0;
+        button1.Reset();
+        button2.Reset();
+        button3.Reset();
+    }
+
+    public void OpenGates()
+    {
+        button1.Die();
+        button2.Die();
+        button3.Die();
+        animator.enabled = true;
+    }
+}

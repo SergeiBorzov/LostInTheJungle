@@ -5,8 +5,6 @@ using UnityEngine;
 public class ArrowColumn : MonoBehaviour
 {
     // Start is called before the first frame update
-    [SerializeField]
-    private GameObject arrow;
 
     [SerializeField]
     private Transform lowSpawn;
@@ -26,15 +24,40 @@ public class ArrowColumn : MonoBehaviour
     private float timeToStop;
 
     private bool shooting;
-    private void Shoot()
+
+    [SerializeField]
+    private Fire low;
+    [SerializeField]
+    private Fire middle;
+    [SerializeField]
+    private Fire high;
+    private void Fire()
+    {
+        low.Action();
+        middle.Action();
+        high.Action();
+    }
+
+    private void StopFire()
+    {
+        low.Stop();
+        middle.Stop();
+        high.Stop();
+    }
+
+    /*private void Shoot()
     {
         var lower = Instantiate(arrow, lowSpawn);
         var middle = Instantiate(arrow, middleSpawn);
         var high = Instantiate(arrow, highSpawn);
-    }
+    }*/
 
     private void Start()
     {
+        low.Stop();
+        middle.Stop();
+        high.Stop();
+
         shooting = false;
         timeToShoot = 1.5f;
     }
@@ -42,7 +65,28 @@ public class ArrowColumn : MonoBehaviour
 
     void Update()
     {
+
         if (!shooting)
+        {
+            timeToShoot -= Time.deltaTime;
+            if (timeToShoot < 0)
+            {
+                shooting = true;
+                timeToStop = shootTime;
+                Fire();
+            }
+        }
+        else
+        {
+            timeToStop -= Time.deltaTime;
+            if (timeToStop < 0)
+            {
+                shooting = false;
+                timeToShoot = waitTime;
+                StopFire();
+            }
+        }
+        /*if (!shooting)
         {
             timeToShoot -= Time.deltaTime;
             if (timeToShoot < 0)
@@ -61,6 +105,6 @@ public class ArrowColumn : MonoBehaviour
                 timeToShoot = waitTime;
                 CancelInvoke("Shoot");
             }
-        }
+        }*/
     }
 }
