@@ -112,7 +112,7 @@ public class FreeMoveState : ICharacterState
                 {
                     animator.SetBool(Character.TransitionParameter.Climb.ToString(), true);
                 }
-                else
+                else if (characterScript.NextClimbExists())
                 {
                     animator.SetBool(Character.TransitionParameter.HangUp.ToString(), true);
                 }

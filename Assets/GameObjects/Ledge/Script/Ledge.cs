@@ -18,4 +18,7 @@ public class Ledge : MonoBehaviour
 
     [SerializeField]
     public Transform previous;
+
+    [SerializeField]
+    public bool isLast;
 }

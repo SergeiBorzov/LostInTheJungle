@@ -76,5 +76,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ledgeOffset: {x: 0.2, y: 0.23, z: 0}
   endPoint: {x: 0, y: 0, z: 0}
+  hangOffset: {x: 0, y: 0.75, z: 0}
   next: {fileID: 0}
   previous: {fileID: 0}

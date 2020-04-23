@@ -11,6 +11,7 @@ Shader "Custom/TransparentShadowCaster" {
 		SubShader{
 			Tags { "RenderType" = "Transparent" "Queue" = "Transparent" }
 			LOD 200
+			//Cull On
 
 			CGPROGRAM
 			// Physically based Standard lighting model, and enable shadows on all light types

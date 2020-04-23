@@ -37,7 +37,8 @@ public class Character : MonoBehaviour
         HangUp,
         HangDown,
         Fight,
-        FightEnd
+        FightEnd,
+        Dead
     }
     #endregion
 
@@ -58,10 +59,6 @@ public class Character : MonoBehaviour
 
     [HideInInspector] public int clicks = 0;
 
-
-
-
-
     [HideInInspector]
     public bool gravityOn = true;
     [HideInInspector]
@@ -76,9 +73,9 @@ public class Character : MonoBehaviour
     public bool isLanding = false;
     [HideInInspector]
     public bool isTurning = false;
-    //[HideInInspector]
+    [HideInInspector]
     public bool isFight = false;
-    //[HideInInspector]
+    [HideInInspector]
     public bool isFightEnd = false;
     [HideInInspector]
     public bool isGrabbingLedge = false;
@@ -92,6 +89,13 @@ public class Character : MonoBehaviour
     public bool isHangJumping = false;
     [HideInInspector]
     public bool isFalling = false;
+
+    public bool isDead = false;
+
+    [HideInInspector]
+    public bool isGui = false;
+
+    public bool debug = true;
     
     #endregion
 
@@ -105,6 +109,15 @@ public class Character : MonoBehaviour
     public Sword swordScript;
     public Collider swordCollider;
 
+
+    [SerializeField]
+    private float maxHp = 100.0f;
+    [SerializeField]
+    private float currentHp = 100.0f;
+
+    [SerializeField]
+    private HealthBar healthBar;
+
     [SerializeField]
     private ParticleSystem trail;
 
@@ -114,9 +127,6 @@ public class Character : MonoBehaviour
     [SerializeField]
     private ParticleSystem trail3;
     #endregion
-
-
-
 
     private void EventTrailOn()
     {
@@ -162,7 +172,12 @@ public class Character : MonoBehaviour
 
     public bool IsClimbLedge()
     {
-        return grabbedLedge.next == null;
+        return grabbedLedge.next == null && grabbedLedge.isLast == true;
+    }
+
+    public bool NextClimbExists()
+    {
+        return grabbedLedge.next != null;
     }
 
     public bool IsDropLedge()
@@ -244,6 +259,24 @@ public class Character : MonoBehaviour
     }
 
 
+    public void TakeDamage(float value)
+    {
+        if (!isDead)
+        {
+            currentHp -= value;
+            healthBar.SetHealth(currentHp / maxHp);
+
+
+            if (currentHp < 0.0f)
+            {
+                currentHp = 0.0f;
+                isDead = true;
+                animator.SetTrigger(Character.TransitionParameter.Dead.ToString());
+            }
+        }
+    }
+
+
     // Recalculate forward vector, to fight jittering on terrain slopes
     private void CalculateForward()
     {
@@ -296,6 +329,14 @@ public class Character : MonoBehaviour
         currentState.OnStateEnter(gameObject);
     }
 
+    public void Die()
+    {
+        currentHp = 0.0f;
+        healthBar.SetHealth(currentHp / maxHp);
+        isDead = true;
+        animator.SetBool("Dead", isDead);
+    }
+
     private void Awake()
     {
         trail.Stop();
@@ -303,8 +344,14 @@ public class Character : MonoBehaviour
         trail3.Stop();
     }
 
-    void Start()
-    {
+    void Start() {
+
+        if (!debug)
+        {
+            transform.position = GameMaster.lastCheckPoint;
+        } 
+        
+
         characterController = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
         isTurning = false;
@@ -313,8 +360,11 @@ public class Character : MonoBehaviour
         swordScript = GetComponentInChildren<Sword>();
         swordCollider = swordScript.GetComponent<Collider>();
         centeredPosition = transform.position + new Vector3(0.0f, characterController.height / 2.0f, 0.0f);
+
         SetState(new FreeMoveState());
-        
+        Debug.Log("Current State!");
+        healthBar.SetHealth(currentHp / maxHp);
+
     }
 
     private void ApplyGravity()
@@ -331,14 +381,19 @@ public class Character : MonoBehaviour
     }
     void Update()
     {
-        CalculateForward();
-        CalculateGroundAngle();
-        CheckGround();
+        if (!isGui)
+        {
+            CalculateForward();
+            CalculateGroundAngle();
+            CheckGround();
 
-        currentState.Update();
-
-        ApplyGravity();
-        FightJittering();
+            if (!isDead)
+            {
+                currentState.Update();
+            }
+            ApplyGravity();
+            FightJittering();
+        }
     }
 
 

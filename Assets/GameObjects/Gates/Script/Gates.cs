@@ -25,23 +25,27 @@ public class Gates : MonoBehaviour
     }
 
 
-    public void Check(int order)
+    public bool Check(int order)
     {
         if (order == 1 && current == 0)
         {
             current = 1;
+            return true;
         }
         else if (order == 2 && current == 1)
         {
             current = 2;
+            return true;
         }
         else if (order == 3 && current == 2)
         {
             OpenGates();
+            return true;
         }
         else
         {
             Reset();
+            return false;
         }
     }
 
@@ -59,5 +63,6 @@ public class Gates : MonoBehaviour
         button2.Die();
         button3.Die();
         animator.enabled = true;
+        Debug.Log("HEHEHEHEHEHE");
     }
 }

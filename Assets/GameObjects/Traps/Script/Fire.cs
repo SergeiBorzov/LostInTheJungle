@@ -42,7 +42,7 @@ public class Fire : MonoBehaviour
 
         if (characterScript != null)
         {
-            Debug.Log("Pain in Fire!");
+            characterScript.TakeDamage(1.0f);
         }
     }
 

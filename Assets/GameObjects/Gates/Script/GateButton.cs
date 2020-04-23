@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class GateButton : MonoBehaviour
 {
-    //private Animator animator;
+    private Animator animator;
+    private Material mat;
+    private float lightUpTime = 2.0f;
+    private float timer = 1.0f;
 
     private bool active;
     private bool pressed;
@@ -25,10 +28,12 @@ public class GateButton : MonoBehaviour
 
     void Start()
     {
-        //animator = GetComponent<Animator>();
+        animator = GetComponent<Animator>();
         pressed = false;
         active = false;
         alive = true;
+        mat = GetComponent<Renderer>().material;
+        timer = lightUpTime;
     }
 
     public void Die()
@@ -39,23 +44,62 @@ public class GateButton : MonoBehaviour
     public void Reset()
     {
         pressed = false;
+        animator.SetBool("Pressed", pressed);
+        if (!active)
+        {
+            StopCoroutine("LightUp");
+            StartCoroutine("LightDown");
+        }
+    }
+
+    IEnumerator LightUp()
+    {
+        while (timer > 0.0f)
+        {
+            timer -= Time.deltaTime;
+            if (timer < 0)
+            {
+                timer = 0.0f;
+            }
+
+            mat.SetColor("_EmissionColor", Color.yellow*((lightUpTime - timer) / lightUpTime));
+            yield return null;
+        }
+    }
+
+    IEnumerator LightDown()
+    {
+        while (timer < lightUpTime)
+        {
+            timer += Time.deltaTime;
+            if (timer > lightUpTime)
+            {
+                timer = lightUpTime;
+            }
+
+            mat.SetColor("_EmissionColor", Color.yellow * ((lightUpTime - timer) / lightUpTime));
+            yield return null;
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (alive)
+        if (alive && !pressed)
         {
             var characterScript = other.gameObject.GetComponent<Character>();
             if (characterScript != null)
             {
-                Debug.Log("Any!");
                 if (!active)
                 {
                     active = true;
-                    gates.Check(order);
-                    //Check();
-
-                    //animator.SetBool("Active", active);
+                    StopCoroutine("LightDown");
+                    StartCoroutine("LightUp");
+                    if (gates.Check(order))
+                    {
+                        pressed = true;
+                        animator.SetBool("Pressed", pressed);
+                    };
+                    animator.SetBool("Active", active);
                 }
             }
         }
@@ -69,11 +113,16 @@ public class GateButton : MonoBehaviour
             var characterScript = other.gameObject.GetComponent<Character>();
             if (characterScript != null)
             {
-                Debug.Log("How!");
                 if (active)
                 {
                     active = false;
-                    //animator.SetBool("Active", active);
+                    if (!pressed)
+                    {
+                        StopCoroutine("LightUp");
+                        StartCoroutine("LightDown");
+                    }
+                   
+                    animator.SetBool("Active", active);
                 }
             }
         }

@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 2745476768780685984}
   - component: {fileID: 8441273990551006809}
   - component: {fileID: 2177585951198675841}
-  - component: {fileID: 2177585951198675842}
   - component: {fileID: 2815990732365667292}
   m_Layer: 0
   m_Name: IndianCube
@@ -97,20 +96,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &2177585951198675842
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7861521284673002117}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eba3790592ae3294c98d78b60bd04a56, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dissolveMaterial: {fileID: 2100000, guid: 479e616fd5e7d214fa0c639207508aa9, type: 2}
-  selected: 0
 --- !u!65 &2815990732365667292
 BoxCollider:
   m_ObjectHideFlags: 0
