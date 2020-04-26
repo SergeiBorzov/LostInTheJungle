@@ -98,7 +98,8 @@ public class FreeMoveState : ICharacterState
                (!characterScript.lookingRight && Input.GetKey(KeyCode.D))) &&
                 Input.GetKeyDown(KeyCode.Space) &&
                 characterScript.isGrabbingLedge &&
-                !characterScript.isClimbing)
+                !characterScript.isClimbing &&
+                !characterScript.isHangJumping)
         {
             characterScript.isHangJumping = true;
             animator.SetBool(Character.TransitionParameter.isGrabbingLedge.ToString(), false);
@@ -152,7 +153,7 @@ public class FreeMoveState : ICharacterState
     {
         if (Input.GetKeyDown(KeyCode.Space) && characterScript.isGrounded
             && !characterScript.isTurning && !characterScript.isJumping && !characterScript.isDroping
-            && !characterScript.isFight && !characterScript.isFightEnd)
+            && !characterScript.isFight && !characterScript.isFightEnd && !characterScript.isHangJumping)
         {
             animator.SetBool(Character.TransitionParameter.Jump.ToString(), true);
             animator.SetBool(Character.TransitionParameter.Move.ToString(), false);

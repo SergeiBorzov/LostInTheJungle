@@ -63,6 +63,5 @@ public class Gates : MonoBehaviour
         button2.Die();
         button3.Die();
         animator.enabled = true;
-        Debug.Log("HEHEHEHEHEHE");
     }
 }
