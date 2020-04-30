@@ -43,6 +43,7 @@ public class Fire : MonoBehaviour
         if (characterScript != null)
         {
             characterScript.TakeDamage(1.0f);
+            characterScript.OnFire();
         }
     }
 

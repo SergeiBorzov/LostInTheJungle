@@ -44,7 +44,15 @@ public class FreeMoveState : ICharacterState
 
     private void Move(Vector3 velocity)
     {
-        if (characterScript.moveOn)
+        if (characterScript.isOnFire)
+        {
+            if (Mathf.Abs(character.transform.position.z) > 0.01f)
+            {
+                movementOffset.z = (0.0f - character.transform.position.z) * 2.0f;
+            }
+            characterController.Move((movementOffset - characterScript.forward * fightSpeed) * Time.deltaTime);
+        }
+        else if (characterScript.moveOn)
         {
             if (Mathf.Abs(character.transform.position.z) > 0.01f)
             {

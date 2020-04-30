@@ -38,6 +38,7 @@ public class Character : MonoBehaviour
         HangDown,
         Fight,
         FightEnd,
+        OnFire,
         Dead
     }
     #endregion
@@ -89,6 +90,8 @@ public class Character : MonoBehaviour
     public bool isHangJumping = false;
     [HideInInspector]
     public bool isFalling = false;
+    [HideInInspector]
+    public bool isOnFire = false;
 
     public bool isDead = false;
 
@@ -258,6 +261,13 @@ public class Character : MonoBehaviour
         lookingRight = !lookingRight;
     }
 
+    public void OnFire()
+    {
+        if (!isDead && !isOnFire)
+        {
+            animator.SetBool(Character.TransitionParameter.OnFire.ToString(), true);
+        }
+    }
 
     public void TakeDamage(float value)
     {
