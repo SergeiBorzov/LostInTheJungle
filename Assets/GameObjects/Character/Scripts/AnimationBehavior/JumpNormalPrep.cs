@@ -10,7 +10,7 @@ public class JumpNormalPrep : StateMachineBehaviour
     {
         characterScript = animator.GetComponentInParent<Character>();
         characterScript.isJumping = true;
-        characterScript.moveOn = false;
+        characterScript.isStandJumping = true;
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

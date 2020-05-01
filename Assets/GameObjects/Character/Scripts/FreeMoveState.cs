@@ -20,7 +20,7 @@ public class FreeMoveState : ICharacterState
     private float timeToFallJump = 0.75f;
     private float timeToFallNoJump = 0.1f;
     private float timeLandingNeeded = 0.3f;
-    private float fightSpeed = 1.0f;
+    private float fightSpeed = 1.5f;
     private float timeFallingJump;
     private float timeFallingNoJump;
     private float timeFalling;
@@ -62,6 +62,10 @@ public class FreeMoveState : ICharacterState
             if (characterScript.isFight || characterScript.isFightEnd)
             {
                 characterController.Move((movementOffset + characterScript.forward * fightSpeed) * Time.deltaTime);
+            }
+            else if (characterScript.isStandJumping)
+            {
+                characterController.Move((movementOffset + velocity) * Time.deltaTime * 0.5f);
             }
             else if (!(characterScript.groundAngle > characterScript.maxGroundAngle))
             {

@@ -92,6 +92,8 @@ public class Character : MonoBehaviour
     public bool isFalling = false;
     [HideInInspector]
     public bool isOnFire = false;
+    [HideInInspector]
+    public bool isStandJumping = false;
 
     public bool isDead = false;
 
