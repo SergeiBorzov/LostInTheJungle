@@ -25,7 +25,7 @@ public class FreeMoveState : ICharacterState
     private float timeFallingNoJump;
     private float timeFalling;
 
-    private float timeToCombo = 0.7f;
+    private float timeToCombo = 0.5f;
     private float clickTime;
     #endregion
 
