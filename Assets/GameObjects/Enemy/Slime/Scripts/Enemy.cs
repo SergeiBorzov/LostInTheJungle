@@ -148,7 +148,7 @@ public class Enemy : MonoBehaviour
                 float dist2 = (transform.position - patrolPointSecond.position).magnitude;
 
 
-                Debug.Log("Patrol");
+                //Debug.Log("Patrol");
                 if (dist < tauntRadius)
                 {
                     currentState = State.Follow;

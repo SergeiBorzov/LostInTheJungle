@@ -28,8 +28,6 @@ public class JumpNormalLanding : StateMachineBehaviour
     {
         characterScript.isStandJumping = false;
         //characterScript.isLanding = false;
-
-
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()

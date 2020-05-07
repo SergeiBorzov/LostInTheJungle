@@ -10,6 +10,9 @@ public interface ICharacterState
     void OnStateExit();
     void OnTriggerEnter(Collider other);
     void OnTriggerExit(Collider other);
+
+    Vector3 GetVelocity();
+    void SetVelocity(Vector3 v);
 }
 
 public class Character : MonoBehaviour
@@ -39,6 +42,7 @@ public class Character : MonoBehaviour
         Fight,
         FightEnd,
         OnFire,
+        Hook,
         Dead
     }
     #endregion
@@ -94,6 +98,8 @@ public class Character : MonoBehaviour
     public bool isOnFire = false;
     [HideInInspector]
     public bool isStandJumping = false;
+   
+    public bool isHook = false;
 
     public bool isDead = false;
 
@@ -108,11 +114,17 @@ public class Character : MonoBehaviour
     #region Components
     private CharacterController characterController;
     private Animator animator;
+    private CapsuleCollider hookCollider;
+
+    private LedgeChecker ledgeChecker;
 
     public Ledge grabbedLedge;
 
     public Sword swordScript;
     public Collider swordCollider;
+
+    [HideInInspector]
+    public float horizontalMove;
 
 
     [SerializeField]
@@ -132,6 +144,7 @@ public class Character : MonoBehaviour
     [SerializeField]
     private ParticleSystem trail3;
     #endregion
+
 
     private void EventTrailOn()
     {
@@ -209,6 +222,11 @@ public class Character : MonoBehaviour
         transform.parent = null;
     }
 
+    public void HookJump()
+    {
+        verticalVelocity.y = jumpForce;
+    }
+
     public void PerformClimb()
     {
         characterController.enabled = false;
@@ -251,13 +269,14 @@ public class Character : MonoBehaviour
 
     public void Flip()
     {
+        Quaternion quat = transform.rotation;
         if (lookingRight)
         {
-            transform.rotation = Quaternion.Euler(0.0f, -90.0f, 0.0f);
+            transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, -90.0f, transform.rotation.eulerAngles.z);
         }
         else
         {
-            transform.rotation = Quaternion.Euler(0.0f, 90.0f, 0.0f);
+            transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, 90.0f, transform.rotation.eulerAngles.z);
         }
 
         lookingRight = !lookingRight;
@@ -349,6 +368,30 @@ public class Character : MonoBehaviour
         animator.SetBool("Dead", isDead);
     }
 
+    public void SetVelocity(Vector3 v)
+    {
+        currentState.SetVelocity(v);
+    }
+
+    public Vector3 GetVelocity()
+    {
+        return currentState.GetVelocity();
+    }
+
+    public void HookColliderOn()
+    {
+        ledgeChecker.GetComponent<BoxCollider>().enabled = false;
+        hookCollider.enabled = true;
+    }
+
+    public void HookColliderOff()
+    {
+        ledgeChecker.GetComponent<BoxCollider>().enabled = true;
+        hookCollider.enabled = false;
+    }
+
+
+
     private void Awake()
     {
         trail.Stop();
@@ -366,6 +409,8 @@ public class Character : MonoBehaviour
 
         characterController = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
+        hookCollider = GetComponent<CapsuleCollider>();
+        ledgeChecker = GetComponentInChildren<LedgeChecker>();
         isTurning = false;
         isLanding = false;
 
@@ -374,7 +419,7 @@ public class Character : MonoBehaviour
         centeredPosition = transform.position + new Vector3(0.0f, characterController.height / 2.0f, 0.0f);
 
         SetState(new FreeMoveState());
-        Debug.Log("Current State!");
+        //Debug.Log("Current State!");
         healthBar.SetHealth(currentHp / maxHp);
 
     }
@@ -395,16 +440,20 @@ public class Character : MonoBehaviour
     {
         if (!isGui)
         {
-            CalculateForward();
-            CalculateGroundAngle();
-            CheckGround();
-
-            if (!isDead)
+            horizontalMove = Input.GetAxis("Horizontal");
+            if (!isHook)
             {
-                currentState.Update();
-            }
-            ApplyGravity();
-            FightJittering();
+                CalculateForward();
+                CalculateGroundAngle();
+                CheckGround();
+
+                if (!isDead)
+                {
+                    currentState.Update();
+                }
+                ApplyGravity();
+                FightJittering();
+            } 
         }
     }
 

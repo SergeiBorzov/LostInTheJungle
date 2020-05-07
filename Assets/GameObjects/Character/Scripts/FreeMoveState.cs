@@ -25,12 +25,22 @@ public class FreeMoveState : ICharacterState
     private float timeFallingNoJump;
     private float timeFalling;
 
-    private float timeToCombo = 0.5f;
+    private float timeToCombo = 0.45f;
     private float clickTime;
     #endregion
 
     private Vector3 velocity = Vector3.zero;
    
+    public void SetVelocity(Vector3 v)
+    {
+        velocity = v;
+    }
+
+    public Vector3 GetVelocity()
+    {
+        return velocity;
+    }
+
     public void OnStateEnter(GameObject ch)
     {
         character = ch;
@@ -260,10 +270,10 @@ public class FreeMoveState : ICharacterState
 
     public void Update()
     {
-        Debug.Log("Combo " + characterScript.clicks);
+        //Debug.Log("Combo " + characterScript.clicks);
         SetFallingState();
-        float horizontalMove = Input.GetAxis("Horizontal");
 
+        float horizontalMove = characterScript.horizontalMove;
         SetAnimatorClimbState();
         SetAnimatorMoveState(horizontalMove);
         velocity = characterScript.forward * Mathf.Abs(horizontalMove) * runSpeed;
