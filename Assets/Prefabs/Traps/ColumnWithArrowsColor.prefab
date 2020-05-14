@@ -262,6 +262,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4462779037009789545, guid: 288f5b79eb7504a4d8472120a988c9e6,
+        type: 3}
+      propertyPath: LightsModule.light
+      value: 
+      objectReference: {fileID: 6988458935448927475, guid: 5b115dad55f68424a96fa9cf8223e20e,
+        type: 3}
+    - target: {fileID: 4462779037009789545, guid: 288f5b79eb7504a4d8472120a988c9e6,
+        type: 3}
+      propertyPath: LightsModule.ratio
+      value: 0.66
+      objectReference: {fileID: 0}
     - target: {fileID: 1443197625547797408, guid: 288f5b79eb7504a4d8472120a988c9e6,
         type: 3}
       propertyPath: m_Enabled
@@ -445,6 +456,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4462779037009789545, guid: 288f5b79eb7504a4d8472120a988c9e6,
+        type: 3}
+      propertyPath: LightsModule.maxLights
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 1443197625547797408, guid: 288f5b79eb7504a4d8472120a988c9e6,
         type: 3}

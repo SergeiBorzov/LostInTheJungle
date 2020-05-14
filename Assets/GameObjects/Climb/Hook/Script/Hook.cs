@@ -74,7 +74,11 @@ public class Hook : MonoBehaviour
         m_Joint.connectedAnchor = m_Receivers[0].position;
 
         float distanceFromPoint = Vector3.Distance(m_Graple.position, m_Receivers[0].gameObject.transform.position);
-       
+
+        m_Joint.minDistance = Mathf.Clamp(distanceFromPoint, 3.0f, 5.0f) - 1.0f;
+        //m_Joint.maxDistance = 5.0f;
+        //m_Joint.minDistance = 3.0f - distanceFromPoint;
+
         m_CharacterScript.isHook = true;
         m_CharacterScript.verticalVelocity = Vector3.zero;
         m_CharacterController.enabled = false;
@@ -90,11 +94,12 @@ public class Hook : MonoBehaviour
 
     public void Degrapple()
     {
+        m_Rigidbody.isKinematic = true;
+
         m_CharacterScript.isHook = false;
         m_Joint.connectedBody = null;
 
-        m_Rigidbody.velocity = Vector3.zero;
-        m_Rigidbody.isKinematic = true;
+        
 
         m_CharacterScript.HookColliderOff();
         Quaternion q = m_CharacterScript.transform.rotation;
@@ -284,6 +289,7 @@ public class Hook : MonoBehaviour
         m_LineRenderer.SetPosition(0, m_Graple.position);
         m_LineRenderer.SetPosition(1, m_ReceiverPosition);
     }
+
     private void LateUpdate()
     {
         if (flip)
@@ -297,7 +303,7 @@ public class Hook : MonoBehaviour
         }
 
 
-        Vector3 n = m_Receivers[0].position - m_Graple.position;
+        /*Vector3 n = m_Receivers[0].position - m_Graple.position;
         n = new Vector3(n.x, n.y, 0.0f);
         n.Normalize();
 
@@ -316,7 +322,7 @@ public class Hook : MonoBehaviour
                 Quaternion.Lerp(quat, res, Time.deltaTime * 2.0f);
             }
         }
-        
+        */
 
         if (m_LineRenderer.enabled)
         {

@@ -8,8 +8,6 @@ public class Fire : MonoBehaviour
 
     [SerializeField]
     private ParticleSystem main;
-    [SerializeField]
-    private ParticleSystem glow;
 
     [SerializeField]
     private Collider fireCollider;
@@ -19,21 +17,18 @@ public class Fire : MonoBehaviour
     {
         fireCollider.enabled = false;
         main.Stop();
-        glow.Stop();
     }
 
     public void Action()
     {
         fireCollider.enabled = true;
         main.Play();
-        glow.Play();
     }
 
     public void Stop()
     {
         fireCollider.enabled = false;
         main.Stop();
-        glow.Stop();
     }
 
     private void OnTriggerStay(Collider other)

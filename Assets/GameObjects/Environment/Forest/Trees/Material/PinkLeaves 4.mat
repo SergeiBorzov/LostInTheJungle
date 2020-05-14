@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: PinkLeaves 4
-  m_Shader: {fileID: 4800000, guid: 0fb7ef7da0679e14fbd20b757595cac7, type: 3}
+  m_Shader: {fileID: 4800000, guid: 2f6d1d74520ef4c4cbefd4fd8bcc59f6, type: 3}
   m_ShaderKeywords: _ALPHATEST_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -48,7 +48,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: ad44d58ec2003be4c855ca29c74dd368, type: 3}
+        m_Texture: {fileID: 2800000, guid: 9c5ad7671a36c224cab18c0c2c6d115a, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -91,8 +91,6 @@ Material:
     - _Occlusion: 7.5
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _ScaleX: 3
-    - _ScaleY: 3
     - _ShakeBending: 1
     - _ShakeDisplacement: 0.112
     - _ShakeTime: 0.072
