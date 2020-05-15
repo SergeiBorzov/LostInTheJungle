@@ -16,6 +16,7 @@ public class Hook : MonoBehaviour
     Animator m_Animator;
 
     public bool m_SwingReady = false;
+    bool m_SwingPressed = false;
     bool m_Swing_Right = false;
     bool m_Swing_Left = false;
 
@@ -24,6 +25,9 @@ public class Hook : MonoBehaviour
 
     bool m_Up = false;
     bool m_Down = false;
+
+    bool m_MaxSpeedInit = false;
+    float m_MaxSpeed = 0.0f;
 
     Vector3 m_ReceiverPosition;
 
@@ -43,6 +47,62 @@ public class Hook : MonoBehaviour
     public Vector3 GetReceiver()
     {
         return m_ReceiverPosition;
+    }
+
+    private void ComputeFrontSwing()
+    {
+        var v = m_Rigidbody.velocity;
+        var speed = v.magnitude;
+
+
+        Vector3 n = m_Receivers[0].position - m_Graple.position;
+        n = new Vector3(n.x, n.y, 0.0f);
+        n.Normalize();
+        float cos = Vector3.Dot(n, Vector3.right);
+
+        if (Mathf.Abs(cos) < 0.05f)
+        {
+            m_SwingPressed = false;
+            m_MaxSpeed = speed;
+            if (!m_MaxSpeedInit)
+            {
+                m_MaxSpeedInit = true;
+            }
+            //Debug.Log("Max speed: " + m_MaxSpeed);
+        }
+
+        if (m_MaxSpeedInit)
+        {
+            if (m_MaxSpeed < 2.5f)
+            {
+                m_Animator.SetBool(Character.TransitionParameter.SwingIdle.ToString(), true);
+            }
+        }
+
+        
+
+
+        float dir_cos = 0.0f;
+
+        if (m_CharacterScript.lookingRight)
+        {
+            dir_cos = Vector3.Dot(v, Vector3.right);
+        }
+        else
+        {
+            dir_cos = Vector3.Dot(v, Vector3.left);
+        }
+
+
+        if (dir_cos < -0.05f)
+        {
+            m_Animator.SetBool(Character.TransitionParameter.FrontSwing.ToString(), false);
+        }
+        else
+        {
+            m_Animator.SetBool(Character.TransitionParameter.FrontSwing.ToString(), true);
+        }
+        
     }
 
     private void Start()
@@ -114,6 +174,7 @@ public class Hook : MonoBehaviour
 
     private void Update()
     {
+
         if (Input.GetMouseButtonDown(1) && !m_CharacterScript.isHook && !m_CharacterScript.isGrounded) {
             if (m_Receivers.Count != 0)
             {
@@ -125,51 +186,84 @@ public class Hook : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) && m_CharacterScript.isHook)
+        if (m_CharacterScript.isHook)
         {
-            if (m_Receivers.Count != 0)
+            ComputeFrontSwing();
+
+            if (Input.GetKeyDown(KeyCode.Space))
             {
-                m_Degrapple = true;
-                /*var script = m_Receivers[0].GetComponent<HookReceiver>();
-                Degrapple();
-                script.Deactivate();
-                m_CharacterScript.HookJump();*/
+                if (m_Receivers.Count != 0)
+                {
+                    m_Degrapple = true;
+                    /*var script = m_Receivers[0].GetComponent<HookReceiver>();
+                    Degrapple();
+                    script.Deactivate();
+                    m_CharacterScript.HookJump();*/
+                }
+            }
+
+            if (Input.GetKey(KeyCode.A))
+            {
+                if (m_CharacterScript.lookingRight && !m_CharacterScript.isTurning)
+                {
+                    m_Animator.SetBool(Character.TransitionParameter.Turn.ToString(), true);
+                }
+                m_Swing_Left = true;
+                
+                if (!m_SwingPressed)
+                {
+                    m_SwingPressed = true;
+                    m_Animator.SetBool(Character.TransitionParameter.Swing.ToString(), true);
+                }
+            }
+            else if (Input.GetKey(KeyCode.D))
+            {
+                if (!m_CharacterScript.lookingRight && !m_CharacterScript.isTurning)
+                {
+                    m_Animator.SetBool(Character.TransitionParameter.Turn.ToString(), true);
+                }
+                m_Swing_Right = true;
+
+                if (!m_SwingPressed)
+                {
+                    m_SwingPressed = true;
+                    m_Animator.SetBool(Character.TransitionParameter.Swing.ToString(), true);
+                }
+
+            }
+
+
+            if (Input.GetKeyUp(KeyCode.A))
+            {
+                m_SwingPressed = false;
+                m_Animator.SetBool(Character.TransitionParameter.Swing.ToString(), false);
+            }
+            else if (Input.GetKeyUp(KeyCode.D))
+            {
+                m_SwingPressed = false;
+                m_Animator.SetBool(Character.TransitionParameter.Swing.ToString(), false);
+            }
+
+            if (Input.GetAxis("Mouse ScrollWheel") < 0.0f)
+            {
+                m_Up = true;
+            }
+            else if (Input.GetAxis("Mouse ScrollWheel") > 0.0f)
+            {
+                m_Down = true;
             }
         }
+       
 
         
-        if (Input.GetKey(KeyCode.A) )
-        {
-            if (m_CharacterScript.lookingRight && !m_CharacterScript.isTurning)
-            {
-               
-                m_Animator.SetBool(Character.TransitionParameter.Turn.ToString(), true);
-                
-            }
-            m_Swing_Left = true;
-        }
-        else if (Input.GetKey(KeyCode.D))
-        {
-            if (!m_CharacterScript.lookingRight && !m_CharacterScript.isTurning)
-            {
-                m_Animator.SetBool(Character.TransitionParameter.Turn.ToString(), true);
-            }
-            m_Swing_Right = true;
-        }
+       
 
         /*if (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D))
         {
             m_SwingReady = true;
         }*/
 
-        if (Input.GetAxis("Mouse ScrollWheel") < 0.0f)
-        {
-            m_Up = true;
-        }
-        else if (Input.GetAxis("Mouse ScrollWheel") > 0.0f)
-        {
-            m_Down = true;
-        }
+        
     }
 
 
@@ -182,6 +276,17 @@ public class Hook : MonoBehaviour
         float s = m_Rigidbody.velocity.magnitude;
         m_Rigidbody.velocity = m_Rigidbody.velocity.normalized * (s - Time.fixedDeltaTime * m_Friction * Mathf.Abs(cos));
     }
+
+    private void Stop2()
+    {
+        Vector3 n = m_Receivers[0].position - m_Graple.position;
+        n = new Vector3(n.x, n.y, 0.0f);
+        n.Normalize();
+        float cos = Vector3.Dot(n, Vector3.right);
+        float s = m_Rigidbody.velocity.magnitude;
+        m_Rigidbody.velocity = m_Rigidbody.velocity.normalized * (s - Time.fixedDeltaTime * 1.5f * Mathf.Abs(cos));
+    }
+
     private void FixedUpdate()
     {
        
@@ -218,34 +323,33 @@ public class Hook : MonoBehaviour
 
             if (m_Swing_Right)
             {
-                Debug.Log("Here");
-                if (cos > 0.0f)
+                if (cos < 0.0f)
                 {
                     m_Rigidbody.velocity += new Vector3(n.y, -n.x, 0.0f) * Time.fixedDeltaTime * 2.0f;
                 }
                 else
                 {
-                    Debug.Log("Stop");
                     Stop();
                 }
                 m_Swing_Right = false;
             }
             else if (m_Swing_Left)
             {
-                if (cos < 0.0f)
+                if (cos > 0.0f)
                 {
                     m_Rigidbody.velocity += new Vector3(-n.y, n.x, 0.0f) * Time.fixedDeltaTime * 2.0f;
-                    
                 }
                 else
                 {
+                    //Debug.Log("Stop L!");
                     Stop();
                 }
                 m_Swing_Left = false;
             }
             else
             {
-                //Stop();
+                Debug.Log("Stop2!");
+                Stop2();
             }
 
             float speed = m_Rigidbody.velocity.magnitude;
@@ -303,26 +407,36 @@ public class Hook : MonoBehaviour
         }
 
 
-        /*Vector3 n = m_Receivers[0].position - m_Graple.position;
-        n = new Vector3(n.x, n.y, 0.0f);
-        n.Normalize();
+        
 
-        if (m_CharacterScript.isHook)
+        /*if (m_CharacterScript.isHook)
         {
+            Vector3 n = m_Receivers[0].position - m_Graple.position;
+            n = new Vector3(n.x, n.y, 0.0f);
+            n.Normalize();
+
             float cos = Vector3.Dot(n, Vector3.right);
+            Debug.Log("Cos " + cos);
             Quaternion quat = m_CharacterScript.transform.rotation;
             if (m_CharacterScript.lookingRight)
             {
                 Quaternion res = Quaternion.Euler(90.0f - Mathf.Rad2Deg * Mathf.Acos(cos), quat.eulerAngles.y, quat.eulerAngles.z);
-                Quaternion.Lerp(quat, res, Time.deltaTime*2.0f);
+                //Quaternion.Lerp(quat, res, 0.5f);
+                //m_CharacterScript.transform.rotation = Quaternion.Lerp(quat, res, Time.deltaTime*2.0f); 
+                //m_CharacterScript.transform.rotation = res;
+
             }
             else
             {
                 Quaternion res = Quaternion.Euler(-90.0f + Mathf.Rad2Deg * Mathf.Acos(cos), quat.eulerAngles.y, quat.eulerAngles.z);
-                Quaternion.Lerp(quat, res, Time.deltaTime * 2.0f);
+                //Quaternion.Lerp(quat, res, 0.5f);
+                //m_CharacterScript.transform.rotation = Quaternion.Lerp(quat, res, Time.deltaTime * 2.0f);
+                //m_CharacterScript.transform.rotation = res;
+
             }
-        }
-        */
+
+        }*/
+        
 
         if (m_LineRenderer.enabled)
         {

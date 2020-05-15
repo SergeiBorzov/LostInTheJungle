@@ -43,6 +43,9 @@ public class Character : MonoBehaviour
         FightEnd,
         OnFire,
         Hook,
+        Swing,
+        FrontSwing,
+        SwingIdle,
         Dead
     }
     #endregion
@@ -117,6 +120,7 @@ public class Character : MonoBehaviour
     private CapsuleCollider hookCollider;
 
     private LedgeChecker ledgeChecker;
+    //private Hook hook;
 
     public Ledge grabbedLedge;
 
@@ -282,6 +286,11 @@ public class Character : MonoBehaviour
         lookingRight = !lookingRight;
     }
 
+    public void ResetSwing()
+    {
+        animator.SetBool(Character.TransitionParameter.Swing.ToString(), false);
+    }
+
     public void OnFire()
     {
         if (!isDead && !isOnFire)
@@ -413,6 +422,7 @@ public class Character : MonoBehaviour
         ledgeChecker = GetComponentInChildren<LedgeChecker>();
         isTurning = false;
         isLanding = false;
+        //hook = GetComponentInChildren<Hook>();
 
         swordScript = GetComponentInChildren<Sword>();
         swordCollider = swordScript.GetComponent<Collider>();
