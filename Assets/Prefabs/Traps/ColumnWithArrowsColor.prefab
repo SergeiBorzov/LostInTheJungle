@@ -462,6 +462,11 @@ PrefabInstance:
       propertyPath: LightsModule.maxLights
       value: 20
       objectReference: {fileID: 0}
+    - target: {fileID: 4462779037009789545, guid: 288f5b79eb7504a4d8472120a988c9e6,
+        type: 3}
+      propertyPath: LightsModule.ratio
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 1443197625547797408, guid: 288f5b79eb7504a4d8472120a988c9e6,
         type: 3}
       propertyPath: m_Enabled
