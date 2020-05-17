@@ -42,6 +42,9 @@ public class Character : MonoBehaviour
         Fight,
         FightEnd,
         OnFire,
+        Box,
+        Push,
+        Pull,
         Hook,
         Swing,
         FrontSwing,
@@ -101,7 +104,14 @@ public class Character : MonoBehaviour
     public bool isOnFire = false;
     [HideInInspector]
     public bool isStandJumping = false;
-   
+    //[HideInInspector]
+    public bool isNearBox = false;
+    public bool isGrabbingBox = false;
+    //[HideInInspector]
+    public bool isPushing = false;
+    //[HideInInspector]
+    public bool isPulling = false;
+
     public bool isHook = false;
 
     public bool isDead = false;
@@ -131,6 +141,8 @@ public class Character : MonoBehaviour
     public float horizontalMove;
 
 
+
+
     [SerializeField]
     private float maxHp = 100.0f;
     [SerializeField]
@@ -147,6 +159,9 @@ public class Character : MonoBehaviour
 
     [SerializeField]
     private ParticleSystem trail3;
+
+    //[SerializeField]
+    public Box grabbedBox;
     #endregion
 
 
@@ -494,7 +509,12 @@ public class Character : MonoBehaviour
             Enemy enemyScript = body.gameObject.GetComponent<Enemy>();
             if (enemyScript != null)
             {
-                Debug.Log("Was here!");
+                return;
+            }
+
+            Box box = body.gameObject.GetComponent<Box>();
+            if (box != null)
+            {
                 return;
             }
 

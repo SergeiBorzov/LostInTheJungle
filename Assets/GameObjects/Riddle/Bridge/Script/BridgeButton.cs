@@ -68,7 +68,7 @@ public class BridgeButton : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         if (alive)
         {
