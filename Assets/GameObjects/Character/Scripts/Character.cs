@@ -245,6 +245,7 @@ public class Character : MonoBehaviour
         grabbedLedge = grabbedLedge.next.gameObject.GetComponent<Ledge>();
         transform.position += grabbedLedge.hangOffset;
         transform.parent = grabbedLedge.transform;
+
         characterController.enabled = true;
     }
 
