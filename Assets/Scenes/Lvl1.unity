@@ -2782,6 +2782,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 187844516}
     m_Modifications:
+    - target: {fileID: 3227144701160562533, guid: 2c1f566d5766b184d9a7bae0bd212867,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1437561752}
+    - target: {fileID: 3227144701160562533, guid: 2c1f566d5766b184d9a7bae0bd212867,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: LastCheckPoint
+      objectReference: {fileID: 0}
     - target: {fileID: 149453904806227271, guid: 2c1f566d5766b184d9a7bae0bd212867,
         type: 3}
       propertyPath: m_Name
@@ -4018,7 +4028,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 39
+  m_RootOrder: 40
   m_LocalEulerAnglesHint: {x: 0, y: -90.00001, z: -2.285}
 --- !u!1001 &259959746
 PrefabInstance:
@@ -13069,7 +13079,7 @@ Transform:
   m_LocalScale: {x: 10, y: 6, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 41
+  m_RootOrder: 42
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &727939362 stripped
 Transform:
@@ -19140,6 +19150,63 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7a4d01328b1a0f54fb24bb6dfd0f0f9c, type: 3}
+--- !u!1 &1115554038
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1115554040}
+  - component: {fileID: 1115554039}
+  - component: {fileID: 1115554041}
+  m_Layer: 9
+  m_Name: DeathPit
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!65 &1115554039
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1115554038}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 7.82, y: 0, z: 30}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!4 &1115554040
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1115554038}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 186.93, y: 41.13, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 39
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1115554041
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1115554038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a4b08012ef25d74eb4d7a148743e4c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1119481433
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20334,7 +20401,7 @@ Transform:
   m_LocalScale: {x: 10, y: 1, z: 11.5}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 42
+  m_RootOrder: 43
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1194524256
 PrefabInstance:
@@ -21279,7 +21346,7 @@ PrefabInstance:
     - target: {fileID: 4105058359729180036, guid: 4e80d1bdb944d394cbcd953da52ea227,
         type: 3}
       propertyPath: m_RootOrder
-      value: 40
+      value: 41
       objectReference: {fileID: 0}
     - target: {fileID: 4105058359729180036, guid: 4e80d1bdb944d394cbcd953da52ea227,
         type: 3}
@@ -40238,6 +40305,11 @@ PrefabInstance:
       propertyPath: healthBar
       value: 
       objectReference: {fileID: 930098201}
+    - target: {fileID: 5356078827226548758, guid: 3c074f1246219446db1e639fdfafb8ba,
+        type: 3}
+      propertyPath: debug
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3840110195951218693, guid: 3c074f1246219446db1e639fdfafb8ba,
         type: 3}
       propertyPath: m_IsActive
