@@ -167,7 +167,7 @@ public class Enemy : MonoBehaviour
             }
             case State.Follow:
             {
-                Debug.Log("Follow");
+                //Debug.Log("Follow");
                 agent.SetDestination(playerTransform.position);
 
                 if (dist < attackRadius)
@@ -184,7 +184,7 @@ public class Enemy : MonoBehaviour
             }
             case State.Attack:
             {
-                Debug.Log("Attack");
+                //Debug.Log("Attack");
                 
                 if (dist > attackRadius)
                 {

@@ -12,7 +12,7 @@ public class CheckPoint : MonoBehaviour
         var characterScript = other.gameObject.GetComponent<Character>();
         if (characterScript != null)
         {
-            Debug.Log("CheckPoint!");
+            //Debug.Log("CheckPoint!");
             GameMaster.lastCheckPoint = respawn.position;
         }
     }
