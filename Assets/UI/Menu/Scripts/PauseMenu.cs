@@ -14,6 +14,7 @@ public class PauseMenu : MonoBehaviour
     {
         pauseMenu.SetActive(true);
         characterScript.isGui = true;
+        characterScript.GetComponents<AudioSource>()[4].Stop();
         Time.timeScale = 0.0f;
         gamePaused = true;
     }
@@ -31,6 +32,7 @@ public class PauseMenu : MonoBehaviour
         pauseMenu.SetActive(false);
         Time.timeScale = 1.0f;
         gamePaused = false;
+        characterScript.GetComponents<AudioSource>()[4].Play();
     }
 
     public void Restart()

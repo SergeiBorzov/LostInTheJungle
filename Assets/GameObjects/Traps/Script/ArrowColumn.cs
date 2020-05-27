@@ -31,11 +31,15 @@ public class ArrowColumn : MonoBehaviour
     private Fire middle;
     [SerializeField]
     private Fire high;
+    //suond
+    AudioSource flame_sound;
+    //sound
     private void Fire()
     {
         low.Action();
         middle.Action();
         high.Action();
+        flame_sound.Play();
     }
 
     private void StopFire()
@@ -43,6 +47,7 @@ public class ArrowColumn : MonoBehaviour
         low.Stop();
         middle.Stop();
         high.Stop();
+        flame_sound.Stop();
     }
 
     /*private void Shoot()
@@ -54,6 +59,7 @@ public class ArrowColumn : MonoBehaviour
 
     private void Start()
     {
+        flame_sound = GetComponent<AudioSource>();
         low.Stop();
         middle.Stop();
         high.Stop();

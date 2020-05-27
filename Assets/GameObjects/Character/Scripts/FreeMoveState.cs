@@ -101,11 +101,16 @@ public class FreeMoveState : ICharacterState
     {
         if (Mathf.Abs(horizontalMove) > 0.01f && !characterScript.isJumping && !characterScript.isDroping)
         {
-            animator.SetBool(Character.TransitionParameter.Move.ToString(), true);
+           
+            animator.SetBool(Character.TransitionParameter.Move.ToString(), true); 
+            if(!character.GetComponents<AudioSource>()[4].isPlaying){
+                character.GetComponents<AudioSource>()[4].Play();
+            }
         }
         else
         {
             animator.SetBool(Character.TransitionParameter.Move.ToString(), false);
+            character.GetComponents<AudioSource>()[4].Stop();
         }
     }
 
@@ -139,6 +144,8 @@ public class FreeMoveState : ICharacterState
             characterScript.isHangJumping = true;
             animator.SetBool(Character.TransitionParameter.isGrabbingLedge.ToString(), false);
             animator.SetBool(Character.TransitionParameter.Jump.ToString(), true);
+            character.GetComponents<AudioSource>()[0].Play();
+            character.GetComponents<AudioSource>()[4].Stop();
         }
         else
         {
@@ -147,11 +154,14 @@ public class FreeMoveState : ICharacterState
                 if (characterScript.IsClimbLedge())
                 {
                     animator.SetBool(Character.TransitionParameter.Climb.ToString(), true);
+                    character.GetComponents<AudioSource>()[5].Play();
                 }
                 else if (characterScript.NextClimbExists())
                 {
                     animator.SetBool(Character.TransitionParameter.HangUp.ToString(), true);
+                    character.GetComponents<AudioSource>()[5].Play();
                 }
+                character.GetComponents<AudioSource>()[4].Stop();
             }
             else if (Input.GetKey(KeyCode.S) && characterScript.isGrabbingLedge && !characterScript.isClimbing && !characterScript.isHangJumping)
             {
@@ -164,6 +174,7 @@ public class FreeMoveState : ICharacterState
                 {
                     animator.SetBool(Character.TransitionParameter.HangDown.ToString(), true);
                 }
+                character.GetComponents<AudioSource>()[4].Stop();
             }
         }
        
@@ -178,6 +189,7 @@ public class FreeMoveState : ICharacterState
             velocity.x = 0.0f;
             characterScript.verticalVelocity = Vector3.zero;
             characterScript.gravityOn = false;
+            character.GetComponents<AudioSource>()[4].Stop();
         }
     }
 
@@ -194,12 +206,14 @@ public class FreeMoveState : ICharacterState
             animator.SetBool(Character.TransitionParameter.Jump.ToString(), true);
             animator.SetBool(Character.TransitionParameter.Move.ToString(), false);
             animator.SetBool(Character.TransitionParameter.Turn.ToString(), false);
-
+            character.GetComponents<AudioSource>()[0].Play();
+            character.GetComponents<AudioSource>()[4].Stop();
 
             if (Mathf.Abs(horizontalMove) > 0.01f && !characterScript.isIdle)
             {
                 animator.SetBool(Character.TransitionParameter.RunningJump.ToString(), true);
                 characterScript.verticalVelocity.y = characterScript.jumpForce;
+                character.GetComponents<AudioSource>()[4].Stop();
             }
 
         }
@@ -235,6 +249,7 @@ public class FreeMoveState : ICharacterState
                 {
                     animator.SetBool(Character.TransitionParameter.LandingNeeded.ToString(), true);
                 }
+                character.GetComponents<AudioSource>()[4].Stop();
             }
         }
         else
@@ -324,6 +339,8 @@ public class FreeMoveState : ICharacterState
             if (characterScript.clicks == 1)
             {
                 animator.SetBool(Character.TransitionParameter.Fight.ToString(), true);
+                character.GetComponents<AudioSource>()[2].Play();
+                character.GetComponents<AudioSource>()[3].Play();
             }
            // Debug.Log(1);
             characterScript.clicks = Mathf.Clamp(characterScript.clicks, 0, 3);

@@ -39,10 +39,21 @@ public class FallenTree : MonoBehaviour
 
         if (swordScript != null)
         {
+            
             actionCollider.enabled = false;
             safeCollider.enabled = false;
             bridgeCollider.enabled = true;
             animator.enabled = true;
+            StartCoroutine(soundCorutine());
         }
+    }
+
+     IEnumerator soundCorutine()
+    {
+        this.GetComponents<AudioSource>()[1].Play();
+
+        yield return new WaitForSeconds(0.85f);
+
+        this.GetComponents<AudioSource>()[0].Play();
     }
 }

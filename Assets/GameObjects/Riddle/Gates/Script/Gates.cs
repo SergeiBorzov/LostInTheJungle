@@ -63,5 +63,6 @@ public class Gates : MonoBehaviour
         button2.Die();
         button3.Die();
         animator.enabled = true;
+        this.GetComponents<AudioSource>()[0].Play();
     }
 }

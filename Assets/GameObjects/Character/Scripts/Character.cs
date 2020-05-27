@@ -231,6 +231,7 @@ public class Character : MonoBehaviour
     {
         gravityOn = false;
         verticalVelocity.y = jumpForce;
+
     }
 
     public void HangJump()
@@ -239,11 +240,13 @@ public class Character : MonoBehaviour
         moveOn = true;
         verticalVelocity.y = jumpForce;
         transform.parent = null;
+
     }
 
     public void HookJump()
     {
         verticalVelocity.y = jumpForce;
+
     }
 
     public void PerformClimb()
@@ -311,7 +314,8 @@ public class Character : MonoBehaviour
     {
         if (!isDead && !isOnFire)
         {
-            animator.SetBool(Character.TransitionParameter.OnFire.ToString(), true);
+            animator.SetBool(Character.TransitionParameter.OnFire.ToString(), true); 
+            this.GetComponents<AudioSource>()[1].Play();
         }
     }
 
@@ -321,6 +325,7 @@ public class Character : MonoBehaviour
         {
             currentHp -= value;
             healthBar.SetHealth(currentHp / maxHp);
+            this.GetComponents<AudioSource>()[4].Stop();
 
 
             if (currentHp < 0.0f)
@@ -328,6 +333,7 @@ public class Character : MonoBehaviour
                 currentHp = 0.0f;
                 isDead = true;
                 animator.SetTrigger(Character.TransitionParameter.Dead.ToString());
+                this.GetComponents<AudioSource>()[1].Play();
             }
         }
     }
@@ -391,6 +397,7 @@ public class Character : MonoBehaviour
         healthBar.SetHealth(currentHp / maxHp);
         isDead = true;
         animator.SetBool("Dead", isDead);
+        GetComponents<AudioSource>()[4].Stop();
     }
 
     public void SetVelocity(Vector3 v)
@@ -447,7 +454,6 @@ public class Character : MonoBehaviour
         SetState(new FreeMoveState());
         //Debug.Log("Current State!");
         healthBar.SetHealth(currentHp / maxHp);
-
     }
 
     private void ApplyGravity()
