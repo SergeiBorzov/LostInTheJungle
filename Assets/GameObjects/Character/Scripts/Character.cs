@@ -49,7 +49,8 @@ public class Character : MonoBehaviour
         Swing,
         FrontSwing,
         SwingIdle,
-        Dead
+        Dead,
+        BlockedSwing
     }
     #endregion
 
@@ -118,6 +119,16 @@ public class Character : MonoBehaviour
 
     [HideInInspector]
     public bool isGui = false;
+
+
+    public float timeToFallJump = 0.75f;
+    public float timeToFallNoJump = 0.1f;
+    public float timeFallingJump;
+    public float timeFallingNoJump;
+    public float timeFalling;
+
+    public Vector3 velocity = Vector3.zero;
+
 
     public bool debug = true;
     
@@ -246,6 +257,9 @@ public class Character : MonoBehaviour
     public void HookJump()
     {
         verticalVelocity.y = jumpForce;
+
+        timeFallingJump = timeToFallJump;
+        timeFallingNoJump = timeToFallNoJump;
 
     }
 

@@ -17,28 +17,24 @@ public class FreeMoveState : ICharacterState
     //private float walkSpeed = 3.0f;
     //private float pushForce = 5.0f;
     //private float slowingDown = 2.0f;
-    private float timeToFallJump = 0.75f;
-    private float timeToFallNoJump = 0.1f;
+    
     private float timeLandingNeeded = 0.3f;
     private float fightSpeed = 1.5f;
-    private float timeFallingJump;
-    private float timeFallingNoJump;
-    private float timeFalling;
+    
 
     private float timeToCombo = 0.45f;
     private float clickTime;
     #endregion
 
-    private Vector3 velocity = Vector3.zero;
    
     public void SetVelocity(Vector3 v)
     {
-        velocity = v;
+        characterScript.velocity = v;
     }
 
     public Vector3 GetVelocity()
     {
-        return velocity;
+        return characterScript.velocity;
     }
 
     public void OnStateEnter(GameObject ch)
@@ -47,8 +43,8 @@ public class FreeMoveState : ICharacterState
         characterScript = character.GetComponent<Character>();
         characterController = character.GetComponent<CharacterController>();
         animator = character.GetComponent<Animator>();
-        timeFallingJump = timeToFallJump;
-        timeFallingNoJump = timeToFallNoJump;
+        characterScript.timeFallingJump = characterScript.timeToFallJump;
+        characterScript.timeFallingNoJump = characterScript.timeToFallNoJump;
     }
 
 
@@ -186,7 +182,7 @@ public class FreeMoveState : ICharacterState
     {
         if (characterScript.isGrabbingLedge)
         {
-            velocity.x = 0.0f;
+            characterScript.velocity.x = 0.0f;
             characterScript.verticalVelocity = Vector3.zero;
             characterScript.gravityOn = false;
             character.GetComponents<AudioSource>()[4].Stop();
@@ -222,30 +218,30 @@ public class FreeMoveState : ICharacterState
 
     private void SetFallingState()
     {
-        if (!characterScript.isGrounded && !characterScript.isGrabbingLedge)
+        if (!characterScript.isGrounded && !characterScript.isGrabbingLedge && !characterScript.isHook)
         {
             if (characterScript.isIdle || characterScript.isRunning)
             {
-                timeFallingNoJump -= Time.deltaTime;
-                if (timeFallingNoJump < 0.0f)
+                characterScript.timeFallingNoJump -= Time.deltaTime;
+                if (characterScript.timeFallingNoJump < 0.0f)
                 {
                     characterScript.isFalling = true;
                     animator.SetBool(Character.TransitionParameter.Falling.ToString(), true);
                 }
-                if (timeFallingNoJump < -timeLandingNeeded)
+                if (characterScript.timeFallingNoJump < -timeLandingNeeded)
                 {
                     animator.SetBool(Character.TransitionParameter.LandingNeeded.ToString(), true);
                 }
             }
             else
             {
-                timeFallingJump -= Time.deltaTime;
-                if (timeFallingJump < 0.0f)
+                characterScript.timeFallingJump -= Time.deltaTime;
+                if (characterScript.timeFallingJump < 0.0f)
                 {
                     characterScript.isFalling = true;
                     animator.SetBool(Character.TransitionParameter.Falling.ToString(), true);
                 }
-                if (timeFallingJump < -timeLandingNeeded)
+                if (characterScript.timeFallingJump < -timeLandingNeeded)
                 {
                     animator.SetBool(Character.TransitionParameter.LandingNeeded.ToString(), true);
                 }
@@ -255,8 +251,8 @@ public class FreeMoveState : ICharacterState
         else
         {
             characterScript.isFalling = false;
-            timeFallingJump = timeToFallJump;
-            timeFallingNoJump = timeToFallNoJump;
+            characterScript.timeFallingJump = characterScript.timeToFallJump;
+            characterScript.timeFallingNoJump = characterScript.timeToFallNoJump;
             animator.SetBool(Character.TransitionParameter.Falling.ToString(), false);
         }
     }
@@ -356,13 +352,13 @@ public class FreeMoveState : ICharacterState
         SetAnimatorBoxState();
         SetAnimatorClimbState();
         SetAnimatorMoveState(horizontalMove);
-        velocity = characterScript.forward * Mathf.Abs(horizontalMove) * runSpeed;
+        characterScript.velocity = characterScript.forward * Mathf.Abs(horizontalMove) * runSpeed;
         SetGravity();
         SetAnimatorJumpState(horizontalMove);
         SetAnimatorHangingState();
         SetAnimatorTurnState(horizontalMove);
         SetAnimatorFight(horizontalMove);
-        Move(velocity);
+        Move(characterScript.velocity);
     }
 
     public void OnStateExit()

@@ -15,10 +15,12 @@ public class Hook : MonoBehaviour
     SpringJoint m_Joint;
     Animator m_Animator;
 
-    public bool m_SwingReady = false;
     bool m_SwingPressed = false;
     bool m_Swing_Right = false;
     bool m_Swing_Left = false;
+    bool m_BlockMovement = false;
+    bool m_SwingLate = true;
+
 
     bool m_Grapple = false;
     bool m_Degrapple = false;
@@ -38,7 +40,7 @@ public class Hook : MonoBehaviour
     private Transform m_Graple;
 
     [SerializeField]
-    float m_SwingCos = 0.8f;
+    private float m_RopeLength = 4.0f;
 
     [SerializeField]
     float m_Friction = 3.0f;
@@ -60,6 +62,7 @@ public class Hook : MonoBehaviour
         n.Normalize();
         float cos = Vector3.Dot(n, Vector3.right);
 
+
         if (Mathf.Abs(cos) < 0.05f)
         {
             m_SwingPressed = false;
@@ -68,8 +71,8 @@ public class Hook : MonoBehaviour
             {
                 m_MaxSpeedInit = true;
             }
-            //Debug.Log("Max speed: " + m_MaxSpeed);
         }
+
 
         if (m_MaxSpeedInit)
         {
@@ -80,8 +83,6 @@ public class Hook : MonoBehaviour
         }
 
         
-
-
         float dir_cos = 0.0f;
 
         if (m_CharacterScript.lookingRight)
@@ -94,7 +95,7 @@ public class Hook : MonoBehaviour
         }
 
 
-        if (dir_cos < -0.05f)
+        if (dir_cos < -0.02f)
         {
             m_Animator.SetBool(Character.TransitionParameter.FrontSwing.ToString(), false);
         }
@@ -115,16 +116,18 @@ public class Hook : MonoBehaviour
         m_LineRenderer = GetComponent<LineRenderer>();
         m_Animator = GetComponentInParent<Animator>();
 
-        m_Joint.maxDistance = 0.0f;
+        //m_Joint.maxDistance = 0.0f;
         m_Joint.minDistance = 4.0f;
 
         m_Joint.autoConfigureConnectedAnchor = false;
         m_Joint.anchor = new Vector3(-0.25f, 2.03f, -0.07f);
-        m_Joint.spring = 30.5f;
+        m_Joint.spring = 60.0f;
         m_Joint.damper = 100.0f;
         m_Joint.massScale = 1.5f;
 
-
+        m_LineRenderer = gameObject.AddComponent<LineRenderer>();
+        m_LineRenderer.startWidth = 0.05f;
+        m_LineRenderer.endWidth = 0.05f;
         m_LineRenderer.positionCount = 2;
         m_LineRenderer.enabled = false;
     }
@@ -135,10 +138,7 @@ public class Hook : MonoBehaviour
 
         float distanceFromPoint = Vector3.Distance(m_Graple.position, m_Receivers[0].gameObject.transform.position);
 
-        m_Joint.minDistance = Mathf.Clamp(distanceFromPoint, 3.0f, 5.0f) - 1.0f;
-        //m_Joint.maxDistance = 5.0f;
-        //m_Joint.minDistance = 3.0f - distanceFromPoint;
-
+        m_Joint.minDistance = Mathf.Clamp(6.0f - distanceFromPoint, 2.0f, 6.0f);
         m_CharacterScript.isHook = true;
         m_CharacterScript.verticalVelocity = Vector3.zero;
         m_CharacterController.enabled = false;
@@ -154,18 +154,17 @@ public class Hook : MonoBehaviour
 
     public void Degrapple()
     {
+        m_Joint.connectedBody = null;
         m_Rigidbody.isKinematic = true;
 
         m_CharacterScript.isHook = false;
-        m_Joint.connectedBody = null;
 
         
 
         m_CharacterScript.HookColliderOff();
-        Quaternion q = m_CharacterScript.transform.rotation;
-        m_CharacterScript.transform.rotation = Quaternion.Euler(0.0f, q.eulerAngles.y, q.eulerAngles.z);
+        //Quaternion q = m_CharacterScript.transform.rotation;
+        //m_CharacterScript.transform.rotation = Quaternion.Euler(0.0f, q.eulerAngles.y, q.eulerAngles.z);
         m_CharacterController.enabled = true;
-        m_CharacterScript.isHook = false;
 
         m_LineRenderer.enabled = false;
 
@@ -174,11 +173,26 @@ public class Hook : MonoBehaviour
 
     private void Update()
     {
-
         if (Input.GetMouseButtonDown(1) && !m_CharacterScript.isHook && !m_CharacterScript.isGrounded) {
             if (m_Receivers.Count != 0)
             {
-                m_Grapple = true;
+                Vector3 dif = (m_Receivers[0].position - transform.position);
+
+                if (m_CharacterScript.lookingRight)
+                {
+                    if (Vector3.Dot(dif, Vector3.right) > 0)
+                    {
+                        m_Grapple = true;
+                    }
+                }
+                else
+                {
+                    if (Vector3.Dot(dif, Vector3.left) > 0)
+                    {
+                        m_Grapple = true;
+                    }
+                }
+                
                 /*var script = m_Receivers[0].GetComponent<HookReceiver>();
                 m_ReceiverPosition = m_Receivers[0].position;
                 Grapple();
@@ -188,17 +202,17 @@ public class Hook : MonoBehaviour
 
         if (m_CharacterScript.isHook)
         {
-            ComputeFrontSwing();
 
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 if (m_Receivers.Count != 0)
                 {
-                    m_Degrapple = true;
-                    /*var script = m_Receivers[0].GetComponent<HookReceiver>();
+                    var script = m_Receivers[0].GetComponent<HookReceiver>();
                     Degrapple();
                     script.Deactivate();
-                    m_CharacterScript.HookJump();*/
+                    m_CharacterScript.HookJump();
+                    m_Joint.minDistance = m_RopeLength;
+                    m_Degrapple = true;
                 }
             }
 
@@ -214,6 +228,7 @@ public class Hook : MonoBehaviour
                 {
                     m_SwingPressed = true;
                     m_Animator.SetBool(Character.TransitionParameter.Swing.ToString(), true);
+                    m_Animator.SetBool(Character.TransitionParameter.SwingIdle.ToString(), false);
                 }
             }
             else if (Input.GetKey(KeyCode.D))
@@ -228,19 +243,26 @@ public class Hook : MonoBehaviour
                 {
                     m_SwingPressed = true;
                     m_Animator.SetBool(Character.TransitionParameter.Swing.ToString(), true);
+                    m_Animator.SetBool(Character.TransitionParameter.SwingIdle.ToString(), false);
                 }
 
             }
+
+            ComputeFrontSwing();
 
 
             if (Input.GetKeyUp(KeyCode.A))
             {
                 m_SwingPressed = false;
+                m_BlockMovement = false;
+                m_SwingLate = false;
                 m_Animator.SetBool(Character.TransitionParameter.Swing.ToString(), false);
             }
             else if (Input.GetKeyUp(KeyCode.D))
             {
                 m_SwingPressed = false;
+                m_BlockMovement = false;
+                m_SwingLate = false;
                 m_Animator.SetBool(Character.TransitionParameter.Swing.ToString(), false);
             }
 
@@ -303,12 +325,8 @@ public class Hook : MonoBehaviour
         }
         else if (m_Degrapple)
         {
-            m_Joint.minDistance = 4.0f;
             m_Degrapple = false;
-            var script = m_Receivers[0].GetComponent<HookReceiver>();
-            Degrapple();
-            script.Deactivate();
-            m_CharacterScript.HookJump();
+           
         }
 
 
@@ -341,14 +359,12 @@ public class Hook : MonoBehaviour
                 }
                 else
                 {
-                    //Debug.Log("Stop L!");
                     Stop();
                 }
                 m_Swing_Left = false;
             }
             else
             {
-                Debug.Log("Stop2!");
                 Stop2();
             }
 
@@ -362,24 +378,24 @@ public class Hook : MonoBehaviour
 
         if (m_Up)
         {
-            if (m_Joint.minDistance < 5.0f)
+            if (m_Joint.minDistance < 6.0f)
             {
-                m_Joint.minDistance += Time.fixedDeltaTime * 8.0f;
-                if (m_Joint.minDistance > 5.0f)
+                m_Joint.minDistance += Time.fixedDeltaTime * 16.0f;
+                if (m_Joint.minDistance > 6.0f)
                 {
-                    m_Joint.minDistance = 5.0f;
+                    m_Joint.minDistance = 6.0f;
                 }
             }
             m_Up = false;
         }   
         else if (m_Down)
         {
-            if (m_Joint.minDistance > 1.0f)
+            if (m_Joint.minDistance > 2.0f)
             {
-                m_Joint.minDistance -= Time.fixedDeltaTime * 8.0f;
-                if (m_Joint.minDistance < 1.0f)
+                m_Joint.minDistance -= Time.fixedDeltaTime * 16.0f;
+                if (m_Joint.minDistance < 2.0f)
                 {
-                    m_Joint.minDistance = 1.0f;
+                    m_Joint.minDistance = 2.0f;
                 }
             }
             m_Down = false;
