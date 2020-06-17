@@ -16,6 +16,8 @@ public class BridgeButton2 : MonoBehaviour
     [SerializeField]
     Bridge bridge2;
 
+    private int m_Activators = 0;
+
     public bool IsActive()
     {
         return active;
@@ -73,6 +75,7 @@ public class BridgeButton2 : MonoBehaviour
             var box = other.gameObject.GetComponent<Box>();
             if (characterScript != null || box != null)
             {
+                m_Activators++;
                 if (!active)
                 {
                     active = true;
@@ -94,7 +97,8 @@ public class BridgeButton2 : MonoBehaviour
 
             if (characterScript != null || box != null)
             {
-                if (active)
+                m_Activators--;
+                if (active && m_Activators == 0)
                 {
                     active = false;
                    

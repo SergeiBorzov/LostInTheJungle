@@ -83,7 +83,7 @@ public class Character : MonoBehaviour
     public bool lookingRight = true;
     [HideInInspector]
     public bool isLanding = false;
-    [HideInInspector]
+    //[HideInInspector]
     public bool isTurning = false;
     [HideInInspector]
     public bool isFight = false;
@@ -105,12 +105,13 @@ public class Character : MonoBehaviour
     public bool isOnFire = false;
     [HideInInspector]
     public bool isStandJumping = false;
-    //[HideInInspector]
+    [HideInInspector]
     public bool isNearBox = false;
+    [HideInInspector]
     public bool isGrabbingBox = false;
-    //[HideInInspector]
+    [HideInInspector]
     public bool isPushing = false;
-    //[HideInInspector]
+    [HideInInspector]
     public bool isPulling = false;
 
     public bool isHook = false;

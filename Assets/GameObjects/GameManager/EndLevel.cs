@@ -7,7 +7,10 @@ public class EndLevel : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-        GameMaster.lastCheckPoint = GameMaster.levelStart;
-        SceneManager.LoadScene(0);
+        if (other.gameObject.GetComponent<Character>() != null)
+        {
+            GameMaster.lastCheckPoint = GameMaster.levelStart;
+            SceneManager.LoadScene(0);
+        }
     }
 }

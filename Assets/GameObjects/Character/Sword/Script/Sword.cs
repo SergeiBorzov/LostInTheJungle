@@ -25,15 +25,5 @@ public class Sword : MonoBehaviour
             return;
         }
 
-        /*Enemy enemy = collision.gameObject.GetComponent<Enemy>();
-        if (enemy != null)
-        {
-            if (canDamage)
-            {
-                enemy.TakeDamage();
-                canDamage = false;
-            }
-            return;
-        }*/
     }
 }

@@ -128,7 +128,7 @@ public class Hook : MonoBehaviour
         m_LineRenderer = gameObject.AddComponent<LineRenderer>();
         m_LineRenderer.startWidth = 0.05f;
         m_LineRenderer.endWidth = 0.05f;
-        m_LineRenderer.positionCount = 2;
+        m_LineRenderer.positionCount = 0;
         m_LineRenderer.enabled = false;
     }
 
@@ -146,7 +146,7 @@ public class Hook : MonoBehaviour
 
         m_Rigidbody.isKinematic = false;
         m_Rigidbody.velocity = 1.25f*m_CharacterScript.GetVelocity();
-
+        m_LineRenderer.useWorldSpace = true;
         m_LineRenderer.enabled = true;
 
         m_Animator.SetBool(Character.TransitionParameter.Hook.ToString(), true);
@@ -167,6 +167,7 @@ public class Hook : MonoBehaviour
         m_CharacterController.enabled = true;
 
         m_LineRenderer.enabled = false;
+        m_LineRenderer.positionCount = 0;
 
         m_Animator.SetBool(Character.TransitionParameter.Hook.ToString(), false);
     }
@@ -406,6 +407,7 @@ public class Hook : MonoBehaviour
 
     private void DrawRope()
     {
+        m_LineRenderer.positionCount = 2;
         m_LineRenderer.SetPosition(0, m_Graple.position);
         m_LineRenderer.SetPosition(1, m_ReceiverPosition);
     }

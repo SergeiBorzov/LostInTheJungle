@@ -12,7 +12,13 @@ GameObject:
   - component: {fileID: 4382755577022245707}
   - component: {fileID: 8065425294700189618}
   - component: {fileID: 4162604950228035416}
-  m_Layer: 0
+  - component: {fileID: 6481209277883972774}
+  - component: {fileID: 5650246713740469977}
+  - component: {fileID: 6965127907201379051}
+  - component: {fileID: 7168616996786731069}
+  - component: {fileID: 1964144941321976309}
+  - component: {fileID: 1310005641916147328}
+  m_Layer: 17
   m_Name: IndianCube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,3 +98,88 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2, y: 2, z: 2}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!65 &6481209277883972774
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8634231295563277166}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3.3, y: 0.3, z: 3}
+  m_Center: {x: 0, y: 0.44, z: 0}
+--- !u!135 &5650246713740469977
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8634231295563277166}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.04
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6965127907201379051
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8634231295563277166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf33b3f41be52d44d8ec7495178fbd49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_CharacterScript: {fileID: 0}
+  m_canPush: 1
+  m_canPull: 1
+--- !u!54 &7168616996786731069
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8634231295563277166}
+  serializedVersion: 2
+  m_Mass: 0.1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 120
+  m_CollisionDetection: 0
+--- !u!65 &1964144941321976309
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8634231295563277166}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3.3, y: 0.3, z: 3}
+  m_Center: {x: 0, y: 0.44, z: 0}
+--- !u!114 &1310005641916147328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8634231295563277166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf33b3f41be52d44d8ec7495178fbd49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_CharacterScript: {fileID: 0}
+  m_canPush: 1
+  m_canPull: 1

@@ -113,7 +113,7 @@ public class FreeMoveState : ICharacterState
     private void SetAnimatorTurnState(float horizontalMove)
     {
         ///-------------------------Check turn----------------------------------
-        if (!characterScript.isLanding && !characterScript.isGrabbingLedge && !characterScript.isHangJumping)
+        if (!characterScript.isLanding && !characterScript.isGrabbingLedge && !characterScript.isHangJumping && !characterScript.isOnFire)
         {
             if (horizontalMove > 0.0f && !characterScript.lookingRight)
             {
@@ -275,15 +275,19 @@ public class FreeMoveState : ICharacterState
 
     private void SetAnimatorBoxState()
     {
-        if (characterScript.isNearBox && !characterScript.isJumping && !characterScript.isHangJumping && !characterScript.isTurning)
+        if (characterScript.isNearBox && (!characterScript.isJumping && 
+                                          !characterScript.isHangJumping && 
+                                          !characterScript.isTurning && 
+                                          !characterScript.isRunning &&
+                                          !characterScript.isFight) && Input.GetMouseButton(1))
         {
-            bool t = Input.GetMouseButton(1);
-            if (t)
+           
+            if (Input.GetMouseButton(1))
             {
                 characterScript.grabbedBox.Grab();
                 animator.SetBool(Character.TransitionParameter.Box.ToString(), true);
-                if ((t && Input.GetKey(KeyCode.D) && characterScript.lookingRight) ||
-                    (t && Input.GetKey(KeyCode.A) && !characterScript.lookingRight))
+                if ((Input.GetMouseButton(1) && Input.GetKey(KeyCode.D) && characterScript.lookingRight) ||
+                    (Input.GetMouseButton(1) && Input.GetKey(KeyCode.A) && !characterScript.lookingRight))
                 {
                     characterScript.isPushing = true;
                     characterScript.isPulling = false;
@@ -291,8 +295,8 @@ public class FreeMoveState : ICharacterState
                     animator.SetBool(Character.TransitionParameter.Push.ToString(), true);
                     animator.SetBool(Character.TransitionParameter.Pull.ToString(), false);
                 }
-                else if ((t &&  Input.GetKey(KeyCode.D) && !characterScript.lookingRight) ||
-                         (t &&  Input.GetKey(KeyCode.A) && characterScript.lookingRight))
+                else if ((Input.GetMouseButton(1) &&  Input.GetKey(KeyCode.D) && !characterScript.lookingRight) ||
+                         (Input.GetMouseButton(1) &&  Input.GetKey(KeyCode.A) && characterScript.lookingRight))
                 {
                     characterScript.isPushing = false;
                     characterScript.isPulling = true;
@@ -309,18 +313,22 @@ public class FreeMoveState : ICharacterState
                     animator.SetBool(Character.TransitionParameter.Pull.ToString(), false);
                 }
             }
-            else if (Input.GetMouseButtonUp(1))
-            {
-                characterScript.grabbedBox.Release();
-                characterScript.isGrabbingBox = false;
-                characterScript.isPushing = false;
-                characterScript.isPulling = false;
-                animator.SetBool(Character.TransitionParameter.Box.ToString(), false);
-                animator.SetBool(Character.TransitionParameter.Push.ToString(), false);
-                animator.SetBool(Character.TransitionParameter.Pull.ToString(), false);
-            }
+
+           
+        }
+
+        if ((characterScript.isGrabbingBox || characterScript.isPushing || characterScript.isPulling) && Input.GetMouseButtonUp(1))
+        {
+            characterScript.grabbedBox.Release();
+            characterScript.isGrabbingBox = false;
+            characterScript.isPushing = false;
+            characterScript.isPulling = false;
+            animator.SetBool(Character.TransitionParameter.Box.ToString(), false);
+            animator.SetBool(Character.TransitionParameter.Push.ToString(), false);
+            animator.SetBool(Character.TransitionParameter.Pull.ToString(), false);
         }
     }
+
     private void SetAnimatorFight(float horizontalMove)
     {
         if (Time.time - clickTime > timeToCombo)
@@ -349,7 +357,6 @@ public class FreeMoveState : ICharacterState
         SetFallingState();
 
         float horizontalMove = characterScript.horizontalMove;
-        SetAnimatorBoxState();
         SetAnimatorClimbState();
         SetAnimatorMoveState(horizontalMove);
         characterScript.velocity = characterScript.forward * Mathf.Abs(horizontalMove) * runSpeed;
@@ -357,6 +364,7 @@ public class FreeMoveState : ICharacterState
         SetAnimatorJumpState(horizontalMove);
         SetAnimatorHangingState();
         SetAnimatorTurnState(horizontalMove);
+        SetAnimatorBoxState();
         SetAnimatorFight(horizontalMove);
         Move(characterScript.velocity);
     }
