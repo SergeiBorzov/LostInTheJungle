@@ -78,6 +78,7 @@ public class Box : MonoBehaviour
         m_Rigidbody.isKinematic = true;
         m_BoxCollider.enabled = true;
         m_SphereCollider.enabled = false;
+        m_Rigidbody.velocity = Vector3.zero;
         m_Rigidbody.isKinematic = false;
     }
 
@@ -95,7 +96,8 @@ public class Box : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.collider.gameObject.layer != LayerMask.NameToLayer("Ground"))
+        if (collision.collider.gameObject.layer != LayerMask.NameToLayer("Ground") && 
+            collision.collider.gameObject.layer != LayerMask.NameToLayer("Player"))
         {
             if (m_CharacterScript && m_CharacterScript.isPushing)
             {
@@ -111,7 +113,8 @@ public class Box : MonoBehaviour
     private void OnCollisionExit(Collision collision)
     {
 
-        if (collision.collider.gameObject.layer != LayerMask.NameToLayer("Ground"))
+        if (collision.collider.gameObject.layer != LayerMask.NameToLayer("Ground") &&
+            collision.collider.gameObject.layer != LayerMask.NameToLayer("Player"))
         {
             m_canPush = true;
             m_canPull = true;

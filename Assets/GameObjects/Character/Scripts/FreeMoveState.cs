@@ -113,7 +113,8 @@ public class FreeMoveState : ICharacterState
     private void SetAnimatorTurnState(float horizontalMove)
     {
         ///-------------------------Check turn----------------------------------
-        if (!characterScript.isLanding && !characterScript.isGrabbingLedge && !characterScript.isHangJumping && !characterScript.isOnFire)
+        if (!characterScript.isLanding && !characterScript.isGrabbingLedge && !characterScript.isHangJumping &&
+            !characterScript.isOnFire && !characterScript.isGrabbingBox && !characterScript.isPulling && !characterScript.isPushing)
         {
             if (horizontalMove > 0.0f && !characterScript.lookingRight)
             {
