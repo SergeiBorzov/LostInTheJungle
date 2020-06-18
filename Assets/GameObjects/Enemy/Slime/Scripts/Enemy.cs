@@ -32,22 +32,37 @@ public class Enemy : MonoBehaviour
 
     private State currentState;
 
+    private bool AttackReady = true;
+    private float AttackWait = 3.0f;
+    private bool hitted = false;
+
 
 
     private bool knockBack = false;
     private Vector3 knockBackDirection = Vector3.zero;
     Renderer slimeRenderer;
 
+    MeshCollider m_Collider;
+
+    [SerializeField]
+    BoxCollider m_LeftTrigger;
+    [SerializeField]
+    BoxCollider m_RightTrigger;
 
     void Start()
     {
         
         currentState = State.Patrol;
         animator = GetComponent<Animator>();
+        animator.SetBool("Move", true);
         agent = GetComponent<NavMeshAgent>();
-        rb = GetComponent<Rigidbody>();
+        rb = GetComponentInChildren<Rigidbody>();
         rb.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
         slimeRenderer = GetComponentInChildren<Renderer>();
+        m_Collider = GetComponentInChildren<MeshCollider>();
+        m_LeftTrigger.enabled = false;
+        m_RightTrigger.enabled = false;
+       
         if (slimeRenderer == null)
         {
             Debug.Log("Slime Renderer is null!!!!");
@@ -63,12 +78,16 @@ public class Enemy : MonoBehaviour
             agent.velocity = knockBackDirection * knockBackForce;
         }
     }
+
     private void Die()
     {
         dead = true;
         agent.enabled = false;
-        //rb.isKinematic = false;
-        rb.constraints = RigidbodyConstraints.FreezePositionZ;
+
+        rb.isKinematic = true;
+        m_Collider.enabled = false;
+        
+        
         gameObject.layer = LayerMask.NameToLayer("Fracture");
         animator.SetTrigger("Death");
         Destroy(gameObject, 5.0f);
@@ -107,10 +126,6 @@ public class Enemy : MonoBehaviour
             {
                 Die();
             }
-            else
-            {
-                animator.SetTrigger("Damage");
-            }
         }
        
     }
@@ -129,10 +144,54 @@ public class Enemy : MonoBehaviour
                 StartCoroutine(KnockBack());
             }
         }
+
+       
+
+       
     }
-    void Update()
+
+    private void OnTriggerStay(Collider other)
     {
-        float dist = (transform.position - playerTransform.position).magnitude;
+        if (other.tag.Equals("Player"))
+        {
+            if (!hitted)
+            {
+                var character = other.gameObject.GetComponent<Character>();
+
+                character.TakeDamage(22.0f);
+                character.isAttackedFromRight = (character.transform.position - transform.position).x < 0.0f;
+                character.OnAttack();
+                hitted = true;
+            }
+        }
+    }
+
+    private void LeftAnimationEventStart()
+    {
+        m_LeftTrigger.enabled = true;
+    }
+
+    private void LeftAnimationEventEnd()
+    {
+        m_LeftTrigger.enabled = false;
+    }
+
+    private void RightAnimationEventStart()
+    {
+        m_RightTrigger.enabled = true;
+    }
+
+    private void RightAnimationEventEnd()
+    {
+        m_RightTrigger.enabled = false;
+    }
+
+    private void Update()
+    {
+        Vector3 diff = playerTransform.position - transform.position;
+
+       
+        float dist = diff.magnitude;
 
 
         if (dead)
@@ -144,23 +203,50 @@ public class Enemy : MonoBehaviour
         {
             case State.Patrol:
             {
-                float dist1 = (transform.position - patrolPointFirst.position).magnitude;
-                float dist2 = (transform.position - patrolPointSecond.position).magnitude;
+                Vector3 diff1 = patrolPointFirst.position - transform.position;
+                float dist1 = diff1.magnitude;
+
+                Vector3 diff2 = patrolPointFirst.position - transform.position;
+                float dist2 = diff2.magnitude;
 
 
                 //Debug.Log("Patrol");
                 if (dist < tauntRadius)
                 {
+                    if (diff.x > 0)
+                    {
+                        animator.SetBool("LookingRight", true);
+                    }
+                    else
+                    {
+                        animator.SetBool("LookingRight", false);
+                    }
                     currentState = State.Follow;
                     agent.isStopped = false;
                     return;
                 }
                 else if (dist1 < attackRadius)
                 {
+                    if (diff1.x > 0)
+                    {
+                        animator.SetBool("LookingRight", true);
+                    }
+                    else
+                    {
+                        animator.SetBool("LookingRight", false);
+                    }
                     agent.SetDestination(patrolPointSecond.position);
                 }
                 else if (dist2 < attackRadius)
                 {
+                    if (diff2.x > 0)
+                    {
+                        animator.SetBool("LookingRight", true);
+                    }
+                    else
+                    {
+                        animator.SetBool("LookingRight", false);
+                    }
                     agent.SetDestination(patrolPointFirst.position);
                 }
                 break;
@@ -184,13 +270,27 @@ public class Enemy : MonoBehaviour
             }
             case State.Attack:
             {
-                //Debug.Log("Attack");
-                
+                if (AttackReady)
+                {
+                    animator.SetTrigger("Attack");
+                    AttackWait = 3.0f;
+                    AttackReady = false;
+                }
+
+                AttackWait -= Time.deltaTime;
+                if (AttackWait < 0.0f)
+                {
+                    AttackReady = true;
+                    hitted = false;
+                }
+
+
                 if (dist > attackRadius)
                 {
                     currentState = State.Follow;
                     agent.isStopped = false;
                 }
+
                 break;
             }
         }

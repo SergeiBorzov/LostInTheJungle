@@ -50,7 +50,8 @@ public class Character : MonoBehaviour
         FrontSwing,
         SwingIdle,
         Dead,
-        BlockedSwing
+        BlockedSwing,
+        OnAttack
     }
     #endregion
 
@@ -113,6 +114,10 @@ public class Character : MonoBehaviour
     public bool isPushing = false;
     [HideInInspector]
     public bool isPulling = false;
+    [HideInInspector]
+    public bool isAttacked = false;
+    [HideInInspector]
+    public bool isAttackedFromRight = false;
 
     public bool isHook = false;
 
@@ -325,6 +330,13 @@ public class Character : MonoBehaviour
         animator.SetBool(Character.TransitionParameter.Swing.ToString(), false);
     }
 
+    public void OnAttack()
+    {
+        if (!isDead && !isAttacked)
+        {
+            animator.SetBool(Character.TransitionParameter.OnAttack.ToString(), true);
+        }
+    }
     public void OnFire()
     {
         if (!isDead && !isOnFire)

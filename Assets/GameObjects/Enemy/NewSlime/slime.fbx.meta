@@ -1,31 +1,11 @@
 fileFormatVersion: 2
-guid: c662411234ededc409cd0e1734aa9412
+guid: 5a7051e3775406d48bc250472b576706
 ModelImporter:
-  serializedVersion: 19300
-  internalIDToNameTable:
-  - first:
-      74: -4667240241141223586
-    second: Armature|Atack
-  - first:
-      74: -982115091633673366
-    second: Armature|Death
-  - first:
-      74: -8945691123924629249
-    second: Armature|Idle
-  - first:
-      74: 91863460285501764
-    second: Armature|Moving_left
-  - first:
-      74: -8082403866702938811
-    second: Armature|Moving_right
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Material.004
-    second: {fileID: 2100000, guid: be272950301b01540aaed1816e947ccb, type: 2}
+  serializedVersion: 26
+  internalIDToNameTable: []
+  externalObjects: {}
   materials:
-    materialImportMode: 1
+    importMaterials: 1
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -89,6 +69,7 @@ ModelImporter:
     normalSmoothingSource: 0
   referencedClips: []
   importAnimation: 1
+  copyAvatar: 0
   humanDescription:
     serializedVersion: 3
     human: []
@@ -106,10 +87,8 @@ ModelImporter:
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  autoGenerateAvatarMappingIfUnspecified: 1
-  animationType: 2
+  animationType: 0
   humanoidOversampling: 1
-  avatarSetup: 0
   additionalBone: 0
   userData: 
   assetBundleName: 

@@ -23,6 +23,7 @@ public class Hook : MonoBehaviour
 
 
     bool m_Grapple = false;
+    HookReceiver receiver;
     bool m_Degrapple = false;
 
     bool m_Up = false;
@@ -57,7 +58,7 @@ public class Hook : MonoBehaviour
         var speed = v.magnitude;
 
 
-        Vector3 n = m_Receivers[0].position - m_Graple.position;
+        Vector3 n = receiver.transform.position - m_Graple.position;
         n = new Vector3(n.x, n.y, 0.0f);
         n.Normalize();
         float cos = Vector3.Dot(n, Vector3.right);
@@ -134,11 +135,11 @@ public class Hook : MonoBehaviour
 
     public void Grapple()
     {
-        m_Joint.connectedAnchor = m_Receivers[0].position;
+        m_Joint.connectedAnchor = receiver.transform.position;
 
-        float distanceFromPoint = Vector3.Distance(m_Graple.position, m_Receivers[0].gameObject.transform.position);
+        float distanceFromPoint = Vector3.Distance(m_Graple.position, receiver.transform.position);
 
-        m_Joint.minDistance = Mathf.Clamp(6.0f - distanceFromPoint, 2.0f, 6.0f);
+        m_Joint.minDistance = 4.0f;
         m_CharacterScript.isHook = true;
         m_CharacterScript.verticalVelocity = Vector3.zero;
         m_CharacterController.enabled = false;
@@ -177,22 +178,30 @@ public class Hook : MonoBehaviour
         if (Input.GetMouseButtonDown(1) && !m_CharacterScript.isHook && !m_CharacterScript.isGrounded) {
             if (m_Receivers.Count != 0)
             {
-                Vector3 dif = (m_Receivers[0].position - transform.position);
+                for (int i = 0; i < m_Receivers.Count; i++)
+                {
+                    Vector3 dif = (m_Receivers[i].position - transform.position);
 
-                if (m_CharacterScript.lookingRight)
-                {
-                    if (Vector3.Dot(dif, Vector3.right) > 0)
+                    if (m_CharacterScript.lookingRight)
                     {
-                        m_Grapple = true;
+                        if (Vector3.Dot(dif, Vector3.right) > 0)
+                        {
+                            m_Grapple = true;
+                            receiver = m_Receivers[i].GetComponent<HookReceiver>();
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        if (Vector3.Dot(dif, Vector3.left) > 0)
+                        {
+                            m_Grapple = true;
+                            receiver = m_Receivers[i].GetComponent<HookReceiver>();
+                            break;
+                        }
                     }
                 }
-                else
-                {
-                    if (Vector3.Dot(dif, Vector3.left) > 0)
-                    {
-                        m_Grapple = true;
-                    }
-                }
+                
                 
                 /*var script = m_Receivers[0].GetComponent<HookReceiver>();
                 m_ReceiverPosition = m_Receivers[0].position;
@@ -208,7 +217,7 @@ public class Hook : MonoBehaviour
             {
                 if (m_Receivers.Count != 0)
                 {
-                    var script = m_Receivers[0].GetComponent<HookReceiver>();
+                    var script = receiver;
                     Degrapple();
                     script.Deactivate();
                     m_CharacterScript.HookJump();
@@ -292,7 +301,7 @@ public class Hook : MonoBehaviour
 
     private void Stop()
     {
-        Vector3 n = m_Receivers[0].position - m_Graple.position;
+        Vector3 n = receiver.transform.position - m_Graple.position;
         n = new Vector3(n.x, n.y, 0.0f);
         n.Normalize();
         float cos = Vector3.Dot(n, Vector3.right);
@@ -302,7 +311,7 @@ public class Hook : MonoBehaviour
 
     private void Stop2()
     {
-        Vector3 n = m_Receivers[0].position - m_Graple.position;
+        Vector3 n = receiver.transform.position - m_Graple.position;
         n = new Vector3(n.x, n.y, 0.0f);
         n.Normalize();
         float cos = Vector3.Dot(n, Vector3.right);
@@ -316,8 +325,8 @@ public class Hook : MonoBehaviour
         if (m_Grapple)
         {
             m_Grapple = false;
-            var script = m_Receivers[0].GetComponent<HookReceiver>();
-            m_ReceiverPosition = m_Receivers[0].position;
+            var script = receiver;
+            m_ReceiverPosition = receiver.transform.position;
             if (m_Graple.position.y < m_ReceiverPosition.y)
             {
                 Grapple();
@@ -334,7 +343,7 @@ public class Hook : MonoBehaviour
 
         if (m_CharacterScript.isHook && m_Receivers.Count > 0)
         {
-            Vector3 n = m_Receivers[0].position - m_Graple.position;
+            Vector3 n = receiver.transform.position - m_Graple.position;
             n = new Vector3(n.x, n.y, 0.0f);
             n.Normalize();
 

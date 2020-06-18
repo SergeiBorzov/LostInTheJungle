@@ -50,7 +50,48 @@ public class FreeMoveState : ICharacterState
 
     private void Move(Vector3 velocity)
     {
-        if (characterScript.isOnFire)
+        if (characterScript.isAttacked)
+        {
+            if (characterScript.isAttackedFromRight)
+            {
+                if (Vector3.Dot(characterScript.forward, Vector3.right) > 0.0f)
+                {
+                    if (Mathf.Abs(character.transform.position.z) > 0.01f)
+                    {
+                        movementOffset.z = (0.0f - character.transform.position.z) * 2.0f;
+                    }
+                    characterController.Move((movementOffset - characterScript.forward * fightSpeed) * Time.deltaTime);
+                }
+                else
+                {
+                    if (Mathf.Abs(character.transform.position.z) > 0.01f)
+                    {
+                        movementOffset.z = (0.0f - character.transform.position.z) * 2.0f;
+                    }
+                    characterController.Move((movementOffset + characterScript.forward * fightSpeed) * Time.deltaTime);
+                }
+            }
+            else
+            {
+                if (Vector3.Dot(characterScript.forward, Vector3.right) > 0.0f)
+                {
+                    if (Mathf.Abs(character.transform.position.z) > 0.01f)
+                    {
+                        movementOffset.z = (0.0f - character.transform.position.z) * 2.0f;
+                    }
+                    characterController.Move((movementOffset + characterScript.forward * fightSpeed) * Time.deltaTime);
+                }
+                else
+                {
+                    if (Mathf.Abs(character.transform.position.z) > 0.01f)
+                    {
+                        movementOffset.z = (0.0f - character.transform.position.z) * 2.0f;
+                    }
+                    characterController.Move((movementOffset - characterScript.forward * fightSpeed) * Time.deltaTime);
+                }
+            }
+        }
+        else if (characterScript.isOnFire)
         {
             if (Mathf.Abs(character.transform.position.z) > 0.01f)
             {
@@ -114,7 +155,8 @@ public class FreeMoveState : ICharacterState
     {
         ///-------------------------Check turn----------------------------------
         if (!characterScript.isLanding && !characterScript.isGrabbingLedge && !characterScript.isHangJumping &&
-            !characterScript.isOnFire && !characterScript.isGrabbingBox && !characterScript.isPulling && !characterScript.isPushing)
+            !characterScript.isOnFire && !characterScript.isGrabbingBox && !characterScript.isPulling && !characterScript.isPushing &&
+            !characterScript.isFalling && !characterScript.isDroping && !characterScript.isAttacked)
         {
             if (horizontalMove > 0.0f && !characterScript.lookingRight)
             {
@@ -198,7 +240,8 @@ public class FreeMoveState : ICharacterState
         if (Input.GetKeyDown(KeyCode.Space) && characterScript.isGrounded
             && !characterScript.isTurning && !characterScript.isJumping && !characterScript.isDroping
             && !characterScript.isFight && !characterScript.isFightEnd && !characterScript.isHangJumping
-            && !characterScript.isGrabbingBox && !characterScript.isPushing && !characterScript.isPulling)
+            && !characterScript.isGrabbingBox && !characterScript.isPushing && !characterScript.isPulling
+            && !characterScript.isAttacked)
         {
             animator.SetBool(Character.TransitionParameter.Jump.ToString(), true);
             animator.SetBool(Character.TransitionParameter.Move.ToString(), false);
