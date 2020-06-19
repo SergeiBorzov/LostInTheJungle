@@ -22,6 +22,7 @@ public class Sword : MonoBehaviour
         if (script != null && (characterScript.isFight == true || characterScript.isFightEnd == true) )
         {
             script.Action();
+            characterScript.TakeHeal(10.0f);
             return;
         }
 

@@ -346,6 +346,14 @@ public class Character : MonoBehaviour
         }
     }
 
+    public void TakeHeal(float value)
+    {
+        currentHp += value;
+        currentHp = Mathf.Min(currentHp, maxHp);
+
+        healthBar.SetHealth(currentHp / maxHp);
+    }
+
     public void TakeDamage(float value)
     {
         if (!isDead)

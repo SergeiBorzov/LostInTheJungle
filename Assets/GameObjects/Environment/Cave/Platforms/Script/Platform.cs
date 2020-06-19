@@ -19,8 +19,17 @@ public class Platform : MonoBehaviour
     [SerializeField]
     Transform SecondPoint;
 
-    [SerializeField]
-    float speed = 2.0f;
+    //[SerializeField]
+    //float speed = 2.0f;
+
+    float speed = 0.0f;
+
+    private void Start()
+    {
+        float dist = (FirstPoint.position - SecondPoint.position).magnitude;
+
+        speed = dist / 5.0f;
+    }
 
     void FixedUpdate()
     {
@@ -71,6 +80,18 @@ public class Platform : MonoBehaviour
                 //character.isDead = true;
                 character.Die();
             }
+
+            character.transform.parent = transform;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        var character = other.gameObject.GetComponent<Character>();
+
+        if (character != null)
+        {
+            character.transform.parent = null;
         }
     }
 }
