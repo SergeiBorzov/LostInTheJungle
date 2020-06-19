@@ -135,7 +135,7 @@ public class Enemy : MonoBehaviour
     {
         Sword swordScript = other.gameObject.GetComponent<Sword>();
 
-        if (swordScript != null)
+        if (swordScript != null && swordScript.canDamage)
         {
             TakeDamage();
             if (!dead)

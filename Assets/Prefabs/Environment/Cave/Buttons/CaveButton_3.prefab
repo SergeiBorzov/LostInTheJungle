@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4857416264584204679}
   - component: {fileID: 4857416264584204672}
   - component: {fileID: 4857416264584204673}
-  - component: {fileID: 4857416264584204674}
+  - component: {fileID: 7509023675189349289}
   m_Layer: 0
   m_Name: CaveButton_3
   m_TagString: Untagged
@@ -127,7 +127,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.13, y: 1.26, z: 2.04}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4857416264584204674
+--- !u!114 &7509023675189349289
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -136,9 +136,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 4857416264584204675}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c22d4c2c32b3c643942914f576bf869, type: 3}
+  m_Script: {fileID: 11500000, guid: 4feb249eec5fe7c49b43e6a4ac0ae906, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   alive: 0
-  order: 3
-  gates: {fileID: 0}
+  bridge: {fileID: 0}
+  bridge2: {fileID: 0}

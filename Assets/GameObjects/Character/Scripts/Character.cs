@@ -273,8 +273,8 @@ public class Character : MonoBehaviour
     {
         characterController.enabled = false;
         transform.position = grabbedLedge.transform.position + grabbedLedge.endPoint;
-        characterController.enabled = true;
         transform.parent = null;
+        characterController.enabled = true;
     }
 
     public void PerformHangUp()
@@ -560,13 +560,13 @@ public class Character : MonoBehaviour
             }
 
 
-            Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
+            //Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
 
             // If you know how fast your character is trying to move,
             // then you can also multiply the push velocity by that.
 
             // Apply the push
-            body.velocity = pushDir * 5.0f;
+            //body.velocity = pushDir * 5.0f;
         }
     }
 
