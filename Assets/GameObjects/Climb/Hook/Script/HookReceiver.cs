@@ -2,14 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class HookReceiver : MonoBehaviour
 {
+    [SerializeField]
+    Material active;
+
+    [SerializeField]
+    Material notActive;
+
+    Light m_Light;
+
     bool m_Active = false;
 
     Renderer m_Renderer;
     //SpringJoint m_Joint;
     private void Start()
     {
+        m_Light = GetComponentInChildren<Light>();
+        m_Light.enabled = false;
         m_Renderer = GetComponent<Renderer>();
     }
 
@@ -18,7 +29,8 @@ public class HookReceiver : MonoBehaviour
         m_Active = true;
         if (m_Active)
         {
-            m_Renderer.material.SetColor("_Color", Color.green);
+            m_Light.enabled = true;
+            m_Renderer.material = active;
         }
     }
 
@@ -27,7 +39,8 @@ public class HookReceiver : MonoBehaviour
         m_Active = false;
         if (!m_Active)
         {
-            m_Renderer.material.SetColor("_Color", Color.red);
+            m_Light.enabled = false;
+            m_Renderer.material = notActive;
         }
     }
 }

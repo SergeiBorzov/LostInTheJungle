@@ -14,6 +14,7 @@
 		#pragma surface surf Lambert alphatest:_Cutoff
 
 		sampler2D _MainTex;
+		
 		fixed4 _Color;
 
 		struct Input {
