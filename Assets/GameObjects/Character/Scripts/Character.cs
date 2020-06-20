@@ -475,7 +475,10 @@ public class Character : MonoBehaviour
         
         characterController = GetComponent<CharacterController>();
         characterController.enabled = false;
-        transform.position = GameMaster.instance.lastCheckPoint;
+        if (!debug)
+        {
+            transform.position = GameMaster.instance.lastCheckPoint;
+        }
         characterController.enabled = true;
 
         animator = GetComponent<Animator>();
