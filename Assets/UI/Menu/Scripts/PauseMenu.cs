@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 public class PauseMenu : MonoBehaviour
 {
-    // Start is called before the first frame update
     [SerializeField] private GameObject dieMenu;
     [SerializeField] private GameObject pauseMenu;
     [SerializeField] private Character characterScript;
+    [SerializeField] private Slider volumeSlider;
+
     private bool gamePaused = false;
 
     private void Pause()
@@ -22,7 +24,9 @@ public class PauseMenu : MonoBehaviour
 
     public void LastCheckPoint()
     {
+        characterScript.gameObject.SetActive(false);
         SceneManager.LoadScene(1);
+        characterScript.gameObject.SetActive(true);
         Time.timeScale = 1.0f;
     }
 
@@ -37,14 +41,14 @@ public class PauseMenu : MonoBehaviour
 
     public void Restart()
     {
-        GameMaster.lastCheckPoint = GameMaster.levelStart;
+        GameMaster.instance.lastCheckPoint = GameMaster.instance.levelStart;
         SceneManager.LoadScene(1);
         Time.timeScale = 1.0f;
     }
 
     public void ToMenu()
     {
-        GameMaster.lastCheckPoint = GameMaster.levelStart;
+        GameMaster.instance.lastCheckPoint = GameMaster.instance.levelStart;
         SceneManager.LoadScene(0);
         Time.timeScale = 1.0f;
     }
@@ -52,6 +56,11 @@ public class PauseMenu : MonoBehaviour
     public void Quit()
     {
         Application.Quit();
+    }
+
+    public void ChangeVolume()
+    {
+        AudioListener.volume = volumeSlider.value;
     }
 
     private void Update()

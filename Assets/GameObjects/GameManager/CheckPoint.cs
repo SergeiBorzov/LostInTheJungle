@@ -9,11 +9,9 @@ public class CheckPoint : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        var characterScript = other.gameObject.GetComponent<Character>();
-        if (characterScript != null)
+        if (other.gameObject.tag.Equals("Player"))
         {
-            //Debug.Log("CheckPoint!");
-            GameMaster.lastCheckPoint = respawn.position;
+            GameMaster.instance.lastCheckPoint = respawn.position;
         }
     }
 }

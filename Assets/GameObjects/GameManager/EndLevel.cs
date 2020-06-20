@@ -9,7 +9,7 @@ public class EndLevel : MonoBehaviour
     {
         if (other.gameObject.GetComponent<Character>() != null)
         {
-            GameMaster.lastCheckPoint = GameMaster.levelStart;
+            GameMaster.instance.lastCheckPoint = GameMaster.instance.levelStart;
             SceneManager.LoadScene(0);
         }
     }

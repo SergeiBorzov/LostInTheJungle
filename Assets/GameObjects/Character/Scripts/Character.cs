@@ -17,6 +17,7 @@ public interface ICharacterState
 
 public class Character : MonoBehaviour
 {
+
     private ICharacterState currentState;
 
 
@@ -466,15 +467,17 @@ public class Character : MonoBehaviour
         trail3.Stop();
     }
 
-    void Start() {
-
-        if (!debug)
-        {
-            transform.position = GameMaster.lastCheckPoint;
-        } 
+    private void OnEnable()
+    {
         
-
+    }
+    void Start() {
+        
         characterController = GetComponent<CharacterController>();
+        characterController.enabled = false;
+        transform.position = GameMaster.instance.lastCheckPoint;
+        characterController.enabled = true;
+
         animator = GetComponent<Animator>();
         hookCollider = GetComponent<CapsuleCollider>();
         ledgeChecker = GetComponentInChildren<LedgeChecker>();

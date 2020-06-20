@@ -11768,6 +11768,8 @@ MonoBehaviour:
   isGrabbingBox: 0
   isPushing: 0
   isPulling: 0
+  isAttacked: 0
+  isAttackedFromRight: 0
   isHook: 0
   isDead: 0
   isGui: 0
@@ -11777,7 +11779,7 @@ MonoBehaviour:
   timeFallingNoJump: 0
   timeFalling: 0
   velocity: {x: 0, y: 0, z: 0}
-  debug: 1
+  debug: 0
   grabbedLedge: {fileID: 0}
   swordScript: {fileID: 0}
   swordCollider: {fileID: 0}
