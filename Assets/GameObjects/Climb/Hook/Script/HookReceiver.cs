@@ -20,27 +20,25 @@ public class HookReceiver : MonoBehaviour
     private void Start()
     {
         m_Light = GetComponentInChildren<Light>();
-        m_Light.enabled = false;
+        m_Light.enabled = true;
         m_Renderer = GetComponent<Renderer>();
     }
 
     public void Activate(Rigidbody body)
     {
-        m_Active = true;
-        if (m_Active)
-        {
-            m_Light.enabled = true;
-            m_Renderer.material = active;
-        }
+        //m_Active = true;
+        //if (m_Active)
+        //{
+        //    m_Renderer.material = notActive;
+        //}
     }
 
     public void Deactivate()
     {
-        m_Active = false;
-        if (!m_Active)
-        {
-            m_Light.enabled = false;
-            m_Renderer.material = notActive;
-        }
+        //m_Active = false;
+        //if (!m_Active)
+        //{
+        //    m_Renderer.material = active;
+        //}
     }
 }
