@@ -19,16 +19,21 @@ public class Platform : MonoBehaviour
     [SerializeField]
     Transform SecondPoint;
 
-    //[SerializeField]
-    //float speed = 2.0f;
+    [SerializeField]
+    float speed = 2.0f;
 
-    float speed = 0.0f;
+    [SerializeField]
+    bool useSpeed = false;
+
 
     private void Start()
     {
         float dist = (FirstPoint.position - SecondPoint.position).magnitude;
 
-        speed = dist / 5.0f;
+        if (!useSpeed)
+        {
+            speed = dist / 5.0f;
+        }
     }
 
     void FixedUpdate()

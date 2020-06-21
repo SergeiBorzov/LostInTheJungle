@@ -3814,7 +3814,7 @@ ParticleSystem:
       properties: 0
       emitProbability: 1
   LightsModule:
-    enabled: 1
+    enabled: 0
     ratio: 1
     light: {fileID: 5636681758086055746, guid: 8b74b188c5220e149aadea4f8722f74f, type: 3}
     randomDistribution: 1
@@ -4832,6 +4832,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FirstPoint: {fileID: 0}
   SecondPoint: {fileID: 0}
+  speed: 0
+  useSpeed: 0
 --- !u!64 &6263004913652369400
 MeshCollider:
   m_ObjectHideFlags: 0
