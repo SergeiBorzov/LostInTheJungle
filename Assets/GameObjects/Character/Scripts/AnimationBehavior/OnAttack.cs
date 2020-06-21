@@ -10,6 +10,9 @@ public class OnAttack : StateMachineBehaviour
     {
         characterScript = animator.GetComponentInParent<Character>();
         characterScript.isAttacked = true;
+        characterScript.isGrabbingLedge = false;
+        animator.SetBool(Character.TransitionParameter.isGrabbingLedge.ToString(), false);
+        characterScript.grabbedLedge = null;
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

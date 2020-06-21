@@ -474,7 +474,32 @@ PrefabInstance:
     - target: {fileID: 4462779037009789545, guid: 288f5b79eb7504a4d8472120a988c9e6,
         type: 3}
       propertyPath: LightsModule.ratio
-      value: 0.66
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4462779037009789545, guid: 288f5b79eb7504a4d8472120a988c9e6,
+        type: 3}
+      propertyPath: LightsModule.enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4462779037009789545, guid: 288f5b79eb7504a4d8472120a988c9e6,
+        type: 3}
+      propertyPath: InitialModule.maxNumParticles
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4462779037009789545, guid: 288f5b79eb7504a4d8472120a988c9e6,
+        type: 3}
+      propertyPath: LightsModule.range
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4462779037009789545, guid: 288f5b79eb7504a4d8472120a988c9e6,
+        type: 3}
+      propertyPath: LightsModule.intensity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4462779037009789545, guid: 288f5b79eb7504a4d8472120a988c9e6,
+        type: 3}
+      propertyPath: LightsModule.maxLights
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 1443197625547797408, guid: 288f5b79eb7504a4d8472120a988c9e6,
         type: 3}
@@ -567,6 +592,36 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4462779037009789545, guid: 288f5b79eb7504a4d8472120a988c9e6,
+        type: 3}
+      propertyPath: InitialModule.maxNumParticles
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4462779037009789545, guid: 288f5b79eb7504a4d8472120a988c9e6,
+        type: 3}
+      propertyPath: LightsModule.enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4462779037009789545, guid: 288f5b79eb7504a4d8472120a988c9e6,
+        type: 3}
+      propertyPath: LightsModule.ratio
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4462779037009789545, guid: 288f5b79eb7504a4d8472120a988c9e6,
+        type: 3}
+      propertyPath: LightsModule.range
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4462779037009789545, guid: 288f5b79eb7504a4d8472120a988c9e6,
+        type: 3}
+      propertyPath: LightsModule.intensity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4462779037009789545, guid: 288f5b79eb7504a4d8472120a988c9e6,
+        type: 3}
+      propertyPath: LightsModule.maxLights
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 1443197625547797408, guid: 288f5b79eb7504a4d8472120a988c9e6,
         type: 3}
@@ -663,12 +718,27 @@ PrefabInstance:
     - target: {fileID: 4462779037009789545, guid: 288f5b79eb7504a4d8472120a988c9e6,
         type: 3}
       propertyPath: LightsModule.maxLights
-      value: 20
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 4462779037009789545, guid: 288f5b79eb7504a4d8472120a988c9e6,
         type: 3}
       propertyPath: LightsModule.ratio
-      value: 0.1
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4462779037009789545, guid: 288f5b79eb7504a4d8472120a988c9e6,
+        type: 3}
+      propertyPath: InitialModule.maxNumParticles
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4462779037009789545, guid: 288f5b79eb7504a4d8472120a988c9e6,
+        type: 3}
+      propertyPath: LightsModule.range
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4462779037009789545, guid: 288f5b79eb7504a4d8472120a988c9e6,
+        type: 3}
+      propertyPath: LightsModule.intensity
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1443197625547797408, guid: 288f5b79eb7504a4d8472120a988c9e6,
         type: 3}
