@@ -228,7 +228,7 @@ public class Hook : MonoBehaviour
 
             if (Input.GetKey(KeyCode.A))
             {
-                if (m_CharacterScript.lookingRight && !m_CharacterScript.isTurning)
+                if (m_CharacterScript.lookingRight && !m_CharacterScript.isTurning && !Input.GetKey(KeyCode.D))
                 {
                     m_Animator.SetBool(Character.TransitionParameter.Turn.ToString(), true);
                 }
@@ -243,7 +243,7 @@ public class Hook : MonoBehaviour
             }
             else if (Input.GetKey(KeyCode.D))
             {
-                if (!m_CharacterScript.lookingRight && !m_CharacterScript.isTurning)
+                if (!m_CharacterScript.lookingRight && !m_CharacterScript.isTurning && !Input.GetKey(KeyCode.A))
                 {
                     m_Animator.SetBool(Character.TransitionParameter.Turn.ToString(), true);
                 }
