@@ -14,5 +14,18 @@ Unity, Blender, Krita, Procreate
 
 ## Screenshots
 ![](https://github.com/SergeiBorzov/LostInTheJungle/blob/master/screenshots/IMG_4438.jpg)
+![](https://github.com/SergeiBorzov/LostInTheJungle/blob/master/screenshots/IMG_4441.jpg)
+![](https://github.com/SergeiBorzov/LostInTheJungle/blob/master/screenshots/IMG_4442.jpg)
+![](https://github.com/SergeiBorzov/LostInTheJungle/blob/master/screenshots/IMG_4443.jpg)
+![](https://github.com/SergeiBorzov/LostInTheJungle/blob/master/screenshots/IMG_4444.jpg)
+![](https://github.com/SergeiBorzov/LostInTheJungle/blob/master/screenshots/IMG_4446.jpg)
+![](https://github.com/SergeiBorzov/LostInTheJungle/blob/master/screenshots/IMG_4447.jpg)
+![](https://github.com/SergeiBorzov/LostInTheJungle/blob/master/screenshots/IMG_4450.jpg)
+![](https://github.com/SergeiBorzov/LostInTheJungle/blob/master/screenshots/IMG_4451.jpg)
+![](https://github.com/SergeiBorzov/LostInTheJungle/blob/master/screenshots/IMG_4452.jpg)
+![](https://github.com/SergeiBorzov/LostInTheJungle/blob/master/screenshots/IMG_4453.jpg)
+![](https://github.com/SergeiBorzov/LostInTheJungle/blob/master/screenshots/IMG_4454.jpg)
+![](https://github.com/SergeiBorzov/LostInTheJungle/blob/master/screenshots/IMG_4455.jpg)
+
 
 
