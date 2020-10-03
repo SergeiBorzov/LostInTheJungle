@@ -9,7 +9,7 @@ Takhmina Sadykova - 2D art, GUI, audio, modeling
 ## Used tools
 Unity, Blender, Krita, Procreate
 
-## Videoclip
+## Trailer
 [![Watch the video](https://img.youtube.com/vi/mL3Cwblh5cQ/0.jpg)](https://youtu.be/mL3Cwblh5cQ)
 
 ## Screenshots
