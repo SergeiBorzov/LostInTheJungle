@@ -1,16 +1,16 @@
 # LostInTheJungle
-"Lost in the jungle" is a 2.D platformer for PC. The game attracts with its bright, unique, cartoonish setting, visual and audio effects. The game is aimed at a fairly wide audience, does not contain restrictive content. The minimum age of the player is 8 years. The game will be especially interesting to people who love cartoons, fairy tales, fantasy.
+"Lost in the jungle" is a 2.D platformer for PC. The game attracts with its bright, unique, cartoonish setting, visual and audio effects. This is an educational project, the goal was to learn Unity. Main focus was on game visuals. We were inspired by the game Trine.
 
 ## Authors
-[Dasha Vasilenko](https://github.com/DashaVasilenko)\
-[Sergei Borzov](https://github.com/SergeiBorzov)\
-Takhmina Sadykova
+[Dasha Vasilenko](https://github.com/DashaVasilenko)\ -  basic idea, modeling, animation, programming, texturing, level design
+[Sergei Borzov](https://github.com/SergeiBorzov)\ - programming, level design, VFX, shaders
+Takhmina Sadykova - 2D art, GUI, audio, modeling
 
 ## Used tools
 Unity, Blender, Krita, Procreate
 
 ## Videoclip
-[![Watch the video](https://github.com/SergeiBorzov/LostInTheJungle/blob/master/screenshots/LostInTheJungle1.jpg)](https://youtu.be/mL3Cwblh5cQ)
+[![Watch the video](https://img.youtu.be/vi/mL3Cwblh5cQ.jpg)](https://youtu.be/mL3Cwblh5cQ)
 
 ## Screenshots
 ![](https://github.com/SergeiBorzov/LostInTheJungle/blob/master/screenshots/IMG_4441.jpg)
