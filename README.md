@@ -10,7 +10,7 @@ Takhmina Sadykova - 2D art, GUI, audio, modeling
 Unity, Blender, Krita, Procreate
 
 ## Videoclip
-[![Watch the video](https://img.youtu.be/vi/mL3Cwblh5cQ.jpg)](https://youtu.be/mL3Cwblh5cQ)
+[![Watch the video](https://img.youtu.be/vi/mL3Cwblh5cQ/0.jpg)](https://youtu.be/mL3Cwblh5cQ)
 
 ## Screenshots
 ![](https://github.com/SergeiBorzov/LostInTheJungle/blob/master/screenshots/IMG_4441.jpg)
