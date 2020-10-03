@@ -2,8 +2,8 @@
 "Lost in the jungle" is a 2.D platformer for PC. The game attracts with its bright, unique, cartoonish setting, visual and audio effects. This is an educational project, the goal was to learn Unity. Main focus was on game visuals. We were inspired by the game Trine.
 
 ## Authors
-[Dasha Vasilenko](https://github.com/DashaVasilenko)\ -  basic idea, modeling, animation, programming, texturing, level design
-[Sergei Borzov](https://github.com/SergeiBorzov)\ - programming, level design, VFX, shaders
+[Dasha Vasilenko](https://github.com/DashaVasilenko) -  basic idea, modeling, animation, programming, texturing, level design\
+[Sergei Borzov](https://github.com/SergeiBorzov) - programming, level design, VFX, shaders\
 Takhmina Sadykova - 2D art, GUI, audio, modeling
 
 ## Used tools
