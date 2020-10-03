@@ -10,9 +10,9 @@ Takhmina Sadykova
 Unity, Blender, Krita, Procreate
 
 ## Videoclip
-[![Watch the video](https://github.com/SergeiBorzov/LostInTheJungle/tree/master/screenshots/LostInTheJungle1.jpg)](https://youtu.be/mL3Cwblh5cQ)
+[![Watch the video](https://github.com/SergeiBorzov/LostInTheJungle/blob/master/screenshots/LostInTheJungle1.jpg)](https://youtu.be/mL3Cwblh5cQ)
 
 ## Screenshots
-![](https://github.com/SergeiBorzov/LostInTheJungle/screenshots/IMG_4438.jpg)
+![](https://github.com/SergeiBorzov/LostInTheJungle/blob/master/screenshots/IMG_4438.jpg)
 
 
