@@ -13,7 +13,6 @@ Unity, Blender, Krita, Procreate
 [![Watch the video](https://github.com/SergeiBorzov/LostInTheJungle/blob/master/screenshots/LostInTheJungle1.jpg)](https://youtu.be/mL3Cwblh5cQ)
 
 ## Screenshots
-![](https://github.com/SergeiBorzov/LostInTheJungle/blob/master/screenshots/IMG_4438.jpg)
 ![](https://github.com/SergeiBorzov/LostInTheJungle/blob/master/screenshots/IMG_4441.jpg)
 ![](https://github.com/SergeiBorzov/LostInTheJungle/blob/master/screenshots/IMG_4442.jpg)
 ![](https://github.com/SergeiBorzov/LostInTheJungle/blob/master/screenshots/IMG_4443.jpg)
